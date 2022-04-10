@@ -44,7 +44,7 @@ class HomeLayout extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.sports_soccer_rounded),
-                label: "Matches",
+                label: "Fixtures",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.bar_chart),

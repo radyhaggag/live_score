@@ -7,12 +7,12 @@ import 'package:live_score/models/lineups_model.dart';
 import 'package:live_score/models/standings_model.dart';
 import 'package:live_score/models/statistics_model.dart';
 import 'package:live_score/modules/home_screen/home_screen.dart';
-import 'package:live_score/modules/matches_screen/matches_screen.dart';
 import 'package:live_score/modules/standings_screen/standings_screen.dart';
 import 'package:live_score/shared/network/dio_helper.dart';
 import 'package:live_score/shared/network/endpoints.dart';
 
 import '../../models/events_model.dart';
+import '../../modules/fixtures_screen/fixtures_screen.dart';
 
 class LiveScoreCubit extends Cubit<LiveScoreStates> {
   LiveScoreCubit() : super(LiveScoreInitialState());
@@ -21,13 +21,13 @@ class LiveScoreCubit extends Cubit<LiveScoreStates> {
 
   List<Widget> screens = [
     const HomeScreen(),
-    const MatchesScreen(),
+    const FixturesScreen(),
     const StandingsScreen(),
   ];
 
   List<String> titles = [
     "Live Score",
-    "Matches",
+    "Fixtures",
     "Standings",
   ];
 
@@ -37,106 +37,106 @@ class LiveScoreCubit extends Cubit<LiveScoreStates> {
     emit(LiveScoreChangeBottomNavState());
   }
 
-  List<SoccerMatch> matches = [];
-  List<SoccerMatch> egyptionLeagueMatches = [];
-  List<SoccerMatch> premierLeagueMatches = [];
-  List<SoccerMatch> laLigaMatches = [];
-  List<SoccerMatch> ligue1Matches = [];
-  List<SoccerMatch> bundesligaMatches = [];
-  List<SoccerMatch> serieAMatches = [];
-  List<SoccerMatch> uefaChampionsMatches = [];
-  List<SoccerMatch> cafChampionshipMatches = [];
-  List<SoccerMatch> worldCupMatches = [];
-  List<SoccerMatch> liveMatches = [];
+  List<SoccerFixtures> fixtures = [];
+  List<SoccerFixtures> egyptionLeagueFixtures = [];
+  List<SoccerFixtures> premierLeagueFixtures = [];
+  List<SoccerFixtures> laLigaFixtures = [];
+  List<SoccerFixtures> ligue1Fixtures = [];
+  List<SoccerFixtures> bundesligaFixtures = [];
+  List<SoccerFixtures> serieAFixtures = [];
+  List<SoccerFixtures> uefaChampionsFixtures = [];
+  List<SoccerFixtures> cafChampionshipFixtures = [];
+  List<SoccerFixtures> worldCupFixtures = [];
+  List<SoccerFixtures> liveFixtures = [];
 
   void getFixtures(String date) {
-    matches = [];
-    egyptionLeagueMatches = [];
-    premierLeagueMatches = [];
-    laLigaMatches = [];
-    ligue1Matches = [];
-    bundesligaMatches = [];
-    serieAMatches = [];
-    uefaChampionsMatches = [];
-    cafChampionshipMatches = [];
-    worldCupMatches = [];
-    liveMatches = [];
+    fixtures = [];
+    egyptionLeagueFixtures = [];
+    premierLeagueFixtures = [];
+    laLigaFixtures = [];
+    ligue1Fixtures = [];
+    bundesligaFixtures = [];
+    serieAFixtures = [];
+    uefaChampionsFixtures = [];
+    cafChampionshipFixtures = [];
+    worldCupFixtures = [];
+    liveFixtures = [];
     emit(LiveScoreGetFixturesLoadingState());
     DioHelper.getData(endPoint: GET_FIXTURES, query: {
       "date": date,
     }).then((value) {
-      List<dynamic> matchesList = value.data['response'];
-      for (var match in matchesList) {
-        if (match["league"]["id"] == 39) {
-          premierLeagueMatches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+      List<dynamic> fixturesList = value.data['response'];
+      for (var fixture in fixturesList) {
+        if (fixture["league"]["id"] == 39) {
+          premierLeagueFixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
-        if (match["league"]["id"] == 140) {
-          laLigaMatches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+        if (fixture["league"]["id"] == 140) {
+          laLigaFixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
-        if (match["league"]["id"] == 135) {
-          serieAMatches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+        if (fixture["league"]["id"] == 135) {
+          serieAFixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
-        if (match["league"]["id"] == 61) {
-          ligue1Matches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+        if (fixture["league"]["id"] == 61) {
+          ligue1Fixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
-        if (match["league"]["id"] == 78) {
-          bundesligaMatches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+        if (fixture["league"]["id"] == 78) {
+          bundesligaFixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
-        if (match["league"]["id"] == 2) {
-          uefaChampionsMatches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+        if (fixture["league"]["id"] == 2) {
+          uefaChampionsFixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
-        if (match["league"]["id"] == 12) {
-          cafChampionshipMatches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+        if (fixture["league"]["id"] == 12) {
+          cafChampionshipFixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
-        if (match["league"]["id"] == 1) {
-          worldCupMatches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+        if (fixture["league"]["id"] == 1) {
+          worldCupFixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
-        if (match["league"]["id"] == 233) {
-          egyptionLeagueMatches.add(SoccerMatch.fromJson(match));
-          matches.add(SoccerMatch.fromJson(match));
-          if (match["fixture"]["status"]["elapsed"] != null &&
-              match["fixture"]["status"]["elapsed"] < 90) {
-            liveMatches.add(SoccerMatch.fromJson(match));
+        if (fixture["league"]["id"] == 233) {
+          egyptionLeagueFixtures.add(SoccerFixtures.fromJson(fixture));
+          fixtures.add(SoccerFixtures.fromJson(fixture));
+          if (fixture["fixture"]["status"]["elapsed"] != null &&
+              fixture["fixture"]["status"]["elapsed"] < 90) {
+            liveFixtures.add(SoccerFixtures.fromJson(fixture));
           }
         }
       }

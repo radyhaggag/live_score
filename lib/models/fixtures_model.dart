@@ -1,10 +1,10 @@
-class SoccerMatch {
+class SoccerFixtures {
   Fixture? fixture;
   League? league;
   Team? home;
   Team? away;
   Goals? goals;
-  SoccerMatch.fromJson(Map<String, dynamic> json) {
+  SoccerFixtures.fromJson(Map<String, dynamic> json) {
     fixture = Fixture.fromJson(json['fixture']);
     league = League.fromJson(json['league']);
     home = Team.fromJson(json['teams']['home']);

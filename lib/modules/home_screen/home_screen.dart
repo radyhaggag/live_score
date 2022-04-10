@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_score/layout/cubit/cubit.dart';
 import 'package:live_score/layout/cubit/states.dart';
 
-import '../../layout/matches_layout/matches_layout.dart';
 import '../../shared/components/league_item.dart';
-import '../../shared/components/live_match_card.dart';
-import '../../shared/components/match_card.dart';
+import '../../shared/components/live_fixtures_card.dart';
+import '../../shared/components/fixtures_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -51,24 +50,18 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              if (cubit.liveMatches.isNotEmpty)
+              if (cubit.liveFixtures.isNotEmpty)
                 Row(
                   children: [
                     Text(
-                      "Live Matches",
+                      "Live Fixtures",
                       style: Theme.of(context).textTheme.titleLarge!,
                     ),
                     const Spacer(),
                     TextButton(
                       onPressed: () {
                         cubit.leagueId = 0;
-                        Navigator.of(context)
-                            .push(
-                              MaterialPageRoute(
-                                builder: (context) => const MatchesLayout(),
-                              ),
-                            )
-                            .then((value) {});
+                        cubit.changeBottomNav(1);
                       },
                       child: Row(
                         children: [
@@ -89,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              if (cubit.liveMatches.isNotEmpty)
+              if (cubit.liveFixtures.isNotEmpty)
                 SizedBox(
                   width: double.infinity,
                   height: 220,
@@ -97,32 +90,25 @@ class HomeScreen extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                    itemBuilder: (context, index) =>
-                        buildLiveMatchCard(cubit.liveMatches[index], context),
+                    itemBuilder: (context, index) => buildLiveFixtureCard(
+                        cubit.liveFixtures[index], context),
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 10),
-                    itemCount: cubit.liveMatches.length,
+                    itemCount: cubit.liveFixtures.length,
                   ),
                 ),
-              if (cubit.matches.isNotEmpty)
+              if (cubit.fixtures.isNotEmpty)
                 Row(
                   children: [
                     Text(
-                      "Matches",
+                      "Fixtures",
                       style: Theme.of(context).textTheme.titleLarge!,
                     ),
                     const Spacer(),
                     TextButton(
                       onPressed: () {
                         cubit.leagueId = 0;
-
-                        Navigator.of(context)
-                            .push(
-                              MaterialPageRoute(
-                                builder: (context) => const MatchesLayout(),
-                              ),
-                            )
-                            .then((value) {});
+                        cubit.changeBottomNav(1);
                       },
                       child: Row(
                         children: [
@@ -143,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              (cubit.matches.isNotEmpty)
+              (cubit.fixtures.isNotEmpty)
                   ? Expanded(
                       child: Container(
                         padding: const EdgeInsets.only(right: 20),
@@ -152,8 +138,8 @@ class HomeScreen extends StatelessWidget {
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemBuilder: (context, index) =>
-                              buildMatchCard(cubit.matches[index], context),
-                          itemCount: cubit.matches.length,
+                              buildFixtureCard(cubit.fixtures[index], context),
+                          itemCount: cubit.fixtures.length,
                         ),
                       ),
                     )

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/layout/cubit/cubit.dart';
-import 'package:live_score/layout/matches_layout/matches_layout.dart';
 import 'package:live_score/models/leagues_model.dart';
-
-import '../../layout/standings_layout/standings_layout.dart';
 
 Widget buildLeagueItem(LeagueModel league, context, LiveScoreCubit cubit) =>
     InkWell(
@@ -68,26 +65,19 @@ Future<dynamic> buildBottomSheet({
                 ElevatedButton(
                   onPressed: () {
                     cubit.leagueId = league.id;
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const MatchesLayout(),
-                      ),
-                    );
+                    cubit.changeBottomNav(1);
+                    Navigator.pop(context);
                   },
-                  child: const Text("View matches"),
+                  child: const Text("View Fixtures"),
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    cubit.changeBottomNav(2);
                     cubit.getStandings(
                       season: league.currentYear.toString(),
                       leagueId: league.id.toString(),
                     );
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const StandingsLayout(),
-                      ),
-                    );
+                    Navigator.pop(context);
                   },
                   child: const Text("View Standings"),
                 ),

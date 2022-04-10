@@ -10,10 +10,10 @@ import 'package:live_score/models/lineups_model.dart';
 import '../../models/statistics_model.dart';
 
 class StatisticsLayout extends StatelessWidget {
-  final SoccerMatch? soccerMatch;
+  final SoccerFixtures? soccerFixture;
   final String? clockString;
   const StatisticsLayout(
-      {Key? key, @required this.soccerMatch, @required this.clockString})
+      {Key? key, @required this.soccerFixture, @required this.clockString})
       : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class StatisticsLayout extends StatelessWidget {
         int hourNow =
             int.parse(DateFormat("h").format(DateTime.now().toLocal()));
 
-        int matchHour = int.parse(clockString!.split(":").first);
+        int fixtureHour = int.parse(clockString!.split(":").first);
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -38,7 +38,7 @@ class StatisticsLayout extends StatelessWidget {
               },
             ),
             title: Text(
-              "${soccerMatch!.home!.name} Vs ${soccerMatch!.away!.name}",
+              "${soccerFixture!.home!.name} Vs ${soccerFixture!.away!.name}",
             ),
           ),
           body: ListView(
@@ -68,12 +68,12 @@ class StatisticsLayout extends StatelessWidget {
                           width: 20,
                           height: 20,
                           image: NetworkImage(
-                            soccerMatch!.league!.logo!,
+                            soccerFixture!.league!.logo!,
                           ),
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          "${soccerMatch!.league!.name}",
+                          "${soccerFixture!.league!.name}",
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
@@ -84,7 +84,7 @@ class StatisticsLayout extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      "Round ${soccerMatch!.league!.round!.split(" ").last}",
+                      "Round ${soccerFixture!.league!.round!.split(" ").last}",
                       style: Theme.of(context)
                           .textTheme
                           .subtitle2!
@@ -107,7 +107,7 @@ class StatisticsLayout extends StatelessWidget {
                                   width: 50,
                                   height: 50,
                                   image: NetworkImage(
-                                    soccerMatch!.home!.logo!,
+                                    soccerFixture!.home!.logo!,
                                   ),
                                 ),
                               ),
@@ -115,7 +115,7 @@ class StatisticsLayout extends StatelessWidget {
                               FittedBox(
                                 fit: BoxFit.contain,
                                 child: Text(
-                                  soccerMatch!.home!.name!,
+                                  soccerFixture!.home!.name!,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
@@ -126,7 +126,7 @@ class StatisticsLayout extends StatelessWidget {
                             ],
                           ),
                         ),
-                        (soccerMatch!.fixture!.status!.elapsed != null)
+                        (soccerFixture!.fixture!.status!.elapsed != null)
                             ? Expanded(
                                 child: Column(
                                   children: [
@@ -135,7 +135,8 @@ class StatisticsLayout extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          soccerMatch!.goals!.home!.toString(),
+                                          soccerFixture!.goals!.home!
+                                              .toString(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headlineMedium!
@@ -152,7 +153,8 @@ class StatisticsLayout extends StatelessWidget {
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
-                                          soccerMatch!.goals!.away!.toString(),
+                                          soccerFixture!.goals!.away!
+                                              .toString(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headlineMedium!
@@ -160,10 +162,12 @@ class StatisticsLayout extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    if (soccerMatch!.fixture!.status!.elapsed !=
+                                    if (soccerFixture!
+                                            .fixture!.status!.elapsed !=
                                         null)
                                       const SizedBox(height: 10),
-                                    if (soccerMatch!.fixture!.status!.elapsed !=
+                                    if (soccerFixture!
+                                            .fixture!.status!.elapsed !=
                                         null)
                                       Container(
                                         padding: const EdgeInsets.symmetric(
@@ -176,7 +180,7 @@ class StatisticsLayout extends StatelessWidget {
                                               BorderRadius.circular(20),
                                         ),
                                         child: Text(
-                                          soccerMatch!.fixture!.status!
+                                          soccerFixture!.fixture!.status!
                                                       .elapsed! <
                                                   90
                                               ? "Live"
@@ -236,7 +240,7 @@ class StatisticsLayout extends StatelessWidget {
                                   width: 50,
                                   height: 50,
                                   image: NetworkImage(
-                                    soccerMatch!.away!.logo!,
+                                    soccerFixture!.away!.logo!,
                                   ),
                                 ),
                               ),
@@ -244,7 +248,7 @@ class StatisticsLayout extends StatelessWidget {
                               FittedBox(
                                 fit: BoxFit.contain,
                                 child: Text(
-                                  soccerMatch!.away!.name!,
+                                  soccerFixture!.away!.name!,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
@@ -267,10 +271,10 @@ class StatisticsLayout extends StatelessWidget {
                   Expanded(
                     child: MaterialButton(
                       onPressed: () {
-                        if (soccerMatch!.fixture!.status!.elapsed != null) {
+                        if (soccerFixture!.fixture!.status!.elapsed != null) {
                           cubit
                               .getStatistics(
-                            fixtureId: soccerMatch!.fixture!.id.toString(),
+                            fixtureId: soccerFixture!.fixture!.id.toString(),
                           )
                               .then(
                             (_) {
@@ -296,10 +300,11 @@ class StatisticsLayout extends StatelessWidget {
                   Expanded(
                     child: MaterialButton(
                       onPressed: () {
-                        if (hourNow >= matchHour - 1 && cubit.lineups.isEmpty) {
+                        if (hourNow >= fixtureHour - 1 &&
+                            cubit.lineups.isEmpty) {
                           cubit
                               .getLineups(
-                            fixtureId: soccerMatch!.fixture!.id.toString(),
+                            fixtureId: soccerFixture!.fixture!.id.toString(),
                           )
                               .then((value) {
                             cubit.changStats(1);
@@ -322,11 +327,11 @@ class StatisticsLayout extends StatelessWidget {
                   Expanded(
                     child: MaterialButton(
                       onPressed: () {
-                        if (soccerMatch!.fixture!.status!.elapsed != null &&
+                        if (soccerFixture!.fixture!.status!.elapsed != null &&
                             cubit.events.isEmpty) {
                           cubit
                               .getEvents(
-                            fixtureId: soccerMatch!.fixture!.id.toString(),
+                            fixtureId: soccerFixture!.fixture!.id.toString(),
                           )
                               .then(
                             (_) {
