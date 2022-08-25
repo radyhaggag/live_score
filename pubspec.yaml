@@ -1,0 +1,40 @@
+name: live_score
+description: Live score app
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.5
+  dio: ^4.0.6
+  bloc: ^8.1.0
+  flutter_bloc: ^8.1.1
+  intl: ^0.17.0
+  hexcolor: ^2.0.7
+  dartz: ^0.10.1
+  equatable: ^2.0.5
+  get_it: ^7.2.0
+  shared_preferences: ^2.0.15
+  internet_connection_checker: ^0.0.1+4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/no_matches.png
+    - assets/images/no_stats.png
+    - assets/images/Football_playground.png
+    - assets/images/substitute.jpg
