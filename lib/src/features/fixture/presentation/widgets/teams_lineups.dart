@@ -141,7 +141,8 @@ class TeamsLineups extends StatelessWidget {
                                 child: CircleAvatar(
                                   radius: AppSize.s13,
                                   backgroundColor: HexColor(
-                                      "#${lineups[1].team.colors.player.primary}"),
+                                    "#${lineups[1].team.colors.player.primary}",
+                                  ),
                                   child: Text(
                                     teamTwoPlayers
                                         .elementAt(lineTwoNumber)

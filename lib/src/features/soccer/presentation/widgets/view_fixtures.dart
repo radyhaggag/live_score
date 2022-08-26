@@ -53,10 +53,13 @@ class ViewDayFixtures extends StatelessWidget {
                     final localTime = DateTime.parse(fixtureTime).toLocal();
                     final formattedTime =
                         DateFormat("h:mm a").format(localTime);
-                    int nowHour = DateTime.now().hour;
+                    int nowHour = int.parse(DateFormat.jm()
+                        .format(DateTime.now())
+                        .split(":")
+                        .first);
                     int fixtureHour = int.parse(formattedTime.split(":").first);
                     return InkWell(
-                      onTap: nowHour >= fixtureHour - 1
+                      onTap: nowHour + 1 >= fixtureHour
                           ? () {
                               Navigator.of(context).pushNamed(Routes.fixture,
                                   arguments: fixtures[index]);

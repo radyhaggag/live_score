@@ -10,9 +10,9 @@ class PlayerModel extends Player {
       : super(id: id, name: name, number: number, grid: grid, pos: pos);
 
   factory PlayerModel.fromJson(Map<String, dynamic> json) => PlayerModel(
-        id: json["id"],
-        name: json["name"],
-        number: json["number"],
+        id: json["id"] ?? 0,
+        name: json["name"] ?? "",
+        number: json["number"] ?? 0,
         pos: json["pos"] ?? "NF",
         grid: json["grid"] ?? "-1",
       );

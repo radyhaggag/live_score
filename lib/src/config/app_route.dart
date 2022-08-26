@@ -55,7 +55,7 @@ class AppRouter {
                 lineupsUseCase: sl<LineupsUseCase>(),
                 eventsUseCase: sl<EventsUseCase>(),
                 statisticsUseCase: sl<StatisticsUseCase>(),
-              )..getStatistics(soccerFixture.fixture.id.toString()),
+              )..getLineups(soccerFixture.fixture.id.toString()),
               child: FixtureScreen(soccerFixture: soccerFixture),
             );
           },

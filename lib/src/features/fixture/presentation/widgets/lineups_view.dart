@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/domain/entities/teams.dart';
 import '../../../../core/utils/app_strings.dart';
 import 'items_not_available.dart';
 import 'teams_lineups.dart';
@@ -18,32 +19,7 @@ class LineupsView extends StatelessWidget {
     return lineups.isNotEmpty
         ? Column(
             children: [
-              Container(
-                color: AppColors.green,
-                padding: const EdgeInsetsDirectional.all(AppPadding.p5),
-                child: Row(
-                  children: [
-                    Image(
-                      fit: BoxFit.cover,
-                      width: AppSize.s35,
-                      height: AppSize.s35,
-                      image: NetworkImage(lineups[0].team.logo),
-                    ),
-                    const SizedBox(width: AppSize.s10),
-                    Text(
-                      lineups[0].team.name,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const Spacer(),
-                    Text(
-                      lineups[0].formation,
-                      style: const TextStyle(
-                          color: Colors.white, fontSize: FontSize.subTitle),
-                    ),
-                    const SizedBox(width: AppSize.s10),
-                  ],
-                ),
-              ),
+              buildTeamHeader(context: context, lineup: lineups[0]),
               Container(
                 width: double.infinity,
                 height: AppSize.s625,
@@ -61,41 +37,42 @@ class LineupsView extends StatelessWidget {
                   child: TeamsLineups(lineups: lineups),
                 ),
               ),
-              Container(
-                color: AppColors.green,
-                padding: const EdgeInsetsDirectional.all(AppPadding.p5),
-                child: Row(
-                  children: [
-                    Image(
-                      fit: BoxFit.cover,
-                      width: AppSize.s35,
-                      height: AppSize.s35,
-                      image: NetworkImage(
-                        lineups[1].team.logo,
-                      ),
-                    ),
-                    const SizedBox(width: AppSize.s10),
-                    Text(
-                      lineups[1].team.name,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const Spacer(),
-                    Text(
-                      lineups[1].formation,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: AppColors.white),
-                    ),
-                    const SizedBox(width: AppSize.s10),
-                  ],
-                ),
-              ),
+              buildTeamHeader(context: context, lineup: lineups[1]),
             ],
           )
         : const ItemsNotAvailable(
             icon: Icons.people,
             message: AppStrings.noLineups,
           );
+  }
+
+  Widget buildTeamHeader(
+      {required BuildContext context, required Lineup lineup}) {
+    return Container(
+      color: AppColors.darkGreen,
+      padding: const EdgeInsetsDirectional.all(AppPadding.p5),
+      child: Row(
+        children: [
+          Image(
+            fit: BoxFit.cover,
+            width: AppSize.s35,
+            height: AppSize.s35,
+            image: NetworkImage(lineup.team.logo),
+          ),
+          const SizedBox(width: AppSize.s10),
+          Text(
+            lineup.team.name,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const Spacer(),
+          Text(
+            lineup.formation,
+            style: const TextStyle(
+                color: Colors.white, fontSize: FontSize.subTitle),
+          ),
+          const SizedBox(width: AppSize.s10),
+        ],
+      ),
+    );
   }
 }

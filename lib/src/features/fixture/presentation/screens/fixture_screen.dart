@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/events_view.dart';
 import '../widgets/lineups_view.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
@@ -64,6 +65,10 @@ class FixtureScreen extends StatelessWidget {
                 if (soccerFixture.fixture.status.short != "NS") {
                   await cubit
                       .getStatistics(soccerFixture.fixture.id.toString());
+                } else {
+                  Fluttertoast.showToast(
+                      msg: AppStrings.noStats,
+                      backgroundColor: AppColors.blueGrey);
                 }
               },
             ),
@@ -82,6 +87,10 @@ class FixtureScreen extends StatelessWidget {
               onPressed: () async {
                 if (soccerFixture.fixture.status.short != "NS") {
                   await cubit.getEvents(soccerFixture.fixture.id.toString());
+                } else {
+                  Fluttertoast.showToast(
+                      msg: AppStrings.noEvents,
+                      backgroundColor: AppColors.blueGrey);
                 }
               },
             ),
