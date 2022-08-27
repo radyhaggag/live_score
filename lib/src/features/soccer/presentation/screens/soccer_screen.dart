@@ -35,11 +35,11 @@ class _SoccerScreenState extends State<SoccerScreen> {
     if (cubit.filteredLeagues.isEmpty) {
       await cubit.getLeagues();
     }
-    // if (cubit.filteredLeagues.isNotEmpty) {
-    //   await cubit.getLiveFixtures().then((value) {
-    //     cubit.currentFixtures = liveFixtures = value;
-    //   });
-    // }
+    if (cubit.filteredLeagues.isNotEmpty) {
+      await cubit.getLiveFixtures().then((value) {
+        cubit.currentFixtures = liveFixtures = value;
+      });
+    }
     if (cubit.filteredLeagues.isNotEmpty && fixtures.isEmpty) {
       fixtures = await cubit.getFixtures();
     }
