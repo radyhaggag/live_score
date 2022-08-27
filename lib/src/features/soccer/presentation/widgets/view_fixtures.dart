@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:live_score/src/core/utils/app_assets.dart';
 import '../../../../config/app_route.dart';
 import '../../../../core/media_query.dart';
 import '../cubit/soccer_cubit.dart';
@@ -57,9 +56,11 @@ class ViewDayFixtures extends StatelessWidget {
                         .format(DateTime.now())
                         .split(":")
                         .first);
+                    bool timeIsBefore = DateTime.now().isBefore(localTime);
                     int fixtureHour = int.parse(formattedTime.split(":").first);
                     return InkWell(
-                      onTap: nowHour + 1 >= fixtureHour
+                      onTap: (timeIsBefore && nowHour + 1 >= fixtureHour) ||
+                              fixtures[index].fixture.status.elapsed != null
                           ? () {
                               Navigator.of(context).pushNamed(Routes.fixture,
                                   arguments: fixtures[index]);

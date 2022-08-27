@@ -28,7 +28,7 @@ class StandingsForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String>? formLetters = form?.split("");
+    List<String>? formLetters = form?.split("").reversed.toList();
     while (formLetters != null && formLetters.length < 5) {
       formLetters.add("");
     }
