@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+
 import '../error/error_handler.dart';
 
 abstract class UseCase<Output, Params> {

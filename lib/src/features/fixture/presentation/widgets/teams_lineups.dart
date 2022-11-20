@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import '../../domain/entities/lineups.dart';
+
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
+import '../../domain/entities/lineups.dart';
 import '../../domain/entities/player.dart';
 
 class TeamsLineups extends StatelessWidget {

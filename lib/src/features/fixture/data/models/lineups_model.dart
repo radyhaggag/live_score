@@ -1,9 +1,9 @@
-import 'lineup_team_model.dart';
-import 'player_model.dart';
 import '../../domain/entities/lineup_team.dart';
 import '../../domain/entities/lineups.dart';
 import '../../domain/entities/player.dart';
 import '../../domain/mappers/mappers.dart';
+import 'lineup_team_model.dart';
+import 'player_model.dart';
 
 class LineupModel extends Lineup {
   const LineupModel(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AppColors {
+  AppColors._();
   static const Color white = Color(0xFFFAFAFA);
   static const Color black = Color(0xFF131313);
   static const Color red = Color(0xFFCA0825);

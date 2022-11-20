@@ -1,3 +1,10 @@
+import '../../models/fixture_league.dart';
+import '../../models/fixture_model.dart';
+import '../../models/goals_model.dart';
+import '../../models/league_model.dart';
+import '../../models/soccer_fixture_model.dart';
+import '../../models/status_model.dart';
+import '../../models/teams_model.dart';
 import '../entities/fixture.dart';
 import '../entities/fixture_league.dart';
 import '../entities/goals.dart';
@@ -5,13 +12,6 @@ import '../entities/league.dart';
 import '../entities/soccer_fixture.dart';
 import '../entities/status.dart';
 import '../entities/teams.dart';
-import '../../models/goals_model.dart';
-import '../../models/league_model.dart';
-import '../../models/status_model.dart';
-import '../../models/teams_model.dart';
-import '../../models/fixture_league.dart';
-import '../../models/fixture_model.dart';
-import '../../models/soccer_fixture_model.dart';
 
 extension StatusExtension on StatusModel {
   Status toDomain() => Status(long: long, short: short, elapsed: elapsed);

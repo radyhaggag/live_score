@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import 'team_rank.dart';
 
 class Standings extends Equatable {

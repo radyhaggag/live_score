@@ -1,12 +1,12 @@
-import 'presentation/cubit/fixture_cubit.dart';
+import '../../container_injector.dart';
 import '../../core/api/dio_helper.dart';
 import '../../core/network/network_info.dart';
 import 'data/data_sources/fixture_data_source.dart';
 import 'data/repositories/fixture_repository_impl.dart';
+import 'domain/use_cases/events_usecase.dart';
 import 'domain/use_cases/lineups_usecase.dart';
 import 'domain/use_cases/statistics_usecase.dart';
-import '../../container_injector.dart';
-import 'domain/use_cases/events_usecase.dart';
+import 'presentation/cubit/fixture_cubit.dart';
 
 void initFixture() {
   sl.registerLazySingleton<FixtureDataSourceImpl>(

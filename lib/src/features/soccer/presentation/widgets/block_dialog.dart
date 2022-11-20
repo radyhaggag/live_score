@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../config/app_route.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -31,7 +32,7 @@ class BlockAlert extends StatelessWidget {
           width: context.width / 2,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: AppColors.blue,
+              backgroundColor: AppColors.blue,
             ),
             onPressed: () {
               Navigator.of(context).pop();

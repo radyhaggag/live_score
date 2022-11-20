@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import '../../../../core/domain/entities/teams.dart';
 
 class TeamRank extends Equatable {

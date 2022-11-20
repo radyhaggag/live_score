@@ -27,8 +27,8 @@ class SoccerDataSourceImpl implements SoccerDataSource {
   Future<List<SoccerFixtureModel>> getDayFixtures(
       {required String date}) async {
     try {
-      final response =
-          await dioHelper.get(url: FIXTURES, queryParams: {"date": date});
+      final response = await dioHelper
+          .get(url: Endpoints.fixtures, queryParams: {"date": date});
       return _getResult(response);
     } catch (error) {
       rethrow;
@@ -38,7 +38,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
   @override
   Future<List<LeagueModel>> getLeagues() async {
     try {
-      final response = await dioHelper.get(url: LEAGUES);
+      final response = await dioHelper.get(url: Endpoints.leagues);
       List<dynamic> result = response.data["response"];
       List<LeagueModel> leagues = List<LeagueModel>.from(result.map(
         (item) => LeagueModel.fromJson(item),
@@ -52,8 +52,8 @@ class SoccerDataSourceImpl implements SoccerDataSource {
   @override
   Future<List<SoccerFixtureModel>> getLiveFixtures() async {
     try {
-      final response =
-          await dioHelper.get(url: FIXTURES, queryParams: {"live": "all"});
+      final response = await dioHelper
+          .get(url: Endpoints.fixtures, queryParams: {"live": "all"});
       return _getResult(response);
     } catch (error) {
       rethrow;
@@ -63,8 +63,8 @@ class SoccerDataSourceImpl implements SoccerDataSource {
   @override
   Future<StandingsModel> getStandings({required StandingsParams params}) async {
     try {
-      final response =
-          await dioHelper.get(url: STANDINGS, queryParams: params.toJson());
+      final response = await dioHelper.get(
+          url: Endpoints.standings, queryParams: params.toJson());
       List<dynamic> result = response.data["response"];
       StandingsModel standings = result.isNotEmpty
           ? StandingsModel.fromJson(result.first["league"])

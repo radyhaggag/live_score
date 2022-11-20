@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 

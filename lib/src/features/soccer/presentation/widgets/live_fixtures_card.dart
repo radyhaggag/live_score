@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:live_score/src/core/media_query.dart';
+
+import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/app_values.dart';
-import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../screens/soccer_screen.dart';
 
 class LiveFixtureCard extends StatelessWidget {

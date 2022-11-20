@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:live_score/src/core/domain/entities/teams.dart';
-import '../../../../core/utils/app_strings.dart';
-import 'items_not_available.dart';
-import 'teams_lineups.dart';
+
 import '../../../../core/utils/app_assets.dart';
-import '../../../../core/utils/app_values.dart';
-import '../../domain/entities/lineups.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
+import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/app_values.dart';
+import '../../domain/entities/lineups.dart';
+import 'items_not_available.dart';
+import 'teams_lineups.dart';
 
 class LineupsView extends StatelessWidget {
   final List<Lineup> lineups;

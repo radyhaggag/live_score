@@ -1,9 +1,9 @@
-import '../domain/mappers/mappers.dart';
 import '../domain/entities/fixture.dart';
 import '../domain/entities/fixture_league.dart';
 import '../domain/entities/goals.dart';
 import '../domain/entities/soccer_fixture.dart';
 import '../domain/entities/teams.dart';
+import '../domain/mappers/mappers.dart';
 import 'fixture_league.dart';
 import 'fixture_model.dart';
 import 'goals_model.dart';

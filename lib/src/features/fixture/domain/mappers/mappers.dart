@@ -1,11 +1,11 @@
+import '../../data/models/event_model.dart';
+import '../../data/models/lineup_team_model.dart';
 import '../../data/models/lineups_model.dart';
 import '../../data/models/player_model.dart';
+import '../../data/models/statistics_model.dart';
 import '../entities/events.dart';
 import '../entities/lineup_team.dart';
 import '../entities/lineups.dart';
-import '../../data/models/event_model.dart';
-import '../../data/models/lineup_team_model.dart';
-import '../../data/models/statistics_model.dart';
 import '../entities/player.dart';
 import '../entities/statistics.dart';
 
@@ -31,7 +31,6 @@ extension PlayerColorsExtension on PlayerColorsModel {
   PlayerColors toDomain() =>
       PlayerColors(primary: primary, number: number, border: border);
 }
-
 
 extension LineupExtension on LineupModel {
   Lineup toDomain() => Lineup(

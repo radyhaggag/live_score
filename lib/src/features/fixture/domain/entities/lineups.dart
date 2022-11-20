@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import 'lineup_team.dart';
 import 'player.dart';
 

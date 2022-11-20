@@ -1,19 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/utils/app_constants.dart';
+
 import '../../../../core/domain/entities/league.dart';
-import '../../domain/entities/league_of_fixture.dart';
-import '../../domain/use_cases/leagues_usecase.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/usecase/usecase.dart';
+import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../domain/use_cases/standings_usecase.dart';
-import '../screens/standings_screen.dart';
+import '../../domain/entities/league_of_fixture.dart';
 import '../../domain/use_cases/day_fixtures_usecase.dart';
+import '../../domain/use_cases/leagues_usecase.dart';
 import '../../domain/use_cases/live_fixtures_usecase.dart';
+import '../../domain/use_cases/standings_usecase.dart';
 import '../screens/fixtures_screen.dart';
 import '../screens/soccer_screen.dart';
+import '../screens/standings_screen.dart';
 import 'soccer_state.dart';
 
 class SoccerCubit extends Cubit<SoccerStates> {
@@ -29,10 +29,10 @@ class SoccerCubit extends Cubit<SoccerStates> {
     required this.standingUseCase,
   }) : super(ScoreInitial());
 
-  List<Widget> screens = [
+  List screens = [
     const SoccerScreen(),
     const FixturesScreen(),
-    StandingsScreen(),
+    const StandingsScreen(),
   ];
 
   List<String> titles = [
@@ -118,8 +118,6 @@ class SoccerCubit extends Cubit<SoccerStates> {
   List<SoccerFixture> currentFixtures = [];
 
   loadCurrentFixtures(int leagueId) {
-    print(AppConstants.leaguesFixtures[leagueId]?.fixtures);
-    print(AppConstants.leaguesFixtures[leagueId]?.fixtures.length);
     currentFixtures = AppConstants.leaguesFixtures[leagueId]?.fixtures ?? [];
     emit(SoccerCurrentFixturesChanges());
   }

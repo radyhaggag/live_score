@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../domain/entities/league.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_size.dart';
 import '../utils/app_values.dart';
-import '../domain/entities/league.dart';
 
 class LeagueTile extends StatelessWidget {
   final League league;

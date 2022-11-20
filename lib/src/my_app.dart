@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'config/app_theme.dart';
 
 import 'config/app_route.dart';
+import 'config/app_theme.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

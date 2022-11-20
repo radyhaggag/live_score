@@ -1,6 +1,5 @@
-import '../../domain/mappers/mappers.dart';
-
 import '../../domain/entities/lineup_team.dart';
+import '../../domain/mappers/mappers.dart';
 
 class LineupTeamModel extends LineupTeam {
   const LineupTeamModel(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/standings_item.dart';
+
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
 import '../../domain/entities/standings.dart';
@@ -8,9 +8,16 @@ import '../../domain/entities/team_rank.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
 import '../widgets/leagues_header.dart';
+import '../widgets/standings_item.dart';
 
-class StandingsScreen extends StatelessWidget {
-  StandingsScreen({Key? key}) : super(key: key);
+class StandingsScreen extends StatefulWidget {
+  const StandingsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<StandingsScreen> createState() => _StandingsScreenState();
+}
+
+class _StandingsScreenState extends State<StandingsScreen> {
   Standings? standings;
 
   @override

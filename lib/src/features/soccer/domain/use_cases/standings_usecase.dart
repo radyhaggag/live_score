@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../../../core/error/error_handler.dart';
 import '../../../../core/usecase/usecase.dart';
-import '../repositories/soccer_repository.dart';
-
 import '../entities/standings.dart';
+import '../repositories/soccer_repository.dart';
 
 class StandingsUseCase extends UseCase<Standings, StandingsParams> {
   final SoccerRepository soccerRepository;

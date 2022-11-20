@@ -1,5 +1,5 @@
-import '../domain/mappers/mappers.dart';
 import '../domain/entities/teams.dart';
+import '../domain/mappers/mappers.dart';
 
 class TeamsModel extends Teams {
   const TeamsModel({

@@ -1,8 +1,8 @@
 import '../../../../core/domain/entities/teams.dart';
 import '../../../../core/domain/mappers/mappers.dart';
+import '../../../../core/models/teams_model.dart';
 import '../../domain/entities/team_rank.dart';
 import '../../domain/mappers/mappers.dart';
-import '../../../../core/models/teams_model.dart';
 
 class TeamRankModel extends TeamRank {
   const TeamRankModel({

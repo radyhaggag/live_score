@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../container_injector.dart';
 import '../core/domain/entities/soccer_fixture.dart';
+import '../core/utils/app_strings.dart';
 import '../features/fixture/domain/use_cases/events_usecase.dart';
 import '../features/fixture/domain/use_cases/lineups_usecase.dart';
-import '../features/fixture/presentation/cubit/fixture_cubit.dart';
-import '../container_injector.dart';
 import '../features/fixture/domain/use_cases/statistics_usecase.dart';
+import '../features/fixture/presentation/cubit/fixture_cubit.dart';
 import '../features/fixture/presentation/screens/fixture_screen.dart';
 import '../features/soccer/presentation/cubit/soccer_cubit.dart';
 import '../features/soccer/presentation/screens/fixtures_screen.dart';
 import '../features/soccer/presentation/screens/soccer_layout.dart';
 import '../features/soccer/presentation/screens/soccer_screen.dart';
 import '../features/soccer/presentation/screens/standings_screen.dart';
-import '../core/utils/app_strings.dart';
 
 class Routes {
   static const String soccerLayout = "soccerLayout";
@@ -61,7 +62,7 @@ class AppRouter {
           },
         );
       case Routes.standings:
-        return MaterialPageRoute(builder: (context) => StandingsScreen());
+        return MaterialPageRoute(builder: (context) => const StandingsScreen());
     }
     return MaterialPageRoute(builder: (context) => const NoRouteFound());
   }

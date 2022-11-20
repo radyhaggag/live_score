@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:live_score/src/core/utils/app_constants.dart';
-import 'package:live_score/src/features/soccer/presentation/widgets/no_fixtures_today.dart';
+import '../widgets/no_fixtures_today.dart';
 import '../widgets/leagues_header.dart';
 import '../cubit/soccer_state.dart';
 import '../cubit/soccer_cubit.dart';

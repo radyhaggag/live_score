@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_values.dart';
-import '../../../../core/domain/entities/soccer_fixture.dart';
 
 class FixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;

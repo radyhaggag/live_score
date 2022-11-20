@@ -21,7 +21,7 @@ class FixtureDataSourceImpl implements FixtureDataSource {
   Future<List<EventModel>> getEvents(String fixtureId) async {
     try {
       final response = await dioHelper.get(
-        url: "$FIXTURES/$EVENTS",
+        url: "${Endpoints.fixtures}/${Endpoints.events}",
         queryParams: {"fixture": fixtureId},
       );
       List<dynamic> result = response.data["response"];
@@ -38,7 +38,7 @@ class FixtureDataSourceImpl implements FixtureDataSource {
   Future<List<LineupModel>> getLineups(String fixtureId) async {
     try {
       final response = await dioHelper.get(
-        url: "$FIXTURES/$LINEUPS",
+        url: "${Endpoints.fixtures}/${Endpoints.lineups}",
         queryParams: {"fixture": fixtureId},
       );
       List<dynamic> result = response.data["response"];
@@ -56,7 +56,7 @@ class FixtureDataSourceImpl implements FixtureDataSource {
   Future<List<StatisticsModel>> getStatistics(String fixtureId) async {
     try {
       final response = await dioHelper.get(
-        url: "$FIXTURES/$STATISTICS",
+        url: "${Endpoints.fixtures}/${Endpoints.statistics}",
         queryParams: {"fixture": fixtureId},
       );
       List<dynamic> result = response.data["response"];
