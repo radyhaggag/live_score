@@ -178,9 +178,9 @@ class EventsView extends StatelessWidget {
         ],
       );
 
-  Widget penaltyMissed() => Stack(
+  Widget penaltyMissed() => const Stack(
         alignment: AlignmentDirectional.bottomEnd,
-        children: const [
+        children: [
           Icon(Icons.sports_soccer, size: AppSize.s30),
           CircleAvatar(
             radius: AppSize.s8,
