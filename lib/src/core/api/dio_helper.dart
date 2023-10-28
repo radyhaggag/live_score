@@ -22,8 +22,8 @@ class DioHelper {
     dio.options = BaseOptions(
       baseUrl: AppConstants.baseUrl,
       receiveDataWhenStatusError: true,
-      receiveTimeout: _timeOut,
-      connectTimeout: _timeOut,
+      receiveTimeout: const Duration(milliseconds: _timeOut),
+      connectTimeout: const Duration(milliseconds: _timeOut),
       headers: headers,
     );
     dio.interceptors.add(sl<LogInterceptor>());

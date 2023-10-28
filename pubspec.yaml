@@ -13,23 +13,22 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.5
-  dio: ^4.0.6
+  dio: ^5.3.3
   bloc: ^8.1.0
   flutter_bloc: ^8.1.1
-  intl: ^0.17.0
-  hexcolor: ^2.0.7
+  intl: ^0.18.1
+  hexcolor: ^3.0.1
   dartz: ^0.10.1
   equatable: ^2.0.5
   get_it: ^7.2.0
-  shared_preferences: ^2.0.15
-  internet_connection_checker: ^0.0.1+4
+  internet_connection_checker: ^1.0.0+1
   fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.1
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true

@@ -7,7 +7,7 @@ class ErrorHandler implements Exception {
   late Failure failure;
 
   ErrorHandler.handle(dynamic error) {
-    if (error is DioError) {
+    if (error is DioException) {
       failure = _handleError(error);
     } else {
       failure = DataSource.unexpected.getFailure();
@@ -25,13 +25,14 @@ class Failure extends Equatable {
   List<Object?> get props => [code, message];
 }
 
-Failure _handleError(DioError error) {
+Failure _handleError(DioException error) {
   switch (error.type) {
-    case DioErrorType.connectTimeout:
-    case DioErrorType.sendTimeout:
-    case DioErrorType.receiveTimeout:
+    case DioExceptionType.connectionTimeout:
+    case DioExceptionType.sendTimeout:
+    case DioExceptionType.receiveTimeout:
+    case DioExceptionType.connectionError:
       return DataSource.networkConnectError.getFailure();
-    case DioErrorType.response:
+    case DioExceptionType.badResponse:
       switch (error.response?.statusCode) {
         case StatusCode.internalServerError:
           return DataSource.internalServerError.getFailure();
@@ -40,8 +41,9 @@ Failure _handleError(DioError error) {
         default:
           return DataSource.unexpected.getFailure();
       }
-    case DioErrorType.cancel:
-    case DioErrorType.other:
+    case DioExceptionType.cancel:
+    case DioExceptionType.unknown:
+    case DioExceptionType.badCertificate:
       return DataSource.unexpected.getFailure();
   }
 }

@@ -24,7 +24,7 @@ class FixtureRepositoryImpl implements FixtureRepository {
         final result = await fixtureDataSource.getEvents(fixtureId);
         List<Event> events = result.map((event) => event.toDomain()).toList();
         return Right(events);
-      } on DioError catch (error) {
+      } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
     } else {
@@ -40,7 +40,7 @@ class FixtureRepositoryImpl implements FixtureRepository {
         List<Lineup> lineups =
             result.map((lineup) => lineup.toDomain()).toList();
         return Right(lineups);
-      } on DioError catch (error) {
+      } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
     } else {
@@ -57,7 +57,7 @@ class FixtureRepositoryImpl implements FixtureRepository {
         List<Statistics> statistics =
             result.map((statistic) => statistic.toDomain()).toList();
         return Right(statistics);
-      } on DioError catch (error) {
+      } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
     } else {

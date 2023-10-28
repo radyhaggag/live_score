@@ -30,7 +30,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
         List<SoccerFixture> fixtures =
             result.map((fixture) => fixture.toDomain()).toList();
         return Right(fixtures);
-      } on DioError catch (error) {
+      } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
     } else {
@@ -46,7 +46,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
         List<League> leagues =
             result.map((league) => league.toDomain()).toList();
         return Right(leagues);
-      } on DioError catch (error) {
+      } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
     } else {
@@ -62,7 +62,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
         List<SoccerFixture> fixtures =
             result.map((fixture) => fixture.toDomain()).toList();
         return Right(fixtures);
-      } on DioError catch (error) {
+      } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
     } else {
@@ -78,7 +78,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
         final result = await soccerDataSource.getStandings(params: params);
         Standings standings = result;
         return Right(standings);
-      } on DioError catch (error) {
+      } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
     } else {
