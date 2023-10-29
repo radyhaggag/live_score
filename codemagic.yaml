@@ -1,0 +1,45 @@
+workflows:
+  android-deploy-workflow:
+    name: Android Deployment Workflow
+    instance_type: mac_mini_m1
+    max_build_duration: 30
+    triggering:
+      events:
+        - push
+      cancel_previous_builds: true
+      branch_patterns:
+        - include: true
+          source: true
+          pattern: master
+
+    environment:
+      groups:
+        - google_credentials
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Setup the Keystore
+        script: |
+          echo $KEYSTORE_FILE | base64 --decode > /tmp/keystore.jks
+          cat >> "$CM_BUILD_DIR/android/key.properties" << EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEYSTORE_KEY_PASSWORD
+          keyAlias=upload
+          storeFile=/tmp/keystore.jks
+          EOF
+
+      - name: Build AAB File
+        script: |
+          cd $CM_BUILD_DIR
+          flutter packages pub get
+          flutter build appbundle
+
+    artifacts:
+      - build/**/outputs/**/*.aab
+
+    publishing:
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT
+        track: alpha
