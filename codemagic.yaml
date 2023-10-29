@@ -5,12 +5,8 @@ workflows:
     max_build_duration: 30
     triggering:
       events:
-        - push
+        - tag
       cancel_previous_builds: true
-      branch_patterns:
-        - include: true
-          source: true
-          pattern: master
 
     environment:
       groups:
