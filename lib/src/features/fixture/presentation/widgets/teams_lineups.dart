@@ -9,7 +9,7 @@ import '../../domain/entities/player.dart';
 class TeamsLineups extends StatelessWidget {
   final List<Lineup> lineups;
 
-  const TeamsLineups({Key? key, required this.lineups}) : super(key: key);
+  const TeamsLineups({super.key, required this.lineups});
 
   @override
   Widget build(BuildContext context) {

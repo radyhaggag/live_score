@@ -8,7 +8,7 @@ import '../../../../core/utils/app_values.dart';
 class LeagueCard extends StatelessWidget {
   final League league;
 
-  const LeagueCard({Key? key, required this.league}) : super(key: key);
+  const LeagueCard({super.key, required this.league});
 
   @override
   Widget build(BuildContext context) {

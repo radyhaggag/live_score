@@ -5,8 +5,8 @@ import '../../../../core/utils/app_strings.dart';
 
 class NoFixturesToday extends StatelessWidget {
   const NoFixturesToday({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

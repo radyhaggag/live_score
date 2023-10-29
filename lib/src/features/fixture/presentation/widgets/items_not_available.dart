@@ -7,8 +7,8 @@ class ItemsNotAvailable extends StatelessWidget {
   final IconData icon;
   final String message;
 
-  const ItemsNotAvailable({Key? key, required this.icon, required this.message})
-      : super(key: key);
+  const ItemsNotAvailable(
+      {super.key, required this.icon, required this.message});
 
   @override
   Widget build(BuildContext context) {

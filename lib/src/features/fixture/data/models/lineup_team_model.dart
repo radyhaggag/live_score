@@ -3,11 +3,10 @@ import '../../domain/mappers/mappers.dart';
 
 class LineupTeamModel extends LineupTeam {
   const LineupTeamModel(
-      {required int id,
-      required String name,
-      required String logo,
-      required LineupColors colors})
-      : super(id: id, name: name, logo: logo, colors: colors);
+      {required super.id,
+      required super.name,
+      required super.logo,
+      required super.colors});
 
   factory LineupTeamModel.fromJson(Map<String, dynamic> json) =>
       LineupTeamModel(
@@ -20,8 +19,7 @@ class LineupTeamModel extends LineupTeam {
 
 class PlayerColorsModel extends PlayerColors {
   const PlayerColorsModel(
-      {required String primary, required String number, required String border})
-      : super(primary: primary, number: number, border: border);
+      {required super.primary, required super.number, required super.border});
 
   factory PlayerColorsModel.fromJson(Map<String, dynamic> json) =>
       PlayerColorsModel(
@@ -32,9 +30,7 @@ class PlayerColorsModel extends PlayerColors {
 }
 
 class LineupColorsModel extends LineupColors {
-  const LineupColorsModel(
-      {required PlayerColors player, required PlayerColors goalKeeper})
-      : super(player: player, goalKeeper: goalKeeper);
+  const LineupColorsModel({required super.player, required super.goalKeeper});
 
   factory LineupColorsModel.fromJson(Map<String, dynamic> json) =>
       LineupColorsModel(

@@ -11,8 +11,7 @@ import 'view_team.dart';
 class FixtureDetails extends StatelessWidget {
   final SoccerFixture soccerFixture;
 
-  const FixtureDetails({Key? key, required this.soccerFixture})
-      : super(key: key);
+  const FixtureDetails({super.key, required this.soccerFixture});
 
   @override
   Widget build(BuildContext context) {

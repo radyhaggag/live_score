@@ -14,7 +14,7 @@ import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../widgets/leagues_header.dart';
 
 class SoccerScreen extends StatefulWidget {
-  const SoccerScreen({Key? key}) : super(key: key);
+  const SoccerScreen({super.key});
 
   @override
   State<SoccerScreen> createState() => _SoccerScreenState();

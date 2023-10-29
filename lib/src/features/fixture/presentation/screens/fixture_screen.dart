@@ -14,8 +14,7 @@ import '../widgets/statistics_view.dart';
 class FixtureScreen extends StatelessWidget {
   final SoccerFixture soccerFixture;
 
-  const FixtureScreen({Key? key, required this.soccerFixture})
-      : super(key: key);
+  const FixtureScreen({super.key, required this.soccerFixture});
 
   @override
   Widget build(BuildContext context) {

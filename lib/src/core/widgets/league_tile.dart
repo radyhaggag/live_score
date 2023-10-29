@@ -8,7 +8,7 @@ import '../utils/app_values.dart';
 class LeagueTile extends StatelessWidget {
   final League league;
 
-  const LeagueTile({Key? key, required this.league}) : super(key: key);
+  const LeagueTile({super.key, required this.league});
 
   @override
   Widget build(BuildContext context) {

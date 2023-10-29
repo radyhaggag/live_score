@@ -17,7 +17,7 @@ import 'view_all_tile.dart';
 class ViewDayFixtures extends StatelessWidget {
   final List<SoccerFixture> fixtures;
 
-  const ViewDayFixtures({Key? key, required this.fixtures}) : super(key: key);
+  const ViewDayFixtures({super.key, required this.fixtures});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class ViewDayFixtures extends StatelessWidget {
 class ViewLiveFixtures extends StatelessWidget {
   final List<SoccerFixture> fixtures;
 
-  const ViewLiveFixtures({Key? key, required this.fixtures}) : super(key: key);
+  const ViewLiveFixtures({super.key, required this.fixtures});
 
   @override
   Widget build(BuildContext context) {

@@ -11,8 +11,7 @@ import '../screens/soccer_screen.dart';
 class LiveFixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
 
-  const LiveFixtureCard({Key? key, required this.soccerFixture})
-      : super(key: key);
+  const LiveFixtureCard({super.key, required this.soccerFixture});
 
   @override
   Widget build(BuildContext context) {

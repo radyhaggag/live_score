@@ -25,8 +25,8 @@ class ModalSheetContent extends StatelessWidget {
   final League league;
   final SoccerCubit cubit;
 
-  const ModalSheetContent({Key? key, required this.league, required this.cubit})
-      : super(key: key);
+  const ModalSheetContent(
+      {super.key, required this.league, required this.cubit});
 
   @override
   Widget build(BuildContext context) {

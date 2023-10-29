@@ -7,7 +7,7 @@ import '../../../../core/utils/app_size.dart';
 class ViewTeam extends StatelessWidget {
   final Team team;
 
-  const ViewTeam({Key? key, required this.team}) : super(key: key);
+  const ViewTeam({super.key, required this.team});
 
   @override
   Widget build(BuildContext context) {

@@ -2,12 +2,12 @@ import '../domain/entities/fixture_league.dart';
 
 class FixtureLeagueModel extends FixtureLeague {
   const FixtureLeagueModel({
-    required int id,
-    required String name,
-    required String logo,
-    required int season,
-    required String round,
-  }) : super(id: id, name: name, logo: logo, season: season, round: round);
+    required super.id,
+    required super.name,
+    required super.logo,
+    required super.season,
+    required super.round,
+  });
 
   factory FixtureLeagueModel.fromJson(Map<String, dynamic> json) =>
       FixtureLeagueModel(

@@ -5,11 +5,10 @@ class LineupTeam extends Team {
   final LineupColors colors;
 
   const LineupTeam(
-      {required int id,
-      required String name,
-      required String logo,
-      required this.colors})
-      : super(id: id, name: name, logo: logo);
+      {required super.id,
+      required super.name,
+      required super.logo,
+      required this.colors});
 }
 
 class PlayerColors extends Equatable {

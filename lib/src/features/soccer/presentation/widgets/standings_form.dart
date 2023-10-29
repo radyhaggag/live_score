@@ -7,7 +7,7 @@ import '../../../../core/utils/app_values.dart';
 class StandingsForm extends StatelessWidget {
   final String? form;
 
-  const StandingsForm({Key? key, required this.form}) : super(key: key);
+  const StandingsForm({super.key, required this.form});
 
   Color getBackground(String letter) {
     Color color = AppColors.grey.withOpacity(0.2);

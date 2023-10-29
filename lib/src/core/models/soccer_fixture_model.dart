@@ -1,8 +1,4 @@
-import '../domain/entities/fixture.dart';
-import '../domain/entities/fixture_league.dart';
-import '../domain/entities/goals.dart';
 import '../domain/entities/soccer_fixture.dart';
-import '../domain/entities/teams.dart';
 import '../domain/mappers/mappers.dart';
 import 'fixture_league.dart';
 import 'fixture_model.dart';
@@ -11,16 +7,10 @@ import 'teams_model.dart';
 
 class SoccerFixtureModel extends SoccerFixture {
   const SoccerFixtureModel(
-      {required Fixture fixture,
-      required FixtureLeague fixtureLeague,
-      required Teams teams,
-      required Goals goals})
-      : super(
-          fixture: fixture,
-          fixtureLeague: fixtureLeague,
-          teams: teams,
-          goals: goals,
-        );
+      {required super.fixture,
+      required super.fixtureLeague,
+      required super.teams,
+      required super.goals});
 
   factory SoccerFixtureModel.fromJson(Map<String, dynamic> json) =>
       SoccerFixtureModel(

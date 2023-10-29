@@ -9,7 +9,7 @@ import '../../../../core/utils/app_strings.dart';
 class BlockAlert extends StatelessWidget {
   final String message;
 
-  const BlockAlert({Key? key, required this.message}) : super(key: key);
+  const BlockAlert({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {

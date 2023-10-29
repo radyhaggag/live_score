@@ -1,4 +1,3 @@
-import '../../domain/entities/lineup_team.dart';
 import '../../domain/entities/lineups.dart';
 import '../../domain/entities/player.dart';
 import '../../domain/mappers/mappers.dart';
@@ -7,18 +6,11 @@ import 'player_model.dart';
 
 class LineupModel extends Lineup {
   const LineupModel(
-      {required LineupTeam team,
-      required String coachName,
-      required String formation,
-      required List<Player> startXI,
-      required List<Player> substitutes})
-      : super(
-          team: team,
-          coachName: coachName,
-          formation: formation,
-          startXI: startXI,
-          substitutes: substitutes,
-        );
+      {required super.team,
+      required super.coachName,
+      required super.formation,
+      required super.startXI,
+      required super.substitutes});
 
   factory LineupModel.fromJson(Map<String, dynamic> json) => LineupModel(
         team: LineupTeamModel.fromJson(json["team"]),

@@ -11,8 +11,7 @@ class EventsView extends StatelessWidget {
   final List<Event> events;
   final Color color;
 
-  const EventsView({Key? key, required this.events, required this.color})
-      : super(key: key);
+  const EventsView({super.key, required this.events, required this.color});
 
   @override
   Widget build(BuildContext context) {

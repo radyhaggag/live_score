@@ -9,8 +9,7 @@ class FixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
   final String? fixtureTime;
 
-  const FixtureCard({Key? key, required this.soccerFixture, this.fixtureTime})
-      : super(key: key);
+  const FixtureCard({super.key, required this.soccerFixture, this.fixtureTime});
 
   @override
   Widget build(BuildContext context) {

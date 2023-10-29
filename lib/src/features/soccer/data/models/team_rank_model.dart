@@ -1,4 +1,3 @@
-import '../../../../core/domain/entities/teams.dart';
 import '../../../../core/domain/mappers/mappers.dart';
 import '../../../../core/models/teams_model.dart';
 import '../../domain/entities/team_rank.dart';
@@ -6,22 +5,14 @@ import '../../domain/mappers/mappers.dart';
 
 class TeamRankModel extends TeamRank {
   const TeamRankModel({
-    required int rank,
-    required Team team,
-    required int points,
-    required int goalsDiff,
-    required String? lastMatches,
-    required TeamRankStats stats,
-    required String? group,
-  }) : super(
-          rank: rank,
-          team: team,
-          points: points,
-          goalsDiff: goalsDiff,
-          lastMatches: lastMatches,
-          stats: stats,
-          group: group,
-        );
+    required super.rank,
+    required super.team,
+    required super.points,
+    required super.goalsDiff,
+    required super.lastMatches,
+    required super.stats,
+    required super.group,
+  });
 
   factory TeamRankModel.fromJson(Map<String, dynamic> json) => TeamRankModel(
         rank: json["rank"],
@@ -36,20 +27,13 @@ class TeamRankModel extends TeamRank {
 
 class TeamRankStatsModel extends TeamRankStats {
   const TeamRankStatsModel({
-    required int played,
-    required int win,
-    required int draw,
-    required int lose,
-    required int scored,
-    required int received,
-  }) : super(
-          played: played,
-          win: win,
-          draw: draw,
-          lose: lose,
-          scored: scored,
-          received: received,
-        );
+    required super.played,
+    required super.win,
+    required super.draw,
+    required super.lose,
+    required super.scored,
+    required super.received,
+  });
 
   factory TeamRankStatsModel.fromJson(Map<String, dynamic> json) =>
       TeamRankStatsModel(

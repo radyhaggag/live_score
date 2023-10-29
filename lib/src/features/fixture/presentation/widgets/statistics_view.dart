@@ -10,7 +10,7 @@ import '../../domain/entities/statistics.dart';
 class StatisticsView extends StatelessWidget {
   final List<Statistics> statistics;
 
-  const StatisticsView({Key? key, required this.statistics}) : super(key: key);
+  const StatisticsView({super.key, required this.statistics});
 
   @override
   Widget build(BuildContext context) {

@@ -4,8 +4,7 @@ import '../../domain/mappers/mappers.dart';
 import '../../domain/entities/standings.dart';
 
 class StandingsModel extends Standings {
-  const StandingsModel({required List<List<TeamRank>> standings})
-      : super(standings: standings);
+  const StandingsModel({required super.standings});
 
   factory StandingsModel.fromJson(Map<dynamic, dynamic> json) => StandingsModel(
         standings: List<List<TeamRank>>.from(

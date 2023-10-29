@@ -12,7 +12,7 @@ import 'teams_lineups.dart';
 class LineupsView extends StatelessWidget {
   final List<Lineup> lineups;
 
-  const LineupsView({Key? key, required this.lineups}) : super(key: key);
+  const LineupsView({super.key, required this.lineups});
 
   @override
   Widget build(BuildContext context) {

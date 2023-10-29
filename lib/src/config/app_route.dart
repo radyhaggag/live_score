@@ -69,7 +69,7 @@ class AppRouter {
 }
 
 class NoRouteFound extends StatelessWidget {
-  const NoRouteFound({Key? key}) : super(key: key);
+  const NoRouteFound({super.key});
 
   @override
   Widget build(BuildContext context) => const Scaffold(

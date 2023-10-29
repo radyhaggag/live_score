@@ -8,7 +8,7 @@ import 'standings_form.dart';
 class StandingsItem extends StatelessWidget {
   final TeamRank teamRank;
 
-  const StandingsItem({Key? key, required this.teamRank}) : super(key: key);
+  const StandingsItem({super.key, required this.teamRank});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class StandingsItem extends StatelessWidget {
 }
 
 class StandingsHeaders extends StatelessWidget {
-  const StandingsHeaders({Key? key}) : super(key: key);
+  const StandingsHeaders({super.key});
   static const List<String> _headers = [
     "PL",
     "W",

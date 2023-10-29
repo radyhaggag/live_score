@@ -3,9 +3,9 @@ import '../domain/mappers/mappers.dart';
 
 class TeamsModel extends Teams {
   const TeamsModel({
-    required Team home,
-    required Team away,
-  }) : super(home: home, away: away);
+    required super.home,
+    required super.away,
+  });
 
   factory TeamsModel.fromJson(Map<String, dynamic> json) => TeamsModel(
         home: TeamModel.fromJson(json['home']).toDomain(),
@@ -15,11 +15,11 @@ class TeamsModel extends Teams {
 
 class TeamModel extends Team {
   const TeamModel({
-    required int id,
-    required String name,
-    required String logo,
-    required bool? winner,
-  }) : super(id: id, name: name, logo: logo, winner: winner);
+    required super.id,
+    required super.name,
+    required super.logo,
+    required super.winner,
+  });
 
   factory TeamModel.fromJson(Map<String, dynamic> json) => TeamModel(
         id: json['id'],

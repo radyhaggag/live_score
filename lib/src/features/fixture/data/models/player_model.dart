@@ -2,12 +2,11 @@ import '../../domain/entities/player.dart';
 
 class PlayerModel extends Player {
   const PlayerModel(
-      {required int id,
-      required String name,
-      required int number,
-      required String grid,
-      required String pos})
-      : super(id: id, name: name, number: number, grid: grid, pos: pos);
+      {required super.id,
+      required super.name,
+      required super.number,
+      required super.grid,
+      required super.pos});
 
   factory PlayerModel.fromJson(Map<String, dynamic> json) => PlayerModel(
         id: json["id"] ?? 0,

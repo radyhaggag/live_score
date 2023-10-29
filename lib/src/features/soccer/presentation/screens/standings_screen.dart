@@ -11,7 +11,7 @@ import '../widgets/leagues_header.dart';
 import '../widgets/standings_item.dart';
 
 class StandingsScreen extends StatefulWidget {
-  const StandingsScreen({Key? key}) : super(key: key);
+  const StandingsScreen({super.key});
 
   @override
   State<StandingsScreen> createState() => _StandingsScreenState();

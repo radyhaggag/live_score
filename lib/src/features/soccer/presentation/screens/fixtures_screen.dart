@@ -9,7 +9,7 @@ import '../widgets/fixture_card.dart';
 import '../../../../core/utils/app_size.dart';
 
 class FixturesScreen extends StatelessWidget {
-  const FixturesScreen({Key? key}) : super(key: key);
+  const FixturesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

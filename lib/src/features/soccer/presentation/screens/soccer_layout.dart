@@ -6,7 +6,7 @@ import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
 
 class SoccerLayout extends StatelessWidget {
-  const SoccerLayout({Key? key}) : super(key: key);
+  const SoccerLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
