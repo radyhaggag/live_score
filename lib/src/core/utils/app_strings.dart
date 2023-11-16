@@ -30,4 +30,5 @@ class AppStrings {
   static const String noLineups = "Lineups not available";
   static const String noEvents = "Events not available";
   static const String noFixtures = "No Fixtures scheduled today";
+  static const String appName = "Live score";
 }

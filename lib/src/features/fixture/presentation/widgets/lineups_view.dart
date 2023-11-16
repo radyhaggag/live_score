@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_assets.dart';
@@ -53,11 +54,11 @@ class LineupsView extends StatelessWidget {
       padding: const EdgeInsetsDirectional.all(AppPadding.p5),
       child: Row(
         children: [
-          Image(
+          CachedNetworkImage(
             fit: BoxFit.cover,
             width: AppSize.s35,
             height: AppSize.s35,
-            image: NetworkImage(lineup.team.logo),
+            imageUrl: lineup.team.logo,
           ),
           const SizedBox(width: AppSize.s10),
           Text(

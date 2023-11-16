@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
@@ -82,10 +84,10 @@ class EventsView extends StatelessWidget {
   Widget eventTeam(Event event, BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image(
+          CachedNetworkImage(
             width: AppSize.s20,
             height: AppSize.s20,
-            image: NetworkImage(event.team.logo),
+            imageUrl: event.team.logo,
           ),
           const SizedBox(width: AppSize.s10),
           Text(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
@@ -145,11 +146,11 @@ Expanded buildTeamInfo(BuildContext context,
   return Expanded(
     child: Column(
       children: [
-        Image(
+        CachedNetworkImage(
           fit: BoxFit.cover,
           height: AppSize.s45,
           width: AppSize.s45,
-          image: NetworkImage(logo),
+          imageUrl: logo,
         ),
         const SizedBox(height: AppSize.s10),
         Text(

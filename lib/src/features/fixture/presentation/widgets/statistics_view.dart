@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/app_size.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/statistics.dart';
 
@@ -68,10 +70,10 @@ class StatisticsView extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image(
+              CachedNetworkImage(
                 width: AppSize.s20,
                 height: AppSize.s20,
-                image: NetworkImage(statistics[0].team.logo),
+                imageUrl: statistics[0].team.logo,
               ),
               const SizedBox(width: AppSize.s5),
               Text(statistics[0].team.name, textAlign: TextAlign.center),
@@ -79,10 +81,10 @@ class StatisticsView extends StatelessWidget {
           ),
           Row(
             children: [
-              Image(
+              CachedNetworkImage(
                 width: AppSize.s20,
                 height: AppSize.s20,
-                image: NetworkImage(statistics[1].team.logo),
+                imageUrl: statistics[1].team.logo,
               ),
               const SizedBox(width: AppSize.s5),
               Text(statistics[1].team.name, textAlign: TextAlign.center),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/domain/entities/teams.dart';
@@ -17,11 +18,11 @@ class ViewTeam extends StatelessWidget {
         CircleAvatar(
           backgroundColor: Colors.white,
           radius: AppSize.s35,
-          child: Image(
+          child: CachedNetworkImage(
             fit: BoxFit.cover,
             width: AppSize.s50,
             height: AppSize.s50,
-            image: NetworkImage(team.logo),
+            imageUrl: team.logo,
           ),
         ),
         const SizedBox(height: AppSize.s10),

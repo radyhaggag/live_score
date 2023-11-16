@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_values.dart';
@@ -38,10 +40,10 @@ class StandingsItem extends StatelessWidget {
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
-                Image(
+                CachedNetworkImage(
                   width: AppSize.s20,
                   height: AppSize.s20,
-                  image: NetworkImage(teamRank.team.logo),
+                  imageUrl: teamRank.team.logo,
                 ),
                 const SizedBox(width: AppSize.s10),
                 Flexible(

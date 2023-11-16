@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -24,11 +25,11 @@ class FixtureDetails extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(
+              CachedNetworkImage(
                 fit: BoxFit.cover,
                 width: AppSize.s20,
                 height: AppSize.s20,
-                image: NetworkImage(soccerFixture.fixtureLeague.logo),
+                imageUrl: soccerFixture.fixtureLeague.logo,
               ),
               const SizedBox(width: AppSize.s5),
               Text(

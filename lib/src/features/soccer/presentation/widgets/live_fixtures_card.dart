@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
@@ -76,11 +77,11 @@ class LiveFixtureCard extends StatelessWidget {
 Widget buildTeamLogo(String logo) => CircleAvatar(
       backgroundColor: AppColors.white,
       radius: AppSize.s25,
-      child: Image(
+      child: CachedNetworkImage(
         fit: BoxFit.cover,
         width: AppSize.s30,
         height: AppSize.s30,
-        image: NetworkImage(logo),
+        imageUrl: logo,
       ),
     );
 

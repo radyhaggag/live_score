@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../domain/entities/league.dart';
@@ -14,17 +15,19 @@ class LeagueTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-          vertical: AppPadding.p10, horizontal: AppPadding.p20),
+        vertical: AppPadding.p10,
+        horizontal: AppPadding.p20,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSize.s10),
         gradient: AppColors.redGradient,
       ),
       child: Row(
         children: [
-          Image(
+          CachedNetworkImage(
             width: AppSize.s40,
             height: AppSize.s40,
-            image: NetworkImage(league.logo),
+            imageUrl: league.logo,
           ),
           const SizedBox(width: AppSize.s5),
           Text(

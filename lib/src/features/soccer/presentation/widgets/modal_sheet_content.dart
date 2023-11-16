@@ -1,12 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/domain/entities/league.dart';
+import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_constants.dart';
+import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/app_values.dart';
 import '../../domain/use_cases/standings_usecase.dart';
 import '../cubit/soccer_cubit.dart';
-import '../../../../core/media_query.dart';
-import '../../../../core/utils/app_size.dart';
-import '../../../../core/utils/app_values.dart';
-import '../../../../core/domain/entities/league.dart';
 
 Future<dynamic> buildBottomSheet({
   required BuildContext context,
@@ -39,10 +41,10 @@ class ModalSheetContent extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image(
+                CachedNetworkImage(
                   width: AppSize.s20,
                   height: AppSize.s20,
-                  image: NetworkImage(league.logo),
+                  imageUrl: league.logo,
                 ),
                 const SizedBox(width: AppSize.s10),
                 Flexible(

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../config/app_route.dart';
-import '../../../../core/media_query.dart';
-import '../cubit/soccer_cubit.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/app_values.dart';
+import '../cubit/soccer_cubit.dart';
 import 'fixture_card.dart';
 import 'live_fixtures_card.dart';
 import 'no_fixtures_today.dart';

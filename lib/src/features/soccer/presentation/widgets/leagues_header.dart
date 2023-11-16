@@ -1,13 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/domain/entities/league.dart';
-import '../cubit/soccer_cubit.dart';
-import 'modal_sheet_content.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/use_cases/standings_usecase.dart';
+import '../cubit/soccer_cubit.dart';
 import 'league_card.dart';
+import 'modal_sheet_content.dart';
 
 class LeaguesHeader extends StatelessWidget {
   final List<League> leagues;
@@ -51,11 +53,11 @@ class LeaguesHeader extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: Colors.white,
           radius: AppSize.s35,
-          child: Image(
+          child: CachedNetworkImage(
             fit: BoxFit.contain,
             width: AppSize.s40,
             height: AppSize.s40,
-            image: NetworkImage(league.logo),
+            imageUrl: league.logo,
           ),
         ),
       );
