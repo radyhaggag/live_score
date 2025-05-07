@@ -31,14 +31,18 @@ class BlockAlert extends StatelessWidget {
         SizedBox(
           width: context.width / 2,
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.blue,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue),
             onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacementNamed(Routes.soccerLayout);
+              Navigator.of(
+                context,
+              ).pushNamedAndRemoveUntil(Routes.soccerLayout, (route) => false);
             },
-            child: const Text(AppStrings.reload),
+            child: Text(
+              AppStrings.reload,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.white),
+            ),
           ),
         ),
       ],
@@ -50,8 +54,6 @@ void buildBlockAlert({required BuildContext context, required String message}) {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (_) => AlertDialog(
-      content: BlockAlert(message: message),
-    ),
+    builder: (_) => AlertDialog(content: BlockAlert(message: message)),
   );
 }

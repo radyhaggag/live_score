@@ -47,3 +47,5 @@ app.*.map.json
 /android/app/release
 **/android/app/upload-keystore.jks
 **/android/key.properties
+*.env
+*.pem

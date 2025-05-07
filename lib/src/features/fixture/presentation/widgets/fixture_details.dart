@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:live_score/src/core/extensions/color.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -134,7 +135,7 @@ class FixtureDetails extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.white.withOpacity(0.9),
+              color: AppColors.white.withOpacitySafe(0.9),
             ),
       );
 }

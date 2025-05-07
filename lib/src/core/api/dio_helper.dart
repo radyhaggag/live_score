@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../container_injector.dart';
 import '../utils/app_constants.dart';
@@ -6,8 +7,7 @@ import 'interceptors.dart';
 
 const String _contentType = "Content-Type";
 const String _applicationJson = "application/json";
-const String _apiKey =
-    "59e59ee6171e8f9a4960bed9e46c4003"; // Add your api key here
+final String _apiKey = dotenv.env['API_KEY'] ?? ''; // Add your api key here
 const int _timeOut = 20000;
 
 class DioHelper {

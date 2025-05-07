@@ -32,7 +32,7 @@ void initCore() {
   );
   sl.registerLazySingleton<DioHelper>(() => DioHelper(dio: sl<Dio>()));
   sl.registerLazySingleton<InternetConnectionChecker>(
-    () => InternetConnectionChecker(),
+    () => InternetConnectionChecker.createInstance(),
   );
   sl.registerLazySingleton<NetworkInfoImpl>(
     () => NetworkInfoImpl(connectionChecker: sl<InternetConnectionChecker>()),

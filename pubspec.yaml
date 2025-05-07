@@ -3,30 +3,30 @@ description: Live score app
 
 publish_to: "none"
 
-version: 1.0.0+4
+version: 1.0.1+5
 
 environment:
-  sdk: ">=3.0.6 <4.0.0"
+  sdk: ^3.7.2
 
 dependencies:
-  bloc: ^8.1.0
-  cached_network_image: ^3.3.0
-  cupertino_icons: ^1.0.5
+  bloc: ^9.0.0
+  cached_network_image: ^3.4.1
+  cupertino_icons: ^1.0.8
   dartz: ^0.10.1
-  dio: ^5.3.3
-  equatable: ^2.0.5
+  dio: ^5.8.0+1
+  equatable: ^2.0.7
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.1
-  flutter_native_splash: ^2.3.5
-  fluttertoast: ^8.2.2
-  get_it: ^7.2.0
+  flutter_bloc: ^9.1.1
+  flutter_dotenv: ^5.2.1
+  fluttertoast: ^8.2.12
+  get_it: ^8.0.3
   hexcolor: ^3.0.1
-  internet_connection_checker: ^1.0.0+1
-  intl: ^0.18.1
+  internet_connection_checker: ^3.0.1
+  intl: ^0.20.2
 
 dev_dependencies:
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
 
@@ -34,7 +34,5 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/no_matches.png
-    - assets/images/no_stats.png
-    - assets/images/Football_playground.png
-    - assets/images/substitute.jpg
+    - assets/images/
+    - .env

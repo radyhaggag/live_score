@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/color.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
@@ -26,7 +27,9 @@ class StandingsItem extends StatelessWidget {
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(
-          vertical: AppPadding.p10, horizontal: AppPadding.p15),
+        vertical: AppPadding.p10,
+        horizontal: AppPadding.p15,
+      ),
       child: Row(
         children: [
           SizedBox(
@@ -49,9 +52,7 @@ class StandingsItem extends StatelessWidget {
                 Flexible(
                   child: Text(
                     teamRank.team.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
+                    style: const TextStyle(fontSize: 16),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     // softWrap: true,
@@ -93,15 +94,17 @@ class StandingsHeaders extends StatelessWidget {
     "GF",
     "GA",
     "GD",
-    "Pts"
+    "Pts",
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.grey.withOpacity(.05),
+      color: AppColors.grey.withOpacitySafe(.05),
       padding: const EdgeInsets.symmetric(
-          vertical: AppPadding.p10, horizontal: AppPadding.p15),
+        vertical: AppPadding.p10,
+        horizontal: AppPadding.p15,
+      ),
       child: Row(
         children: [
           const SizedBox(
@@ -121,7 +124,7 @@ class StandingsHeaders extends StatelessWidget {
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(width: AppSize.s10),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/color.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_size.dart';
@@ -10,7 +11,7 @@ class StandingsForm extends StatelessWidget {
   const StandingsForm({super.key, required this.form});
 
   Color getBackground(String letter) {
-    Color color = AppColors.grey.withOpacity(0.2);
+    Color color = AppColors.grey.withOpacitySafe(0.2);
     if (letter == "W") color = AppColors.green;
     if (letter == "L") color = AppColors.red;
     if (letter == "D") color = AppColors.grey;
@@ -36,30 +37,30 @@ class StandingsForm extends StatelessWidget {
 
     return SizedBox(
       width: AppSize.s110,
-      child: formLetters != null
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ...List.generate(
-                  5,
-                  (index) => getCircle(
-                    child: getIcon(formLetters[index]),
-                    color: getBackground(formLetters[index]),
+      child:
+          formLetters != null
+              ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ...List.generate(
+                    5,
+                    (index) => getCircle(
+                      child: getIcon(formLetters[index]),
+                      color: getBackground(formLetters[index]),
+                    ),
                   ),
-                ),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ...List.generate(
-                  5,
-                  (index) => getCircle(
-                    color: AppColors.grey.withOpacity(.2),
+                ],
+              )
+              : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ...List.generate(
+                    5,
+                    (index) =>
+                        getCircle(color: AppColors.grey.withOpacitySafe(.2)),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
     );
   }
 }
@@ -68,12 +69,12 @@ Icon smallIcon(IconData icon) =>
     Icon(icon, color: AppColors.white, size: AppSize.s16);
 
 Widget getCircle({Widget? child, required Color color}) => Container(
-      width: AppSize.s18,
-      height: AppSize.s18,
-      margin: const EdgeInsets.only(right: AppPadding.p2),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: child,
-    );
+  width: AppSize.s18,
+  height: AppSize.s18,
+  margin: const EdgeInsets.only(right: AppPadding.p2),
+  decoration: BoxDecoration(
+    color: color,
+    borderRadius: BorderRadius.circular(50),
+  ),
+  child: child,
+);

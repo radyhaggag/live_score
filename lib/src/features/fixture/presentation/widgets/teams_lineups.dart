@@ -34,22 +34,24 @@ class TeamsLineups extends StatelessWidget {
                     backgroundColor: AppColors.white,
                     child: CircleAvatar(
                       radius: AppSize.s13,
-                      backgroundColor:
-                          HexColor("#${lineups[0].team.colors.player.primary}"),
+                      backgroundColor: HexColor(
+                        "#${lineups[0].team.colors.player.primary}",
+                      ),
                       child: Text(
                         teamOnePlayers[0].number.toString(),
                         style: TextStyle(
-                            color: HexColor(
-                                "#${lineups[0].team.colors.player.number}")),
+                          color: HexColor(
+                            "#${lineups[0].team.colors.player.number}",
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   Text(
                     teamOnePlayers[0].name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.white),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: AppColors.white),
                   ),
                 ],
               ),
@@ -57,55 +59,54 @@ class TeamsLineups extends StatelessWidget {
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: AppSize.s10),
-                itemBuilder: (context, index) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ...List.generate(
-                      int.parse(teamOnePlan[index]),
-                      (_) {
-                        lineOneNumber++;
-                        List<String> playerName =
-                            teamOnePlayers[lineOneNumber].name.split(" ");
-                        return Expanded(
-                          child: Column(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: AppColors.white,
-                                radius: AppSize.s15,
-                                child: CircleAvatar(
-                                  radius: AppSize.s13,
-                                  backgroundColor: HexColor(
-                                      "#${lineups[0].team.colors.player.primary}"),
-                                  child: Text(
-                                    teamOnePlayers[lineOneNumber]
-                                        .number
-                                        .toString(),
-                                    style: TextStyle(
-                                      color: HexColor(
-                                          "#${lineups[0].team.colors.player.number}"),
+                separatorBuilder:
+                    (context, index) => const SizedBox(height: AppSize.s10),
+                itemBuilder:
+                    (context, index) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ...List.generate(int.parse(teamOnePlan[index]), (_) {
+                          lineOneNumber++;
+                          List<String> playerName =
+                              teamOnePlayers[lineOneNumber].name.split(" ");
+                          return Expanded(
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: AppColors.white,
+                                  radius: AppSize.s15,
+                                  child: CircleAvatar(
+                                    radius: AppSize.s13,
+                                    backgroundColor: HexColor(
+                                      "#${lineups[0].team.colors.player.primary}",
+                                    ),
+                                    child: Text(
+                                      teamOnePlayers[lineOneNumber].number
+                                          .toString(),
+                                      style: TextStyle(
+                                        color: HexColor(
+                                          "#${lineups[0].team.colors.player.number}",
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: AppSize.s2),
-                              Text(
-                                playerName.length >= 3
-                                    ? playerName[1] + playerName[2]
-                                    : playerName.length == 2
-                                        ? playerName[1]
-                                        : playerName[0],
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                                const SizedBox(height: AppSize.s2),
+                                Text(
+                                  playerName.length >= 3
+                                      ? playerName[1] + playerName[2]
+                                      : playerName.length == 2
+                                      ? playerName[1]
+                                      : playerName[0],
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
                     ),
-                  ],
-                ),
                 itemCount: teamOnePlan.length,
               ),
             ],
@@ -120,58 +121,60 @@ class TeamsLineups extends StatelessWidget {
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: AppSize.s10),
-                itemBuilder: (context, index) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ...List.generate(
-                      int.parse(teamTwoPlan.elementAt(index)),
-                      (_) {
-                        lineTwoNumber++;
-                        List<String> playerName = teamTwoPlayers
-                            .elementAt(lineTwoNumber)
-                            .name
-                            .split(" ");
-                        return Expanded(
-                          child: Column(
-                            children: [
-                              CircleAvatar(
-                                radius: AppSize.s15,
-                                backgroundColor: AppColors.white,
-                                child: CircleAvatar(
-                                  radius: AppSize.s13,
-                                  backgroundColor: HexColor(
-                                    "#${lineups[1].team.colors.player.primary}",
-                                  ),
-                                  child: Text(
-                                    teamTwoPlayers
-                                        .elementAt(lineTwoNumber)
-                                        .number
-                                        .toString(),
-                                    style: TextStyle(
+                separatorBuilder:
+                    (context, index) => const SizedBox(height: AppSize.s10),
+                itemBuilder:
+                    (context, index) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ...List.generate(int.parse(teamTwoPlan.elementAt(index)), (
+                          _,
+                        ) {
+                          lineTwoNumber++;
+                          List<String> playerName = teamTwoPlayers
+                              .elementAt(lineTwoNumber)
+                              .name
+                              .split(" ");
+                          return Expanded(
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  radius: AppSize.s15,
+                                  backgroundColor: AppColors.white,
+                                  child: CircleAvatar(
+                                    radius: AppSize.s13,
+                                    backgroundColor: HexColor(
+                                      "#${lineups[1].team.colors.player.primary}",
+                                    ),
+                                    child: Text(
+                                      teamTwoPlayers
+                                          .elementAt(lineTwoNumber)
+                                          .number
+                                          .toString(),
+                                      style: TextStyle(
                                         color: HexColor(
-                                            "#${lineups[1].team.colors.player.number}")),
+                                          "#${lineups[1].team.colors.player.number}",
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: AppSize.s2),
-                              Text(
-                                playerName.length >= 3
-                                    ? playerName[1] + playerName[2]
-                                    : playerName.length == 2
-                                        ? playerName[1]
-                                        : playerName[0],
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                                const SizedBox(height: AppSize.s2),
+                                Text(
+                                  playerName.length >= 3
+                                      ? playerName[1] + playerName[2]
+                                      : playerName.length == 2
+                                      ? playerName[1]
+                                      : playerName[0],
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
                     ),
-                  ],
-                ),
                 itemCount: teamTwoPlan.length,
               ),
               Column(
@@ -181,22 +184,24 @@ class TeamsLineups extends StatelessWidget {
                     backgroundColor: AppColors.white,
                     child: CircleAvatar(
                       radius: AppSize.s13,
-                      backgroundColor:
-                          HexColor("#${lineups[1].team.colors.player.primary}"),
+                      backgroundColor: HexColor(
+                        "#${lineups[1].team.colors.player.primary}",
+                      ),
                       child: Text(
                         teamTwoPlayers.elementAt(10).number.toString(),
                         style: TextStyle(
-                            color: HexColor(
-                                "#${lineups[1].team.colors.player.number}")),
+                          color: HexColor(
+                            "#${lineups[1].team.colors.player.number}",
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   Text(
                     teamTwoPlayers.elementAt(10).name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.white),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: AppColors.white),
                   ),
                 ],
               ),
