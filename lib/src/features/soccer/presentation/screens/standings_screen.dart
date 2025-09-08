@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../domain/entities/team_rank.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
@@ -20,8 +20,8 @@ class StandingsScreen extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
 
       children: [
-        CircleLeaguesHeader(leagues: cubit.filteredLeagues, getFixtures: false),
-        const SizedBox(height: AppSize.s5),
+        RectLeaguesHeader(leagues: cubit.filteredLeagues, getFixtures: false),
+        SizedBox(height: 5.height),
         BlocBuilder<SoccerCubit, SoccerStates>(
           buildWhen: (previous, current) {
             return [
@@ -43,14 +43,14 @@ class StandingsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const StandingsHeaders(),
-                    const SizedBox(height: AppSize.s10),
+                    SizedBox(height: 10.height),
                     ...List.generate(state.standings.standings.length, (
                       teamIndex,
                     ) {
                       TeamRank team = state.standings.standings[teamIndex];
                       return StandingsItem(teamRank: team);
                     }),
-                    const SizedBox(height: AppSize.s10),
+                    SizedBox(height: 10.height),
                   ],
                 ),
               );

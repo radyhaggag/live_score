@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/league.dart';
-import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_values.dart';
 
 class LeagueCard extends StatelessWidget {
@@ -19,20 +19,23 @@ class LeagueCard extends StatelessWidget {
         horizontal: AppPadding.p10,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSize.s10),
-        gradient: AppColors.redGradient,
+        borderRadius: BorderRadius.circular(10.radius),
+        // gradient: AppColors.redGradient,
+        color: HexColor(league.hexColor),
       ),
       child: Row(
         children: [
           CachedNetworkImage(
-            width: AppSize.s40,
-            height: AppSize.s40,
+            width: 40.radius,
+            height: 40.radius,
             imageUrl: league.logo,
           ),
-          const SizedBox(width: AppSize.s5),
+          SizedBox(width: 5.width),
           Text(
             league.name,
-            style: const TextStyle(color: AppColors.white),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.white),
           ),
         ],
       ),

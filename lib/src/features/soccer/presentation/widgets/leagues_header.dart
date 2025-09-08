@@ -1,32 +1,33 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/use_cases/standings_usecase.dart';
 import '../cubit/soccer_cubit.dart';
 import 'league_card.dart';
 import 'modal_sheet_content.dart';
 
-class RectLeaguesHeader extends StatelessWidget {
+class CircleLeaguesHeader extends StatelessWidget {
   final List<League> leagues;
 
-  const RectLeaguesHeader({super.key, required this.leagues});
+  const CircleLeaguesHeader({super.key, required this.leagues});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: AppSize.s90,
+      height: 90.height,
       padding: const EdgeInsetsDirectional.only(start: AppPadding.p10),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: AppColors.blueGradient,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(AppSize.s50),
-          topLeft: Radius.circular(AppSize.s50),
+          bottomLeft: Radius.circular(50.radius),
+          topLeft: Radius.circular(50.radius),
         ),
       ),
       child: ListView.separated(
@@ -35,7 +36,7 @@ class RectLeaguesHeader extends StatelessWidget {
         itemBuilder: (context, index) {
           return buildLeagueAvatar(league: leagues[index], context: context);
         },
-        separatorBuilder: (_, _) => const SizedBox(width: AppSize.s10),
+        separatorBuilder: (_, _) => SizedBox(width: 10.width),
         itemCount: leagues.length,
       ),
     );
@@ -53,29 +54,23 @@ class RectLeaguesHeader extends StatelessWidget {
       );
     },
     child: CircleAvatar(
-      backgroundColor: hexToColor(league.hexColor),
-      radius: AppSize.s35,
+      backgroundColor: HexColor(league.hexColor),
+      radius: 35.radius,
       child: CachedNetworkImage(
         fit: BoxFit.contain,
-        width: AppSize.s40,
-        height: AppSize.s40,
+        width: 40.radius,
+        height: 40.radius,
         imageUrl: league.logo,
       ),
     ),
   );
-
-  Color hexToColor(String hex) {
-    hex = hex.replaceAll("#", "");
-    if (hex.length == 6) hex = "FF$hex";
-    return Color(int.parse(hex, radix: 16));
-  }
 }
 
-class CircleLeaguesHeader extends StatelessWidget {
+class RectLeaguesHeader extends StatelessWidget {
   final List<League> leagues;
   final bool getFixtures;
 
-  const CircleLeaguesHeader({
+  const RectLeaguesHeader({
     super.key,
     required this.leagues,
     required this.getFixtures,
@@ -89,14 +84,14 @@ class CircleLeaguesHeader extends StatelessWidget {
         horizontal: AppPadding.p5,
       ),
       child: SizedBox(
-        height: AppSize.s50,
+        height: 40.height,
         child: ListView.separated(
           physics: const AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: leagues.length,
-          separatorBuilder: (context, index) {
-            return const SizedBox(width: AppSize.s5);
+          separatorBuilder: (_, _) {
+            return SizedBox(width: 5.width);
           },
           itemBuilder: (context, index) {
             return InkWell(

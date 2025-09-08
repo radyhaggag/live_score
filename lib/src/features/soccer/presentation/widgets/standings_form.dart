@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_values.dart';
 
 class StandingsForm extends StatelessWidget {
@@ -37,7 +37,7 @@ class StandingsForm extends StatelessWidget {
     }
 
     return SizedBox(
-      width: AppSize.s110,
+      width: 110.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -54,12 +54,12 @@ class StandingsForm extends StatelessWidget {
   }
 
   Icon smallIcon(IconData icon) {
-    return Icon(icon, color: AppColors.white, size: AppSize.s16);
+    return Icon(icon, color: AppColors.white, size: 16.radius);
   }
 
   Widget getCircle({Widget? child, required Color color}) => Container(
-    width: AppSize.s18,
-    height: AppSize.s18,
+    width: 18.radius,
+    height: 18.radius,
     margin: const EdgeInsets.only(right: AppPadding.p2),
     decoration: BoxDecoration(
       color: color,

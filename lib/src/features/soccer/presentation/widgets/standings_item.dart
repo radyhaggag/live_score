@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/team_rank.dart';
 import 'standings_form.dart';
@@ -33,22 +33,22 @@ class StandingsItem extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: AppSize.s200,
+            width: 200.width,
             child: Row(
               children: [
                 SizedBox(
-                  width: AppSize.s30,
+                  width: 30.width,
                   child: Text(
                     teamRank.rank.toString(),
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
                 CachedNetworkImage(
-                  width: AppSize.s20,
-                  height: AppSize.s20,
+                  width: 20.radius,
+                  height: 20.radius,
                   imageUrl: teamRank.team.logo,
                 ),
-                const SizedBox(width: AppSize.s10),
+                SizedBox(width: 10.width),
                 Flexible(
                   child: Text(
                     teamRank.team.name,
@@ -66,7 +66,7 @@ class StandingsItem extends StatelessWidget {
               ...List.generate(
                 headersNumbers.length,
                 (index) => SizedBox(
-                  width: AppSize.s40,
+                  width: 40.width,
                   child: Text(
                     headersNumbers[index],
                     textAlign: TextAlign.center,
@@ -76,7 +76,7 @@ class StandingsItem extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: AppSize.s10),
+          SizedBox(width: 10.width),
           StandingsForm(form: teamRank.form),
         ],
       ),
@@ -107,8 +107,8 @@ class StandingsHeaders extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const SizedBox(
-            width: AppSize.s200,
+          SizedBox(
+            width: 200.width,
             child: Text("Team name", style: TextStyle(fontSize: 16)),
           ),
           Row(
@@ -117,7 +117,7 @@ class StandingsHeaders extends StatelessWidget {
               ...List.generate(
                 _headers.length,
                 (index) => SizedBox(
-                  width: AppSize.s40,
+                  width: 40.width,
                   child: Text(
                     _headers[index],
                     textAlign: TextAlign.center,
@@ -127,9 +127,9 @@ class StandingsHeaders extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: AppSize.s10),
-          const SizedBox(
-            width: AppSize.s110,
+          SizedBox(width: 10.width),
+          SizedBox(
+            width: 110.width,
             child: Text("Form", textAlign: TextAlign.center),
           ),
         ],

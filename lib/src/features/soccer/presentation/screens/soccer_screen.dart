@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/error/response_status.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../../../core/widgets/center_indicator.dart';
@@ -83,12 +83,12 @@ class _SoccerScreenState extends State<SoccerScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (cubit.filteredLeagues.isNotEmpty) ...[
-                        RectLeaguesHeader(leagues: cubit.filteredLeagues),
-                        const SizedBox(height: AppSize.s10),
+                        CircleLeaguesHeader(leagues: cubit.filteredLeagues),
+                        SizedBox(height: 10.height),
                       ],
                       if (liveFixtures.isNotEmpty) ...[
                         ViewLiveFixtures(fixtures: liveFixtures),
-                        const SizedBox(height: AppSize.s10),
+                        SizedBox(height: 10.height),
                       ],
                       ViewDayFixtures(fixtures: fixtures),
                     ],

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../config/app_route.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_strings.dart';
 
 class BlockAlert extends StatelessWidget {
@@ -16,18 +16,14 @@ class BlockAlert extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          Icons.error_outline,
-          color: AppColors.red,
-          size: AppSize.s90,
-        ),
-        const SizedBox(height: AppSize.s10),
+        Icon(Icons.error_outline, color: AppColors.red, size: 90.radius),
+        SizedBox(height: 10.height),
         Text(
           message,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
-        const SizedBox(height: AppSize.s10),
+        SizedBox(height: 10.height),
         SizedBox(
           width: context.width / 2,
           child: ElevatedButton(

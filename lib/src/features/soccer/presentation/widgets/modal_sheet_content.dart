@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/media_query.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/use_cases/standings_usecase.dart';
@@ -44,11 +44,11 @@ class ModalSheetContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CachedNetworkImage(
-                  width: AppSize.s20,
-                  height: AppSize.s20,
+                  width: 20.radius,
+                  height: 20.radius,
                   imageUrl: league.logo,
                 ),
-                const SizedBox(width: AppSize.s10),
+                SizedBox(width: 10.width),
                 Flexible(
                   child: Text(
                     league.name,

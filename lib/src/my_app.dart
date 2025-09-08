@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/app_route.dart';
 import 'config/app_theme.dart';
@@ -9,12 +10,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.soccerLayout,
-      onGenerateRoute: AppRouter.routesGenerator,
-      title: AppStrings.appName,
-      theme: getAppTheme(),
+    return ScreenUtilInit(
+      designSize: const Size(360, 800),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: Routes.soccerLayout,
+        onGenerateRoute: AppRouter.routesGenerator,
+        title: AppStrings.appName,
+        theme: getAppTheme(),
+      ),
     );
   }
 }

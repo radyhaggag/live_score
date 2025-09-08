@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
+
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 
 class ItemsNotAvailable extends StatelessWidget {
   final IconData icon;
@@ -17,8 +18,8 @@ class ItemsNotAvailable extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: AppSize.s100),
-          const SizedBox(height: AppSize.s10),
+          Icon(icon, size: 100.radius),
+          SizedBox(height: 10.height),
           Text(
             message,
             style: Theme.of(context)

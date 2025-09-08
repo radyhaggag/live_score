@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/teams.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
 
 class ViewTeam extends StatelessWidget {
   final Team team;
@@ -17,25 +17,24 @@ class ViewTeam extends StatelessWidget {
       children: [
         CircleAvatar(
           backgroundColor: Colors.white,
-          radius: AppSize.s35,
+          radius: 35.radius,
           child: CachedNetworkImage(
             fit: BoxFit.cover,
-            width: AppSize.s50,
-            height: AppSize.s50,
+            width: 50.radius,
+            height: 50.radius,
             imageUrl: team.logo,
           ),
         ),
-        const SizedBox(height: AppSize.s10),
+        SizedBox(height: 10.height),
         FittedBox(
           child: Text(
             team.name.split(" ").length >= 3
                 ? team.name.split(" ").sublist(0, 2).join(" ")
                 : team.name,
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: AppColors.white),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: AppColors.white),
           ),
         ),
       ],

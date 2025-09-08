@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
-import '../../../../core/utils/app_size.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
 import '../widgets/fixture_card.dart';
@@ -20,24 +20,29 @@ class FixturesScreen extends StatelessWidget {
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CircleLeaguesHeader(leagues: cubit.filteredLeagues, getFixtures: true),
-            const SizedBox(height: AppSize.s10),
+            RectLeaguesHeader(
+              leagues: cubit.filteredLeagues,
+              getFixtures: true,
+            ),
+            SizedBox(height: 10.height),
             cubit.currentFixtures.isNotEmpty
                 ? Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        String fixtureTime =
-                            cubit.currentFixtures[index].fixture.date;
-                        final localTime = DateTime.parse(fixtureTime).toLocal();
-                        final formattedTime =
-                            DateFormat("h:mm a").format(localTime);
-                        return FixtureCard(
-                            soccerFixture: cubit.currentFixtures[index],
-                            fixtureTime: formattedTime);
-                      },
-                      itemCount: cubit.currentFixtures.length,
-                    ),
-                  )
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      String fixtureTime =
+                          cubit.currentFixtures[index].fixture.date;
+                      final localTime = DateTime.parse(fixtureTime).toLocal();
+                      final formattedTime = DateFormat(
+                        "h:mm a",
+                      ).format(localTime);
+                      return FixtureCard(
+                        soccerFixture: cubit.currentFixtures[index],
+                        fixtureTime: formattedTime,
+                      );
+                    },
+                    itemCount: cubit.currentFixtures.length,
+                  ),
+                )
                 : const NoFixturesToday(),
           ],
         );

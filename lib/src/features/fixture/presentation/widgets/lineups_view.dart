@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -19,36 +20,38 @@ class LineupsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return lineups.isNotEmpty
         ? Column(
-            children: [
-              buildTeamHeader(context: context, lineup: lineups[0]),
-              Container(
-                width: double.infinity,
-                height: AppSize.s625,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage(AppAssets.playground),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppPadding.p15,
-                    horizontal: AppPadding.p15,
-                  ),
-                  child: TeamsLineups(lineups: lineups),
+          children: [
+            buildTeamHeader(context: context, lineup: lineups[0]),
+            Container(
+              width: double.infinity,
+              height: 625.height,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage(AppAssets.playground),
                 ),
               ),
-              buildTeamHeader(context: context, lineup: lineups[1]),
-            ],
-          )
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: AppPadding.p15,
+                  horizontal: AppPadding.p15,
+                ),
+                child: TeamsLineups(lineups: lineups),
+              ),
+            ),
+            buildTeamHeader(context: context, lineup: lineups[1]),
+          ],
+        )
         : const ItemsNotAvailable(
-            icon: Icons.people,
-            message: AppStrings.noLineups,
-          );
+          icon: Icons.people,
+          message: AppStrings.noLineups,
+        );
   }
 
-  Widget buildTeamHeader(
-      {required BuildContext context, required Lineup lineup}) {
+  Widget buildTeamHeader({
+    required BuildContext context,
+    required Lineup lineup,
+  }) {
     return Container(
       color: AppColors.darkGreen,
       padding: const EdgeInsetsDirectional.all(AppPadding.p5),
@@ -56,22 +59,21 @@ class LineupsView extends StatelessWidget {
         children: [
           CachedNetworkImage(
             fit: BoxFit.cover,
-            width: AppSize.s35,
-            height: AppSize.s35,
+            width: 35.radius,
+            height: 35.radius,
             imageUrl: lineup.team.logo,
           ),
-          const SizedBox(width: AppSize.s10),
-          Text(
-            lineup.team.name,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          SizedBox(width: 10.width),
+          Text(lineup.team.name, style: Theme.of(context).textTheme.bodySmall),
           const Spacer(),
           Text(
             lineup.formation,
             style: const TextStyle(
-                color: Colors.white, fontSize: FontSize.subTitle),
+              color: Colors.white,
+              fontSize: FontSize.subTitle,
+            ),
           ),
-          const SizedBox(width: AppSize.s10),
+          SizedBox(width: 10.width),
         ],
       ),
     );
