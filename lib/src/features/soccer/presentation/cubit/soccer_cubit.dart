@@ -5,15 +5,11 @@ import '../../../../core/domain/entities/league.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../../../core/utils/app_constants.dart';
-import '../../../../core/utils/app_strings.dart';
 import '../../domain/entities/league_of_fixture.dart';
 import '../../domain/use_cases/day_fixtures_usecase.dart';
 import '../../domain/use_cases/leagues_usecase.dart';
 import '../../domain/use_cases/live_fixtures_usecase.dart';
 import '../../domain/use_cases/standings_usecase.dart';
-import '../screens/fixtures_screen.dart';
-import '../screens/soccer_screen.dart';
-import '../screens/standings_screen.dart';
 import 'soccer_state.dart';
 
 class SoccerCubit extends Cubit<SoccerStates> {
@@ -29,29 +25,12 @@ class SoccerCubit extends Cubit<SoccerStates> {
     required this.standingUseCase,
   }) : super(ScoreInitial());
 
-  List screens = [
-    const SoccerScreen(),
-    const FixturesScreen(),
-    const StandingsScreen(),
-  ];
-
-  List<String> titles = [
-    AppStrings.liveScore,
-    AppStrings.fixtures,
-    AppStrings.standings,
-  ];
-
-  int currentIndex = 0;
-
-  void changeBottomNav(int index) {
-    currentIndex = index;
-    emit(SoccerChangeBottomNav());
-  }
-
   List<League> filteredLeagues = [];
   Map<int, LeagueOfFixture> leaguesFixtures = {};
 
   Future<List<League>> getLeagues() async {
+    if (filteredLeagues.isNotEmpty) return filteredLeagues;
+
     emit(SoccerLeaguesLoading());
     final leagues = await leaguesUseCase(NoParams());
     leagues.fold((left) => emit(SoccerLeaguesLoadFailure(left.message)), (
@@ -94,6 +73,8 @@ class SoccerCubit extends Cubit<SoccerStates> {
     return filteredFixtures;
   }
 
+  List<SoccerFixture> liveFixtures = [];
+
   Future<List<SoccerFixture>> getLiveFixtures() async {
     emit(SoccerFixturesLoading());
     final liveFixtures = await liveFixturesUseCase(NoParams());
@@ -123,12 +104,12 @@ class SoccerCubit extends Cubit<SoccerStates> {
   }
 
   Future<void> getStandings(StandingsParams params) async {
+    if (state is SoccerStandingsLoading) return;
     emit(SoccerStandingsLoading());
     final standings = await standingUseCase(params);
-    standings.fold((left) => emit(SoccerStandingsLoadFailure(left.message)), (
-      right,
-    ) {
-      emit(SoccerStandingsLoaded(right));
-    });
+    standings.fold(
+      (left) => emit(SoccerStandingsLoadFailure(left.message)),
+      (right) => emit(SoccerStandingsLoaded(right)),
+    );
   }
 }

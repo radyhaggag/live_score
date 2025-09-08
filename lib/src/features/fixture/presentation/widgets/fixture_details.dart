@@ -6,7 +6,6 @@ import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_values.dart';
 import '../../../soccer/presentation/screens/soccer_screen.dart';
 import 'view_team.dart';
 
@@ -18,7 +17,7 @@ class FixtureDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppPadding.p20),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(gradient: getGradientColor(soccerFixture)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -55,8 +54,8 @@ class FixtureDetails extends StatelessWidget {
           SizedBox(height: 10.height),
           Container(
             padding: const EdgeInsets.symmetric(
-              horizontal: AppPadding.p20,
-              vertical: AppPadding.p5,
+              horizontal: 20,
+              vertical: 5,
             ),
             decoration: BoxDecoration(
               color: AppColors.lightRed,

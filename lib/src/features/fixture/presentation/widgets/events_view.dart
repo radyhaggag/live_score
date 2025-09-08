@@ -5,7 +5,6 @@ import 'package:live_score/src/core/extensions/nums.dart';
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/events.dart';
 import 'items_not_available.dart';
 
@@ -19,7 +18,7 @@ class EventsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return events.isNotEmpty
         ? Padding(
-          padding: const EdgeInsets.all(AppPadding.p2),
+          padding: const EdgeInsets.all(2),
           child: ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -27,7 +26,7 @@ class EventsView extends StatelessWidget {
             itemBuilder:
                 (context, index) => Card(
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.all(AppPadding.p20),
+                    padding: const EdgeInsetsDirectional.all(20),
                     child: Column(
                       children: [
                         eventTeam(events[index], context),

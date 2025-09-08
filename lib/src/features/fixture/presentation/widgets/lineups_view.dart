@@ -4,9 +4,8 @@ import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
+import '../../../../core/utils/app_fonts.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/lineups.dart';
 import 'items_not_available.dart';
 import 'teams_lineups.dart';
@@ -33,8 +32,8 @@ class LineupsView extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  vertical: AppPadding.p15,
-                  horizontal: AppPadding.p15,
+                  vertical: 15,
+                  horizontal: 15,
                 ),
                 child: TeamsLineups(lineups: lineups),
               ),
@@ -54,7 +53,7 @@ class LineupsView extends StatelessWidget {
   }) {
     return Container(
       color: AppColors.darkGreen,
-      padding: const EdgeInsetsDirectional.all(AppPadding.p5),
+      padding: const EdgeInsetsDirectional.all(5),
       child: Row(
         children: [
           CachedNetworkImage(

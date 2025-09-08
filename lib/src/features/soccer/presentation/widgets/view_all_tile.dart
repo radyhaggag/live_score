@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
 
 Widget viewAll(BuildContext context) => Padding(
       padding: const EdgeInsets.only(
-          top: AppPadding.p8,
-          bottom: AppPadding.p8,
-          left: AppPadding.p20,
-          right: AppPadding.p5),
+          top: 8,
+          bottom: 8,
+          left: 20,
+          right: 5),
       child: Row(
         children: [
           Text(

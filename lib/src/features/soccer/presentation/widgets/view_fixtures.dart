@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
@@ -8,7 +9,6 @@ import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
 import '../cubit/soccer_cubit.dart';
 import 'fixture_card.dart';
 import 'live_fixtures_card.dart';
@@ -24,7 +24,7 @@ class ViewDayFixtures extends StatelessWidget {
   Widget build(BuildContext context) {
     return fixtures.isNotEmpty
         ? Padding(
-          padding: const EdgeInsets.only(right: AppPadding.p20),
+          padding: const EdgeInsets.only(right: 20),
           child: Column(
             children: [
               Row(
@@ -39,7 +39,7 @@ class ViewDayFixtures extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      context.read<SoccerCubit>().changeBottomNav(1);
+                      context.push(Routes.fixtures);
                       context.read<SoccerCubit>().currentFixtures = fixtures;
                     },
                     child: viewAll(context),
@@ -60,9 +60,9 @@ class ViewDayFixtures extends StatelessWidget {
                       (timeIsBefore && nowHour + 1 >= fixtureHour) ||
                               fixtures[index].fixture.status.elapsed != null
                           ? () {
-                            Navigator.of(context).pushNamed(
-                              Routes.fixture,
-                              arguments: fixtures[index],
+                            context.push(
+                              Routes.fixtures,
+                              extra: fixtures[index],
                             );
                           }
                           : null,
@@ -89,7 +89,7 @@ class ViewLiveFixtures extends StatelessWidget {
     return Container(
       width: context.width,
       height: 280.height,
-      padding: const EdgeInsets.only(right: AppPadding.p20),
+      padding: const EdgeInsets.only(right: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -105,8 +105,8 @@ class ViewLiveFixtures extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  context.read<SoccerCubit>().changeBottomNav(1);
                   context.read<SoccerCubit>().currentFixtures = fixtures;
+                  context.push(Routes.fixtures);
                 },
                 child: viewAll(context),
               ),
@@ -121,9 +121,7 @@ class ViewLiveFixtures extends StatelessWidget {
               itemBuilder:
                   (context, index) => InkWell(
                     onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(Routes.fixture, arguments: fixtures[index]);
+                      context.push(Routes.fixtures, extra: fixtures[index]);
                     },
                     child: LiveFixtureCard(soccerFixture: fixtures[index]),
                   ),

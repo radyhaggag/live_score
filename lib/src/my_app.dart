@@ -14,10 +14,9 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 800),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: MaterialApp(
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        initialRoute: Routes.soccerLayout,
-        onGenerateRoute: AppRouter.routesGenerator,
+        routerConfig: AppRouter.router,
         title: AppStrings.appName,
         theme: getAppTheme(),
       ),

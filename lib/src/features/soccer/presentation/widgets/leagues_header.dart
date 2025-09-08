@@ -6,7 +6,6 @@ import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_values.dart';
 import '../../domain/use_cases/standings_usecase.dart';
 import '../cubit/soccer_cubit.dart';
 import 'league_card.dart';
@@ -21,8 +20,8 @@ class CircleLeaguesHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 90.height,
-      padding: const EdgeInsetsDirectional.only(start: AppPadding.p10),
+      height: 65.height,
+      padding: const EdgeInsetsDirectional.only(start: 15),
       decoration: BoxDecoration(
         gradient: AppColors.blueGradient,
         borderRadius: BorderRadius.only(
@@ -34,6 +33,14 @@ class CircleLeaguesHeader extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
+          if(index == leagues.length - 1){
+            return Row(
+              children: [
+                buildLeagueAvatar(league: leagues[index], context: context),
+                SizedBox(width: 10.width),
+              ],
+            );
+          }
           return buildLeagueAvatar(league: leagues[index], context: context);
         },
         separatorBuilder: (_, _) => SizedBox(width: 10.width),
@@ -55,11 +62,11 @@ class CircleLeaguesHeader extends StatelessWidget {
     },
     child: CircleAvatar(
       backgroundColor: HexColor(league.hexColor),
-      radius: 35.radius,
+      radius: 25.radius,
       child: CachedNetworkImage(
         fit: BoxFit.contain,
-        width: 40.radius,
-        height: 40.radius,
+        width: 25.radius,
+        height: 25.radius,
         imageUrl: league.logo,
       ),
     ),
@@ -79,10 +86,7 @@ class RectLeaguesHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppPadding.p5,
-        horizontal: AppPadding.p5,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: SizedBox(
         height: 40.height,
         child: ListView.separated(

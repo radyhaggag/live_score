@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:live_score/src/config/app_route.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
 import '../../domain/use_cases/standings_usecase.dart';
 import '../cubit/soccer_cubit.dart';
 
@@ -35,7 +36,7 @@ class ModalSheetContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppPadding.p15),
+      padding: const EdgeInsets.symmetric(vertical: 15),
       height: context.height / 5,
       child: SingleChildScrollView(
         child: Column(
@@ -65,8 +66,8 @@ class ModalSheetContent extends StatelessWidget {
               onPressed: () {
                 cubit.currentFixtures =
                     cubit.leaguesFixtures[league.id]?.fixtures ?? [];
-                Navigator.pop(context);
-                cubit.changeBottomNav(1);
+                context.pop();
+                context.push(Routes.fixtures);
               },
               child: const Text(AppStrings.viewFixtures),
             ),
@@ -75,8 +76,8 @@ class ModalSheetContent extends StatelessWidget {
                 StandingsParams params = StandingsParams(
                   leagueId: league.id.toString(),
                 );
-                cubit.changeBottomNav(2);
-                Navigator.pop(context);
+                context.push(Routes.standings);
+                context.pop();
                 await cubit.getStandings(params);
               },
               child: const Text("View Standings"),

@@ -4,7 +4,6 @@ import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/team_rank.dart';
 import 'standings_form.dart';
 
@@ -27,8 +26,8 @@ class StandingsItem extends StatelessWidget {
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(
-        vertical: AppPadding.p10,
-        horizontal: AppPadding.p15,
+        vertical: 10,
+        horizontal: 15,
       ),
       child: Row(
         children: [
@@ -102,8 +101,8 @@ class StandingsHeaders extends StatelessWidget {
     return Container(
       color: AppColors.grey.withOpacitySafe(.05),
       padding: const EdgeInsets.symmetric(
-        vertical: AppPadding.p10,
-        horizontal: AppPadding.p15,
+        vertical: 10,
+        horizontal: 15,
       ),
       child: Row(
         children: [

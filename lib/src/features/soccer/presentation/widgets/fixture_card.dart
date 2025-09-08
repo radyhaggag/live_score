@@ -4,8 +4,7 @@ import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
-import '../../../../core/utils/app_values.dart';
+import '../../../../core/utils/app_fonts.dart';
 
 class FixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
@@ -18,10 +17,10 @@ class FixtureCard extends StatelessWidget {
     return Card(
       elevation: 3.radius,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppPadding.p5),
+        borderRadius: BorderRadius.circular(5),
       ),
       child: Padding(
-        padding: const EdgeInsetsDirectional.all(AppPadding.p10),
+        padding: const EdgeInsetsDirectional.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -175,8 +174,8 @@ class _StatusBadge extends StatelessWidget {
     final isLive = status != "FT";
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppPadding.p15,
-        vertical: AppPadding.p5,
+        horizontal: 15,
+        vertical: 5,
       ),
       decoration: BoxDecoration(
         color: isLive ? AppColors.red : AppColors.blue,

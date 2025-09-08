@@ -6,7 +6,6 @@ import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/statistics.dart';
 
 class StatisticsView extends StatelessWidget {
@@ -22,7 +21,7 @@ class StatisticsView extends StatelessWidget {
             buildStatsHeader(),
             ListView.separated(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(AppPadding.p20),
+              padding: const EdgeInsets.all(20),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemBuilder:
@@ -63,9 +62,9 @@ class StatisticsView extends StatelessWidget {
   Padding buildStatsHeader() {
     return Padding(
       padding: const EdgeInsets.only(
-        left: AppPadding.p10,
-        right: AppPadding.p10,
-        top: AppPadding.p10,
+        left: 10,
+        right: 10,
+        top: 10,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

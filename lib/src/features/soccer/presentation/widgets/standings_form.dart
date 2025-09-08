@@ -3,7 +3,6 @@ import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_values.dart';
 
 class StandingsForm extends StatelessWidget {
   final List<int> form;
@@ -60,7 +59,7 @@ class StandingsForm extends StatelessWidget {
   Widget getCircle({Widget? child, required Color color}) => Container(
     width: 18.radius,
     height: 18.radius,
-    margin: const EdgeInsets.only(right: AppPadding.p2),
+    margin: const EdgeInsets.only(right: 2),
     decoration: BoxDecoration(
       color: color,
       borderRadius: BorderRadius.circular(50),

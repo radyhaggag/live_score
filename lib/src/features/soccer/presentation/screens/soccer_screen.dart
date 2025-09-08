@@ -1,54 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/features/soccer/presentation/widgets/block_dialog.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/error/response_status.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
 import '../../../../core/widgets/center_indicator.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
-import '../widgets/block_dialog.dart';
 import '../widgets/leagues_header.dart';
 import '../widgets/view_fixtures.dart';
 
-class SoccerScreen extends StatefulWidget {
+class SoccerScreen extends StatelessWidget {
   const SoccerScreen({super.key});
-
-  @override
-  State<SoccerScreen> createState() => _SoccerScreenState();
-}
-
-class _SoccerScreenState extends State<SoccerScreen> {
-  List<SoccerFixture> fixtures = [];
-  List<SoccerFixture> liveFixtures = [];
-
-  @override
-  void initState() {
-    super.initState();
-    getLists();
-  }
-
-  Future<void> getLists() async {
-    SoccerCubit cubit = context.read<SoccerCubit>();
-    await cubit.getLeagues();
-    // await cubit.getLiveFixtures().then((value) {
-    //   cubit.currentFixtures = liveFixtures = value;
-    // });
-    // fixtures = await cubit.getFixtures();
-  }
-
-  @override
-  void dispose() => super.dispose();
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SoccerCubit, SoccerStates>(
       listener: (context, state) {
-        if (state is SoccerLeaguesLoaded && state.leagues.isEmpty) {
-          buildBlockAlert(context: context, message: AppStrings.reachedLimits);
+        if (state is SoccerLeaguesLoaded) {
+          // context.read<SoccerCubit>().getFixtures();
+          // context.read<SoccerCubit>().getLiveFixtures();
         }
         if (state is SoccerFixturesLoadFailure &&
             state.message ==
@@ -77,8 +50,9 @@ class _SoccerScreenState extends State<SoccerScreen> {
               },
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.zero,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: AppPadding.p20),
+                  padding: const EdgeInsetsDirectional.only(start: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -86,11 +60,11 @@ class _SoccerScreenState extends State<SoccerScreen> {
                         CircleLeaguesHeader(leagues: cubit.filteredLeagues),
                         SizedBox(height: 10.height),
                       ],
-                      if (liveFixtures.isNotEmpty) ...[
-                        ViewLiveFixtures(fixtures: liveFixtures),
+                      if (cubit.currentFixtures.isNotEmpty) ...[
+                        ViewLiveFixtures(fixtures: cubit.currentFixtures),
                         SizedBox(height: 10.height),
                       ],
-                      ViewDayFixtures(fixtures: fixtures),
+                      ViewDayFixtures(fixtures: cubit.dayFixtures),
                     ],
                   ),
                 ),

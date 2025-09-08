@@ -4,7 +4,6 @@ import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../domain/entities/league.dart';
 import '../utils/app_colors.dart';
-import '../utils/app_values.dart';
 
 class LeagueTile extends StatelessWidget {
   final League league;
@@ -14,10 +13,7 @@ class LeagueTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppPadding.p10,
-        horizontal: AppPadding.p20,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.radius),
         gradient: AppColors.redGradient,

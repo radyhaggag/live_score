@@ -6,7 +6,6 @@ import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
 import '../screens/soccer_screen.dart';
 
 class LiveFixtureCard extends StatelessWidget {
@@ -17,7 +16,7 @@ class LiveFixtureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsetsDirectional.all(AppPadding.p20),
+      padding: const EdgeInsetsDirectional.all(20),
       width: context.width / 2.4,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.radius),
@@ -52,8 +51,8 @@ class LiveFixtureCard extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.symmetric(
-              horizontal: AppPadding.p20,
-              vertical: AppPadding.p5,
+              horizontal: 20,
+              vertical: 5,
             ),
             decoration: BoxDecoration(
               color: AppColors.white,

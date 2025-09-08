@@ -4,7 +4,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/league.dart';
-import '../../../../core/utils/app_values.dart';
 
 class LeagueCard extends StatelessWidget {
   final League league;
@@ -15,8 +14,8 @@ class LeagueCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        vertical: AppPadding.p10,
-        horizontal: AppPadding.p10,
+        vertical: 10,
+        horizontal: 10,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.radius),

@@ -1,12 +1,10 @@
-import '../../domain/entities/standings.dart';
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../domain/entities/standings.dart';
 
 abstract class SoccerStates {}
 
 class ScoreInitial extends SoccerStates {}
-
-class SoccerChangeBottomNav extends SoccerStates {}
 
 class SoccerLeaguesLoading extends SoccerStates {}
 

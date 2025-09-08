@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
-import '../../../../config/app_route.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -29,9 +29,7 @@ class BlockAlert extends StatelessWidget {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue),
             onPressed: () {
-              Navigator.of(
-                context,
-              ).pushNamedAndRemoveUntil(Routes.soccerLayout, (route) => false);
+              context.pop();
             },
             child: Text(
               AppStrings.reload,
