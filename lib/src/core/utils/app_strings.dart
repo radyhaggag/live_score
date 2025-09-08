@@ -31,4 +31,10 @@ class AppStrings {
   static const String noEvents = "Events not available";
   static const String noFixtures = "No Fixtures scheduled today";
   static const String appName = "Live score";
+
+  static const List<String> bottomNavTitles = [
+    AppStrings.liveScore,
+    AppStrings.fixtures,
+    AppStrings.standings,
+  ];
 }

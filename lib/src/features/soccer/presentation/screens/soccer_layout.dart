@@ -13,23 +13,15 @@ class SoccerLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final String location = GoRouterState.of(context).uri.toString();
 
-    int currentIndex = 0;
-    if (location.startsWith(Routes.soccer)) {
-      currentIndex = 0;
-    } else if (location.startsWith(Routes.fixtures)) {
-      currentIndex = 1;
-    } else if (location.startsWith(Routes.standings)) {
-      currentIndex = 2;
-    }
-
-    final List<String> titles = [
-      AppStrings.liveScore,
-      AppStrings.fixtures,
-      AppStrings.standings,
-    ];
+    int currentIndex = switch (location) {
+      Routes.soccer => 0,
+      Routes.fixtures => 1,
+      Routes.standings => 2,
+      _ => 0,
+    };
 
     return Scaffold(
-      appBar: AppBar(title: Text(titles[currentIndex])),
+      appBar: AppBar(title: Text(AppStrings.bottomNavTitles[currentIndex])),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
