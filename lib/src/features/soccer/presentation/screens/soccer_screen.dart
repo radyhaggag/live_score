@@ -31,19 +31,13 @@ class _SoccerScreenState extends State<SoccerScreen> {
     getLists();
   }
 
-  getLists() async {
+  Future<void> getLists() async {
     SoccerCubit cubit = context.read<SoccerCubit>();
-    if (cubit.filteredLeagues.isEmpty) {
-      await cubit.getLeagues();
-    }
-    if (cubit.filteredLeagues.isNotEmpty) {
-      await cubit.getLiveFixtures().then((value) {
-        cubit.currentFixtures = liveFixtures = value;
-      });
-    }
-    if (cubit.filteredLeagues.isNotEmpty && fixtures.isEmpty) {
-      fixtures = await cubit.getFixtures();
-    }
+    await cubit.getLeagues();
+    // await cubit.getLiveFixtures().then((value) {
+    //   cubit.currentFixtures = liveFixtures = value;
+    // });
+    // fixtures = await cubit.getFixtures();
   }
 
   @override
@@ -89,7 +83,7 @@ class _SoccerScreenState extends State<SoccerScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (cubit.filteredLeagues.isNotEmpty) ...[
-                        LeaguesHeader(leagues: cubit.filteredLeagues),
+                        RectLeaguesHeader(leagues: cubit.filteredLeagues),
                         const SizedBox(height: AppSize.s10),
                       ],
                       if (liveFixtures.isNotEmpty) ...[

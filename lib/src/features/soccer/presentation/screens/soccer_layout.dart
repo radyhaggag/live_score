@@ -10,14 +10,11 @@ class SoccerLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SoccerCubit, SoccerStates>(
-      listener: (context, state) {},
+    return BlocBuilder<SoccerCubit, SoccerStates>(
       builder: (context, state) {
-        SoccerCubit cubit = context.read<SoccerCubit>();
+        final cubit = context.read<SoccerCubit>();
         return Scaffold(
-          appBar: AppBar(
-            title: Text(cubit.titles[cubit.currentIndex]),
-          ),
+          appBar: AppBar(title: Text(cubit.titles[cubit.currentIndex])),
           body: cubit.screens[cubit.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: cubit.currentIndex,

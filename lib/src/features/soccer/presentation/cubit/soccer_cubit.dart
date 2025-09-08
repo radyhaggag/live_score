@@ -49,24 +49,23 @@ class SoccerCubit extends Cubit<SoccerStates> {
   }
 
   List<League> filteredLeagues = [];
+  Map<int, LeagueOfFixture> leaguesFixtures = {};
 
   Future<List<League>> getLeagues() async {
     emit(SoccerLeaguesLoading());
-    filteredLeagues = [];
     final leagues = await leaguesUseCase(NoParams());
-    leagues.fold(
-      (left) => emit(SoccerLeaguesLoadFailure(left.message)),
-      (right) {
-        for (League league in right) {
-          if (AppConstants.availableLeagues.contains(league.id)) {
-            filteredLeagues.add(league);
-            AppConstants.leaguesFixtures
-                .putIfAbsent(league.id, () => LeagueOfFixture(league: league));
-          }
-        }
-        emit(SoccerLeaguesLoaded(filteredLeagues));
-      },
-    );
+    leagues.fold((left) => emit(SoccerLeaguesLoadFailure(left.message)), (
+      right,
+    ) {
+      filteredLeagues = right;
+      for (League league in right) {
+        leaguesFixtures.putIfAbsent(
+          league.id,
+          () => LeagueOfFixture(league: league),
+        );
+      }
+      emit(SoccerLeaguesLoaded(filteredLeagues));
+    });
     return filteredLeagues;
   }
 
@@ -77,24 +76,21 @@ class SoccerCubit extends Cubit<SoccerStates> {
     String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
     final fixtures = await dayFixturesUseCase(date);
     List<SoccerFixture> filteredFixtures = [];
-    fixtures.fold(
-      (left) => emit(SoccerFixturesLoadFailure(left.message)),
-      (right) {
-        AppConstants.leaguesFixtures.forEach((key, value) {
-          value.fixtures.clear();
-        });
-        for (SoccerFixture fixture in right) {
-          if (AppConstants.availableLeagues
-              .contains(fixture.fixtureLeague.id)) {
-            filteredFixtures.add(fixture);
-            AppConstants.leaguesFixtures[fixture.fixtureLeague.id]!.fixtures
-                .add(fixture);
-          }
-          dayFixtures = filteredFixtures;
+    fixtures.fold((left) => emit(SoccerFixturesLoadFailure(left.message)), (
+      right,
+    ) {
+      leaguesFixtures.forEach((key, value) {
+        value.fixtures.clear();
+      });
+      for (SoccerFixture fixture in right) {
+        if (AppConstants.availableLeagues.contains(fixture.fixtureLeague.id)) {
+          filteredFixtures.add(fixture);
+          leaguesFixtures[fixture.fixtureLeague.id]!.fixtures.add(fixture);
         }
-        emit(SoccerFixturesLoaded(filteredFixtures));
-      },
-    );
+        dayFixtures = filteredFixtures;
+      }
+      emit(SoccerFixturesLoaded(filteredFixtures));
+    });
     return filteredFixtures;
   }
 
@@ -105,10 +101,14 @@ class SoccerCubit extends Cubit<SoccerStates> {
     liveFixtures.fold(
       (left) => emit(SoccerLiveFixturesLoadFailure(left.message)),
       (right) {
-        filteredFixtures = right
-            .where((fixture) => AppConstants.availableLeagues
-                .contains(fixture.fixtureLeague.id))
-            .toList();
+        filteredFixtures =
+            right
+                .where(
+                  (fixture) => AppConstants.availableLeagues.contains(
+                    fixture.fixtureLeague.id,
+                  ),
+                )
+                .toList();
         emit(SoccerLiveFixturesLoaded(filteredFixtures));
       },
     );
@@ -117,19 +117,18 @@ class SoccerCubit extends Cubit<SoccerStates> {
 
   List<SoccerFixture> currentFixtures = [];
 
-  loadCurrentFixtures(int leagueId) {
-    currentFixtures = AppConstants.leaguesFixtures[leagueId]?.fixtures ?? [];
+  void loadCurrentFixtures(int leagueId) {
+    currentFixtures = leaguesFixtures[leagueId]?.fixtures ?? [];
     emit(SoccerCurrentFixturesChanges());
   }
 
   Future<void> getStandings(StandingsParams params) async {
     emit(SoccerStandingsLoading());
     final standings = await standingUseCase(params);
-    standings.fold(
-      (left) => emit(SoccerStandingsLoadFailure(left.message)),
-      (right) {
-        emit(SoccerStandingsLoaded(right));
-      },
-    );
+    standings.fold((left) => emit(SoccerStandingsLoadFailure(left.message)), (
+      right,
+    ) {
+      emit(SoccerStandingsLoaded(right));
+    });
   }
 }

@@ -18,7 +18,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
-  flutter_dotenv: ^5.2.1
+  flutter_dotenv: ^6.0.0
   fluttertoast: ^8.2.12
   get_it: ^8.0.3
   hexcolor: ^3.0.1
@@ -26,7 +26,7 @@ dependencies:
   intl: ^0.20.2
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
 

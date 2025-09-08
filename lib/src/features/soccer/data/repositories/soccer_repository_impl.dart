@@ -22,8 +22,9 @@ class SoccerRepositoryImpl implements SoccerRepository {
   });
 
   @override
-  Future<Either<Failure, List<SoccerFixture>>> getDayFixtures(
-      {required String date}) async {
+  Future<Either<Failure, List<SoccerFixture>>> getDayFixtures({
+    required String date,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
         final result = await soccerDataSource.getDayFixtures(date: date);
@@ -71,8 +72,9 @@ class SoccerRepositoryImpl implements SoccerRepository {
   }
 
   @override
-  Future<Either<Failure, Standings>> getStandings(
-      {required StandingsParams params}) async {
+  Future<Either<Failure, Standings>> getStandings({
+    required StandingsParams params,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
         final result = await soccerDataSource.getStandings(params: params);

@@ -53,7 +53,7 @@ class BlockAlert extends StatelessWidget {
 void buildBlockAlert({required BuildContext context, required String message}) {
   showDialog(
     context: context,
-    barrierDismissible: false,
+    barrierDismissible: true,
     builder: (_) => AlertDialog(content: BlockAlert(message: message)),
   );
 }

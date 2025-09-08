@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/media_query.dart';
-import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/app_values.dart';
@@ -27,8 +26,11 @@ class ModalSheetContent extends StatelessWidget {
   final League league;
   final SoccerCubit cubit;
 
-  const ModalSheetContent(
-      {super.key, required this.league, required this.cubit});
+  const ModalSheetContent({
+    super.key,
+    required this.league,
+    required this.cubit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class ModalSheetContent extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 cubit.currentFixtures =
-                    AppConstants.leaguesFixtures[league.id]?.fixtures ?? [];
+                    cubit.leaguesFixtures[league.id]?.fixtures ?? [];
                 Navigator.pop(context);
                 cubit.changeBottomNav(1);
               },
@@ -71,8 +73,8 @@ class ModalSheetContent extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 StandingsParams params = StandingsParams(
-                    leagueId: league.id.toString(),
-                    season: league.year.toString());
+                  leagueId: league.id.toString(),
+                );
                 cubit.changeBottomNav(2);
                 Navigator.pop(context);
                 await cubit.getStandings(params);

@@ -9,20 +9,28 @@ class TeamRankModel extends TeamRank {
     required super.team,
     required super.points,
     required super.goalsDiff,
-    required super.lastMatches,
+    required super.form,
     required super.stats,
-    required super.group,
   });
 
   factory TeamRankModel.fromJson(Map<String, dynamic> json) => TeamRankModel(
-        rank: json["rank"],
-        team: TeamModel.fromJson(json["team"]).toDomain(),
-        points: json["points"],
-        goalsDiff: json["goalsDiff"],
-        lastMatches: json["form"],
-        group: json["group"],
-        stats: TeamRankStatsModel.fromJson(json["all"]).toDomain(),
-      );
+    rank: json["position"],
+    team: TeamModel.fromJson(json["competitor"]).toDomain(),
+    points: (json["points"] as num).toInt(),
+    goalsDiff: (json["ratio"] as num).toInt(),
+    form: List<int>.from(
+      json["recentForm"].map((e) => int.tryParse(e.toString()) ?? 0),
+    ),
+    stats:
+        TeamRankStatsModel(
+          played: json["gamePlayed"],
+          win: json["gamesWon"],
+          draw: json["gamesEven"],
+          lose: json["gamesLost"],
+          scored: json["for"],
+          received: json["against"],
+        ).toDomain(),
+  );
 }
 
 class TeamRankStatsModel extends TeamRankStats {

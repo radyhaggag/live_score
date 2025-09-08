@@ -7,8 +7,7 @@ class TeamRank extends Equatable {
   final Team team;
   final int points;
   final int goalsDiff;
-  final String? group;
-  final String? lastMatches;
+  final List<int> form;
   final TeamRankStats stats;
 
   const TeamRank({
@@ -16,14 +15,12 @@ class TeamRank extends Equatable {
     required this.team,
     required this.points,
     required this.goalsDiff,
-    this.lastMatches,
+    this.form = const [],
     required this.stats,
-    this.group,
   });
 
   @override
-  List<Object?> get props =>
-      [rank, team, points, goalsDiff, lastMatches, stats, group];
+  List<Object?> get props => [rank, team, points, goalsDiff, form, stats];
 }
 
 class TeamRankStats extends Equatable {

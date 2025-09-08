@@ -28,35 +28,39 @@ class AppRouter {
     switch (settings.name) {
       case Routes.soccerLayout:
         return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => sl<SoccerCubit>(),
-            child: const SoccerLayout(),
-          ),
+          builder:
+              (context) => BlocProvider(
+                create: (context) => sl<SoccerCubit>(),
+                child: const SoccerLayout(),
+              ),
         );
       case Routes.soccer:
         return MaterialPageRoute(
-          builder: (context) => BlocProvider.value(
-            value: sl<SoccerCubit>(),
-            child: const SoccerScreen(),
-          ),
+          builder:
+              (context) => BlocProvider.value(
+                value: sl<SoccerCubit>(),
+                child: const SoccerScreen(),
+              ),
         );
       case Routes.fixtures:
         return MaterialPageRoute(
-          builder: (context) => BlocProvider.value(
-            value: sl<SoccerCubit>(),
-            child: const FixturesScreen(),
-          ),
+          builder:
+              (context) => BlocProvider.value(
+                value: sl<SoccerCubit>(),
+                child: const FixturesScreen(),
+              ),
         );
       case Routes.fixture:
         return MaterialPageRoute(
           builder: (context) {
             SoccerFixture soccerFixture = settings.arguments as SoccerFixture;
             return BlocProvider(
-              create: (context) => FixtureCubit(
-                lineupsUseCase: sl<LineupsUseCase>(),
-                eventsUseCase: sl<EventsUseCase>(),
-                statisticsUseCase: sl<StatisticsUseCase>(),
-              )..getLineups(soccerFixture.fixture.id.toString()),
+              create:
+                  (context) => FixtureCubit(
+                    lineupsUseCase: sl<LineupsUseCase>(),
+                    eventsUseCase: sl<EventsUseCase>(),
+                    statisticsUseCase: sl<StatisticsUseCase>(),
+                  )..getLineups(soccerFixture.fixture.id.toString()),
               child: FixtureScreen(soccerFixture: soccerFixture),
             );
           },
@@ -72,7 +76,6 @@ class NoRouteFound extends StatelessWidget {
   const NoRouteFound({super.key});
 
   @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: Center(child: Text(AppStrings.noRouteFound)),
-      );
+  Widget build(BuildContext context) =>
+      const Scaffold(body: Center(child: Text(AppStrings.noRouteFound)));
 }

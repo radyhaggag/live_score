@@ -77,7 +77,7 @@ class StandingsItem extends StatelessWidget {
             ],
           ),
           const SizedBox(width: AppSize.s10),
-          StandingsForm(form: teamRank.lastMatches),
+          StandingsForm(form: teamRank.form),
         ],
       ),
     );

@@ -31,7 +31,12 @@ extension GoalsExtension on GoalsModel {
 
 extension FixtureLeagueExtension on FixtureLeagueModel {
   FixtureLeague toDomain() => FixtureLeague(
-      id: id, name: name, logo: logo, season: season, round: round);
+    id: id,
+    name: name,
+    logo: logo,
+    season: season,
+    round: round,
+  );
 }
 
 extension FixtureExtension on FixtureModel {
@@ -41,14 +46,22 @@ extension FixtureExtension on FixtureModel {
 
 extension SoccerFixtureExtension on SoccerFixtureModel {
   SoccerFixture toDomain() => SoccerFixture(
-        fixture: fixture,
-        fixtureLeague: fixtureLeague,
-        teams: teams,
-        goals: goals,
-      );
+    fixture: fixture,
+    fixtureLeague: fixtureLeague,
+    teams: teams,
+    goals: goals,
+  );
 }
 
 extension LeagueExtension on LeagueModel {
-  League toDomain() =>
-      League(id: id, name: name, type: type, logo: logo, year: year);
+  League toDomain() {
+    return League(
+      id: id,
+      name: name,
+      logo: logo,
+      countryId: countryId,
+      country: country,
+      hexColor: hexColor,
+    );
+  }
 }

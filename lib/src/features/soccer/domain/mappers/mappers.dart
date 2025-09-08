@@ -9,9 +9,8 @@ extension TeamRankExtension on TeamRankModel {
         team: team,
         points: points,
         goalsDiff: goalsDiff,
-        lastMatches: lastMatches,
+        form: form,
         stats: stats,
-        group: group,
       );
 }
 
