@@ -40,10 +40,10 @@ class SoccerCubit extends Cubit<SoccerStates> {
   }
 
   Future<void> getCurrentRoundFixtures({required int competitionId}) async {
-    emit(SoccerFixturesLoading());
+    emit(SoccerCurrentRoundFixturesLoading());
     final fixtures = await currentRoundFixturesUseCase(competitionId);
     fixtures.fold(
-      (left) => emit(SoccerFixturesLoadFailure(left.message)),
+      (left) => emit(SoccerCurrentRoundFixturesLoadFailure(left.message)),
       (right) => emit(SoccerCurrentRoundFixturesLoaded(right)),
     );
   }

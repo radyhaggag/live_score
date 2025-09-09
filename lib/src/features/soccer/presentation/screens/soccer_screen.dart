@@ -22,7 +22,6 @@ class _SoccerScreenState extends State<SoccerScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<SoccerCubit>().getLeagues();
     context.read<SoccerCubit>().getTodayFixtures();
   }
 
@@ -30,7 +29,7 @@ class _SoccerScreenState extends State<SoccerScreen> {
   Widget build(BuildContext context) {
     return BlocListener<SoccerCubit, SoccerStates>(
       listener: (context, state) {
-        if (state is SoccerFixturesLoadFailure &&
+        if (state is SoccerCurrentRoundFixturesLoadFailure &&
             state.message ==
                 DataSource.networkConnectError.getFailure().message) {
           buildBlockAlert(context: context, message: state.message);

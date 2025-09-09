@@ -11,7 +11,6 @@ class NoFixturesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         const Image(image: AssetImage(AppAssets.noFixtures)),
         Text(

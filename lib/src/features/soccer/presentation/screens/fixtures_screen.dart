@@ -42,9 +42,8 @@ class _FixturesScreenState extends State<FixturesScreen> {
     return BlocBuilder<SoccerCubit, SoccerStates>(
       buildWhen: (previous, current) {
         return [
-          SoccerFixturesLoaded,
-          SoccerFixturesLoading,
-          SoccerFixturesLoadFailure,
+          SoccerCurrentRoundFixturesLoading,
+          SoccerCurrentRoundFixturesLoadFailure,
           SoccerCurrentRoundFixturesLoaded,
         ].contains(current.runtimeType);
       },
@@ -58,7 +57,7 @@ class _FixturesScreenState extends State<FixturesScreen> {
               selectedLeagueId: selectedLeagueId,
             ),
             SizedBox(height: 10.height),
-            if (state is SoccerFixturesLoading)
+            if (state is SoccerCurrentRoundFixturesLoading)
               const LinearProgressIndicator()
             else if (state is SoccerCurrentRoundFixturesLoaded &&
                 state.fixtures.isNotEmpty)

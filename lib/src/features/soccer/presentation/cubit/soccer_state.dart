@@ -20,13 +20,7 @@ class SoccerLeaguesLoadFailure extends SoccerStates {
   SoccerLeaguesLoadFailure(this.message);
 }
 
-class SoccerFixturesLoading extends SoccerStates {}
-
-class SoccerFixturesLoaded extends SoccerStates {
-  final List<SoccerFixture> fixtures;
-
-  SoccerFixturesLoaded(this.fixtures);
-}
+class SoccerCurrentRoundFixturesLoading extends SoccerStates {}
 
 class SoccerCurrentRoundFixturesLoaded extends SoccerStates {
   final List<SoccerFixture> fixtures;
@@ -34,10 +28,10 @@ class SoccerCurrentRoundFixturesLoaded extends SoccerStates {
   SoccerCurrentRoundFixturesLoaded(this.fixtures);
 }
 
-class SoccerFixturesLoadFailure extends SoccerStates {
+class SoccerCurrentRoundFixturesLoadFailure extends SoccerStates {
   final String message;
 
-  SoccerFixturesLoadFailure(this.message);
+  SoccerCurrentRoundFixturesLoadFailure(this.message);
 }
 
 class SoccerTodayFixturesLoading extends SoccerStates {}
