@@ -59,7 +59,8 @@ class _FixturesScreenState extends State<FixturesScreen> {
             SizedBox(height: 10.height),
             if (state is SoccerFixturesLoading)
               const LinearProgressIndicator()
-            else if (state is SoccerCurrentRoundFixturesLoaded)
+            else if (state is SoccerCurrentRoundFixturesLoaded &&
+                state.fixtures.isNotEmpty)
               Expanded(
                 child: ListView.builder(
                   itemCount: _buildGroupedFixtures(state.fixtures).length,
@@ -96,8 +97,11 @@ class _FixturesScreenState extends State<FixturesScreen> {
                   },
                 ),
               )
+            else if (state is SoccerCurrentRoundFixturesLoaded &&
+                state.fixtures.isEmpty)
+              NoFixturesView()
             else
-              const NoFixturesToday(),
+              const SizedBox.shrink(),
           ],
         );
       },

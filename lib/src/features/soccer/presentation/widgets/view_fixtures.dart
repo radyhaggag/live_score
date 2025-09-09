@@ -57,7 +57,7 @@ class ViewDayFixtures extends StatelessWidget {
                       (timeIsBefore && nowHour + 1 >= fixtureHour) ||
                               fixtures[index].gameTime != null
                           ? () {
-                            context.push(Routes.fixtures);
+                            // context.push(Routes.fixtures); // todo: replace with match details
                           }
                           : null,
                   child: FixtureCard(
@@ -69,7 +69,7 @@ class ViewDayFixtures extends StatelessWidget {
             ],
           ),
         )
-        : SizedBox(height: context.height / 2, child: const NoFixturesToday());
+        : SizedBox(height: context.height / 2, child: const NoFixturesView());
   }
 }
 
@@ -80,10 +80,9 @@ class ViewLiveFixtures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: context.width,
       height: 280.height,
-      padding: const EdgeInsets.only(right: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -99,7 +98,7 @@ class ViewLiveFixtures extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  context.push(Routes.fixtures);
+                  // context.push(Routes.fixtures); // todo: replace with live fixtures screen
                 },
                 child: viewAll(context),
               ),
@@ -111,14 +110,17 @@ class ViewLiveFixtures extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemBuilder:
-                  (context, index) => InkWell(
-                    onTap: () {
-                      context.push(Routes.fixtures);
-                    },
-                    child: LiveFixtureCard(soccerFixture: fixtures[index]),
-                  ),
-              separatorBuilder: (context, index) => SizedBox(width: 10.width),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    // context.push(
+                    //   Routes.fixtures,
+                    // ); // todo: replace with match details
+                  },
+                  child: LiveFixtureCard(soccerFixture: fixtures[index]),
+                );
+              },
+              separatorBuilder: (_, _) => SizedBox(width: 10.width),
               itemCount: fixtures.length,
             ),
           ),

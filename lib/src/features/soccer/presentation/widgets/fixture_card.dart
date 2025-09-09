@@ -93,9 +93,9 @@ class _FixtureCenter extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeTeam = soccerFixture.teams.home;
     final awayTeam = soccerFixture.teams.away;
-    final goalsAvailable = homeTeam.score != null && awayTeam.score != null;
+    final goalsAvailable = homeTeam.score != -1 && awayTeam.score != -1;
 
-    if (soccerFixture.status.isScheduled) {
+    if (soccerFixture.status.isScheduled || (soccerFixture.status.isEnded && !goalsAvailable)) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -254,13 +254,16 @@ class _StatusBadge extends StatelessWidget {
         },
         borderRadius: BorderRadius.circular(20.radius),
       ),
-      child: Text(
-        statusText,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: AppColors.white,
-          fontSize: FontSize.paragraph,
+      child: FittedBox(
+        child: Text(
+          statusText,
+          maxLines: 1,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: AppColors.white,
+            fontSize: FontSize.paragraph,
+          ),
+          textAlign: TextAlign.center,
         ),
-        textAlign: TextAlign.center,
       ),
     );
   }

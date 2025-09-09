@@ -40,10 +40,16 @@ class SoccerFixturesLoadFailure extends SoccerStates {
   SoccerFixturesLoadFailure(this.message);
 }
 
-class SoccerTodayFixturesLoaded extends SoccerStates {
-  final List<SoccerFixture> fixtures;
+class SoccerTodayFixturesLoading extends SoccerStates {}
 
-  SoccerTodayFixturesLoaded(this.fixtures);
+class SoccerTodayFixturesLoaded extends SoccerStates {
+  final List<SoccerFixture> todayFixtures;
+  final List<SoccerFixture> liveFixtures;
+
+  SoccerTodayFixturesLoaded({
+    required this.todayFixtures,
+    required this.liveFixtures,
+  });
 }
 
 class SoccerTodayFixturesLoadFailure extends SoccerStates {

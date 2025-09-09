@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/color.dart';
+import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../soccer/presentation/screens/soccer_screen.dart';
 import 'view_team.dart';
 
 class FixtureDetails extends StatelessWidget {
@@ -18,7 +18,7 @@ class FixtureDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      decoration: BoxDecoration(gradient: getGradientColor(soccerFixture)),
+      decoration: BoxDecoration(gradient: soccerFixture.gradientColor),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

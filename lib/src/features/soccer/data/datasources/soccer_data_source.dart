@@ -48,9 +48,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     try {
       final response = await dioHelper.get(
         url: Endpoints.leagues,
-        queryParams: {
-          'competitions': AppConstants.availableLeagues.join(','),
-        },
+        queryParams: {'competitions': AppConstants.availableLeagues.join(',')},
       );
       List<dynamic> result = response.data["competitions"];
       final countries = List<CountryModel>.from(
@@ -119,20 +117,6 @@ class SoccerDataSourceImpl implements SoccerDataSource {
       (id) => AppConstants.availableLeagues.contains(id),
       orElse: () => -1,
     );
-
-    // if availableId is -1, it means not in the available leagues, skip this fixture
-
-    // List<SoccerFixtureModel> fixtures = List<SoccerFixtureModel>.from(
-    //   result.map((fixture) {
-    //     final model = SoccerFixtureModel.fromJson(
-    //       fixture,
-    //       fixtureLeague: _cacheLeagues.firstWhere(
-    //         (league) => league.id == availableId,
-    //       ),
-    //     );
-    //     return model;
-    //   }),
-    // );
 
     List<SoccerFixtureModel> fixtures = [];
     for (var fixture in result) {

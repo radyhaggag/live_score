@@ -48,10 +48,8 @@ class SoccerCubit extends Cubit<SoccerStates> {
     );
   }
 
-  List<SoccerFixture> liveFixtures = [];
-
   Future<List<SoccerFixture>> getTodayFixtures() async {
-    emit(SoccerFixturesLoading());
+    emit(SoccerTodayFixturesLoading());
     final todayFixtures = await todayFixturesUseCase(NoParams());
     List<SoccerFixture> filteredFixtures = [];
     todayFixtures.fold(
@@ -65,7 +63,18 @@ class SoccerCubit extends Cubit<SoccerStates> {
                   ),
                 )
                 .toList();
-        emit(SoccerTodayFixturesLoaded(filteredFixtures));
+
+        final liveFixtures =
+            filteredFixtures.where((fixture) {
+              return fixture.status.isLive;
+            }).toList();
+
+        emit(
+          SoccerTodayFixturesLoaded(
+            todayFixtures: filteredFixtures,
+            liveFixtures: liveFixtures,
+          ),
+        );
       },
     );
     return filteredFixtures;

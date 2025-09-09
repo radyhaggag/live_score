@@ -14,7 +14,7 @@ class Team extends Equatable {
   final int id;
   final String name;
   final String logo;
-  final int? score;
+  final int score;
   final int? aggregatedScore;
   final String? color;
   final String? awayColor;
@@ -23,7 +23,7 @@ class Team extends Equatable {
     required this.id,
     required this.name,
     required this.logo,
-    this.score,
+    this.score = -1,
     this.aggregatedScore,
     this.color,
     this.awayColor,

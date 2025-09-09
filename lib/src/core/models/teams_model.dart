@@ -31,7 +31,7 @@ class TeamModel extends Team {
       logo: AppConstants.clubImage(id.toString()),
       color: json['color'],
       awayColor: json['awayColor'],
-      score: (json['score'] as num?)?.toInt(),
+      score: (json['score'] as num?)?.toInt() ?? -1,
       aggregatedScore: (json['aggregatedScore'] as num?)?.toInt(),
     );
   }
