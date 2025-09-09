@@ -24,9 +24,7 @@ class _StandingsScreenState extends State<StandingsScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SoccerCubit>().getStandings(
-        StandingsParams(
-          leagueId: AppConstants.availableLeagues.first,
-        ),
+        StandingsParams(leagueId: AppConstants.availableLeagues.first),
       );
     });
   }
@@ -67,7 +65,10 @@ class _StandingsScreenState extends State<StandingsScreen> {
                       teamIndex,
                     ) {
                       TeamRank team = state.standings.standings[teamIndex];
-                      return StandingsItem(teamRank: team);
+                      return StandingsItem(
+                        teamRank: team,
+                        totalTeams: state.standings.standings.length,
+                      );
                     }),
                     SizedBox(height: 10.height),
                   ],

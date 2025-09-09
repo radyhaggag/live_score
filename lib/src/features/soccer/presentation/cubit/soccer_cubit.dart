@@ -72,7 +72,6 @@ class SoccerCubit extends Cubit<SoccerStates> {
   }
 
   Future<void> getStandings(StandingsParams params) async {
-    if (state is SoccerStandingsLoading) return;
     emit(SoccerStandingsLoading());
     final standings = await standingUseCase(params);
     standings.fold(

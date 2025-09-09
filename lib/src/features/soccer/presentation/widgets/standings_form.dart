@@ -17,15 +17,12 @@ class StandingsForm extends StatelessWidget {
     return color;
   }
 
-  Icon? getIcon(int number) {
-    if (number == 1) return smallIcon(Icons.check);
-
-    if (number == 0) return smallIcon(Icons.close);
-
-    if (number == 2) return smallIcon(Icons.remove);
-
-    return null;
-  }
+  Icon? getIcon(int number) => switch (number) {
+    0 => smallIcon(Icons.close),
+    1 => smallIcon(Icons.check),
+    2 => smallIcon(Icons.remove),
+    _ => null,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -36,30 +33,27 @@ class StandingsForm extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 110.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ...List.generate(
-            5,
-            (index) => getCircle(
-              child: getIcon(formNumbers[index]),
-              color: getBackground(formNumbers[index]),
-            ),
+        children: List.generate(
+          5,
+          (index) => getCircle(
+            child: getIcon(formNumbers[index]),
+            color: getBackground(formNumbers[index]),
           ),
-        ],
+        ),
       ),
     );
   }
 
   Icon smallIcon(IconData icon) {
-    return Icon(icon, color: AppColors.white, size: 16.radius);
+    return Icon(icon, color: AppColors.white, size: 12.5.radius);
   }
 
   Widget getCircle({Widget? child, required Color color}) => Container(
-    width: 18.radius,
-    height: 18.radius,
-    margin: const EdgeInsets.only(right: 2),
+    width: 15.radius,
+    height: 15.radius,
+    margin: const EdgeInsets.only(right: 5),
     decoration: BoxDecoration(
       color: color,
       borderRadius: BorderRadius.circular(50),
