@@ -45,7 +45,7 @@ class FixtureDetails extends StatelessWidget {
           Row(
             children: [
               Expanded(child: ViewTeam(team: soccerFixture.teams.home)),
-              (soccerFixture.fixture.status.elapsed != null)
+              (soccerFixture.gameTime != null && soccerFixture.gameTime! > 0)
                   ? Expanded(child: buildFixtureResult(context))
                   : Expanded(child: buildFixtureTime(context)),
               Expanded(child: ViewTeam(team: soccerFixture.teams.away)),
@@ -53,16 +53,13 @@ class FixtureDetails extends StatelessWidget {
           ),
           SizedBox(height: 10.height),
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 5,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             decoration: BoxDecoration(
               color: AppColors.lightRed,
               borderRadius: BorderRadius.circular(20.radius),
             ),
             child: Text(
-              soccerFixture.fixture.status.long,
+              soccerFixture.statusText,
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(color: AppColors.white),
@@ -83,11 +80,17 @@ class FixtureDetails extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(soccerFixture.goals.home.toString(), style: displaySmall),
+            Text(
+              soccerFixture.teams.home.score.toString(),
+              style: displaySmall,
+            ),
             SizedBox(width: 10.width),
             Text(":", style: displaySmall),
             SizedBox(width: 10.width),
-            Text(soccerFixture.goals.away.toString(), style: displaySmall),
+            Text(
+              soccerFixture.teams.away.score.toString(),
+              style: displaySmall,
+            ),
           ],
         ),
         SizedBox(height: 5.height),
@@ -97,7 +100,7 @@ class FixtureDetails extends StatelessWidget {
   }
 
   Widget buildFixtureTime(BuildContext context) {
-    String fixtureTime = soccerFixture.fixture.date;
+    String fixtureTime = soccerFixture.startTime.toString();
     final localTime = DateTime.parse(fixtureTime).toLocal();
     final formattedTime = DateFormat("h:mm a").format(localTime);
     return Column(
@@ -115,7 +118,9 @@ class FixtureDetails extends StatelessWidget {
   }
 
   Widget buildFixtureRound(BuildContext context) => Text(
-    soccerFixture.fixtureLeague.round,
+    soccerFixture.roundNum != null
+        ? "Round ${soccerFixture.roundNum}"
+        : "Season ${soccerFixture.seasonNum}",
     maxLines: 1,
     overflow: TextOverflow.ellipsis,
     style: Theme.of(context).textTheme.bodySmall?.copyWith(

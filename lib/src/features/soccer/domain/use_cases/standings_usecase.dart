@@ -18,7 +18,7 @@ class StandingsUseCase extends UseCase<Standings, StandingsParams> {
 }
 
 class StandingsParams extends Equatable {
-  final String leagueId;
+  final int leagueId;
 
   const StandingsParams({required this.leagueId});
 

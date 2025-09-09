@@ -19,8 +19,8 @@ void initSoccer() {
       soccerDataSource: sl<SoccerDataSourceImpl>(),
     ),
   );
-  sl.registerLazySingleton<DayFixturesUseCase>(
-    () => DayFixturesUseCase(
+  sl.registerLazySingleton<CurrentRoundFixturesUseCase>(
+    () => CurrentRoundFixturesUseCase(
       soccerRepository: sl<SoccerRepositoryImpl>(),
     ),
   );
@@ -42,7 +42,7 @@ void initSoccer() {
   );
   sl.registerFactory<SoccerCubit>(
     () => SoccerCubit(
-      dayFixturesUseCase: sl<DayFixturesUseCase>(),
+      currentRoundFixturesUseCase: sl<CurrentRoundFixturesUseCase>(),
       leaguesUseCase: sl<LeaguesUseCase>(),
       liveFixturesUseCase: sl<LiveFixturesUseCase>(),
       standingUseCase: sl<StandingsUseCase>(),

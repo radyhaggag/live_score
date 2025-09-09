@@ -64,18 +64,14 @@ class ModalSheetContent extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                cubit.currentFixtures =
-                    cubit.leaguesFixtures[league.id]?.fixtures ?? [];
                 context.pop();
-                context.push(Routes.fixtures);
+                context.push(Routes.fixtures, extra: league.id);
               },
               child: const Text(AppStrings.viewFixtures),
             ),
             ElevatedButton(
               onPressed: () async {
-                StandingsParams params = StandingsParams(
-                  leagueId: league.id.toString(),
-                );
+                StandingsParams params = StandingsParams(leagueId: league.id);
                 context.push(Routes.standings);
                 context.pop();
                 await cubit.getStandings(params);

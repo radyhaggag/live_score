@@ -12,7 +12,9 @@ import '../models/standings_model.dart';
 abstract class SoccerDataSource {
   Future<List<LeagueModel>> getLeagues();
 
-  Future<List<SoccerFixtureModel>> getDayFixtures({required String date});
+  Future<List<SoccerFixtureModel>> getCurrentRoundFixtures({
+    required int competitionId,
+  });
 
   Future<List<SoccerFixtureModel>> getLiveFixtures();
 
@@ -25,19 +27,21 @@ class SoccerDataSourceImpl implements SoccerDataSource {
   SoccerDataSourceImpl({required this.dioHelper});
 
   @override
-  Future<List<SoccerFixtureModel>> getDayFixtures({
-    required String date,
+  Future<List<SoccerFixtureModel>> getCurrentRoundFixtures({
+    required int competitionId,
   }) async {
     try {
       final response = await dioHelper.get(
-        url: Endpoints.fixtures,
-        queryParams: {"date": date},
+        url: Endpoints.currentRoundFixtures,
+        queryParams: {"competitions": competitionId},
       );
       return _getResult(response);
     } catch (error) {
       rethrow;
     }
   }
+
+  List<LeagueModel> _cacheLeagues = [];
 
   @override
   Future<List<LeagueModel>> getLeagues() async {
@@ -50,7 +54,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
       final countries = List<CountryModel>.from(
         response.data["countries"].map((item) => CountryModel.fromJson(item)),
       );
-      List<LeagueModel> leagues = List<LeagueModel>.from(
+      _cacheLeagues = List<LeagueModel>.from(
         result.map(
           (item) => LeagueModel.fromJson(
             item,
@@ -60,7 +64,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
           ),
         ),
       );
-      return leagues;
+      return _cacheLeagues;
     } catch (error) {
       rethrow;
     }
@@ -96,12 +100,28 @@ class SoccerDataSourceImpl implements SoccerDataSource {
       rethrow;
     }
   }
-}
 
-List<SoccerFixtureModel> _getResult(Response response) {
-  List<dynamic> result = response.data["response"];
-  List<SoccerFixtureModel> fixtures = List<SoccerFixtureModel>.from(
-    result.map((fixture) => SoccerFixtureModel.fromJson(fixture)),
-  );
-  return fixtures;
+  List<SoccerFixtureModel> _getResult(Response response) {
+    List<dynamic> result = response.data["games"];
+    final competitionIds =
+        response.data['competitions']
+            .map<int>((competition) => competition['id'] as int)
+            .toSet()
+            .toList();
+    final availableId = competitionIds.lastWhere(
+      (id) => AppConstants.availableLeagues.contains(id),
+    );
+    List<SoccerFixtureModel> fixtures = List<SoccerFixtureModel>.from(
+      result.map((fixture) {
+        final model = SoccerFixtureModel.fromJson(
+          fixture,
+          fixtureLeague: _cacheLeagues.firstWhere(
+            (league) => league.id == availableId,
+          ),
+        );
+        return model;
+      }),
+    );
+    return fixtures;
+  }
 }

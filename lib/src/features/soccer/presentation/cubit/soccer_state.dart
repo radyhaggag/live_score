@@ -28,6 +28,12 @@ class SoccerFixturesLoaded extends SoccerStates {
   SoccerFixturesLoaded(this.fixtures);
 }
 
+class SoccerCurrentRoundFixturesLoaded extends SoccerStates {
+  final List<SoccerFixture> fixtures;
+
+  SoccerCurrentRoundFixturesLoaded(this.fixtures);
+}
+
 class SoccerFixturesLoadFailure extends SoccerStates {
   final String message;
 
@@ -45,8 +51,6 @@ class SoccerLiveFixturesLoadFailure extends SoccerStates {
 
   SoccerLiveFixturesLoadFailure(this.message);
 }
-
-class SoccerCurrentFixturesChanges extends SoccerStates {}
 
 class SoccerStandingsLoading extends SoccerStates {}
 

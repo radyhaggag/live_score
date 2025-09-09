@@ -1,22 +1,34 @@
+import 'package:live_score/src/core/domain/mappers/mappers.dart';
+import 'package:live_score/src/core/models/league_model.dart';
+
 import '../domain/entities/soccer_fixture.dart';
-import '../domain/mappers/mappers.dart';
-import 'fixture_league.dart';
-import 'fixture_model.dart';
-import 'goals_model.dart';
 import 'teams_model.dart';
 
 class SoccerFixtureModel extends SoccerFixture {
-  const SoccerFixtureModel(
-      {required super.fixture,
-      required super.fixtureLeague,
-      required super.teams,
-      required super.goals});
+  const SoccerFixtureModel({
+    required super.id,
+    required super.teams,
+    required super.statusText,
+    required super.fixtureLeague,
+    super.startTime,
+    super.gameTime,
+    super.roundNum,
+    super.stageNum,
+    super.seasonNum,
+  });
 
-  factory SoccerFixtureModel.fromJson(Map<String, dynamic> json) =>
-      SoccerFixtureModel(
-        fixture: FixtureModel.fromJson(json['fixture']).toDomain(),
-        fixtureLeague: FixtureLeagueModel.fromJson(json['league']).toDomain(),
-        teams: TeamsModel.fromJson(json['teams']).toDomain(),
-        goals: GoalsModel.fromJson(json['goals']).toDomain(),
-      );
+  factory SoccerFixtureModel.fromJson(
+    Map<String, dynamic> json, {
+    required LeagueModel fixtureLeague,
+  }) => SoccerFixtureModel(
+    id: json['id'],
+    teams: TeamsModel.fromJson(json).toDomain(),
+    fixtureLeague: fixtureLeague,
+    statusText: json['statusText'],
+    startTime: DateTime.parse(json['startTime']),
+    gameTime: (json['gameTime'] as num?)?.toInt(),
+    roundNum: json['roundNum'],
+    stageNum: json['stageNum'],
+    seasonNum: json['seasonNum'],
+  );
 }

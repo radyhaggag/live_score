@@ -16,9 +16,7 @@ class FixtureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3.radius,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       child: Padding(
         padding: const EdgeInsetsDirectional.all(10),
         child: Row(
@@ -57,20 +55,21 @@ class _TeamInfo extends StatelessWidget {
       child: Column(
         children: [
           CachedNetworkImage(
-            fit: BoxFit.cover,
-            height: 45.radius,
-            width: 45.radius,
+            height: 25.radius,
+            width: 25.radius,
             imageUrl: logo,
           ),
           SizedBox(height: 10.height),
-          Text(
-            name,
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.fade,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeights.medium,
-              fontSize: FontSize.details,
+          FittedBox(
+            child: Text(
+              name.split(' ').length > 2
+                  ? name.split(' ').sublist(0, 2).join(' ')
+                  : name,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.fade,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.black),
             ),
           ),
         ],
@@ -90,9 +89,10 @@ class _FixtureCenter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isNotStarted = soccerFixture.fixture.status.short == "NS";
-    final goalsAvailable =
-        soccerFixture.goals.home != null && soccerFixture.goals.away != null;
+    final homeTeam = soccerFixture.teams.home;
+    final awayTeam = soccerFixture.teams.away;
+    final isNotStarted = soccerFixture.status == SoccerFixtureStatus.scheduled;
+    final goalsAvailable = homeTeam.score != null && awayTeam.score != null;
 
     if (isNotStarted) {
       return Column(
@@ -103,8 +103,11 @@ class _FixtureCenter extends StatelessWidget {
               context,
             ).textTheme.titleMedium?.copyWith(color: AppColors.deepOrange),
           ),
+
           SizedBox(height: 5.height),
           _LeagueName(name: soccerFixture.fixtureLeague.name),
+          SizedBox(height: 5.height),
+          _StatusBadge(status: soccerFixture.status),
         ],
       );
     }
@@ -115,16 +118,26 @@ class _FixtureCenter extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _ScoreText(value: soccerFixture.goals.home.toString()),
+              _ScoreText(value: homeTeam.score.toString()),
               _ScoreText(value: ":"),
-              _ScoreText(value: soccerFixture.goals.away.toString()),
+              _ScoreText(value: awayTeam.score.toString()),
             ],
           ),
-          SizedBox(height: 5.height),
+          if (homeTeam.aggregatedScore != null &&
+              awayTeam.aggregatedScore != null) ...[
+            SizedBox(height: 5.height),
+            Text(
+              "Aggregate (${homeTeam.aggregatedScore} - ${awayTeam.aggregatedScore})",
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: AppColors.blueGrey),
+            ),
+            SizedBox(height: 5.height),
+          ],
           _LeagueName(name: soccerFixture.fixtureLeague.name),
           SizedBox(height: 5.height),
-          if (soccerFixture.fixture.status.elapsed != null)
-            _StatusBadge(status: soccerFixture.fixture.status.short),
+          if (soccerFixture.gameTime != null)
+            _StatusBadge(status: soccerFixture.status),
         ],
       );
     }
@@ -166,23 +179,27 @@ class _LeagueName extends StatelessWidget {
 }
 
 class _StatusBadge extends StatelessWidget {
-  final String status;
+  final SoccerFixtureStatus status;
   const _StatusBadge({required this.status});
 
   @override
   Widget build(BuildContext context) {
-    final isLive = status != "FT";
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 5,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       decoration: BoxDecoration(
-        color: isLive ? AppColors.red : AppColors.blue,
+        color: switch (status) {
+          SoccerFixtureStatus.live => AppColors.red,
+          SoccerFixtureStatus.ended => AppColors.blue,
+          SoccerFixtureStatus.scheduled => AppColors.blue,
+        },
         borderRadius: BorderRadius.circular(20.radius),
       ),
       child: Text(
-        isLive ? "Live" : "End",
+        switch (status) {
+          SoccerFixtureStatus.live => "Live",
+          SoccerFixtureStatus.ended => "Ended",
+          SoccerFixtureStatus.scheduled => "Scheduled",
+        },
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: AppColors.white,
           fontSize: FontSize.paragraph,

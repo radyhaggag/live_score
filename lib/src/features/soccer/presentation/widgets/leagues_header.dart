@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/utils/app_constants.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -33,7 +34,7 @@ class CircleLeaguesHeader extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          if(index == leagues.length - 1){
+          if (index == leagues.length - 1) {
             return Row(
               children: [
                 buildLeagueAvatar(league: leagues[index], context: context),
@@ -73,15 +74,31 @@ class CircleLeaguesHeader extends StatelessWidget {
   );
 }
 
-class RectLeaguesHeader extends StatelessWidget {
+class RectLeaguesHeader extends StatefulWidget {
   final List<League> leagues;
   final bool getFixtures;
+  final int? selectedLeagueId;
 
   const RectLeaguesHeader({
     super.key,
     required this.leagues,
     required this.getFixtures,
+    this.selectedLeagueId,
   });
+
+  @override
+  State<RectLeaguesHeader> createState() => _RectLeaguesHeaderState();
+}
+
+class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
+  int? selectedLeagueId;
+
+  @override
+  initState() {
+    super.initState();
+    selectedLeagueId =
+        widget.selectedLeagueId ?? AppConstants.availableLeagues.first;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,24 +110,29 @@ class RectLeaguesHeader extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: leagues.length,
+          itemCount: widget.leagues.length,
           separatorBuilder: (_, _) {
             return SizedBox(width: 5.width);
           },
           itemBuilder: (context, index) {
             return InkWell(
-              onTap:
-                  getFixtures == false
-                      ? () async {
-                        StandingsParams params = StandingsParams(
-                          leagueId: leagues[index].id.toString(),
-                        );
-                        await context.read<SoccerCubit>().getStandings(params);
-                      }
-                      : () => context.read<SoccerCubit>().loadCurrentFixtures(
-                        leagues[index].id,
-                      ),
-              child: LeagueCard(league: leagues[index]),
+              onTap: () {
+                if (widget.getFixtures == false) {
+                  StandingsParams params = StandingsParams(
+                    leagueId: widget.leagues[index].id,
+                  );
+                  context.read<SoccerCubit>().getStandings(params);
+                } else {
+                  context.read<SoccerCubit>().getCurrentRoundFixtures(
+                    competitionId: widget.leagues[index].id,
+                  );
+                }
+                setState(() => selectedLeagueId = widget.leagues[index].id);
+              },
+              child: LeagueCard(
+                league: widget.leagues[index],
+                isSelected: selectedLeagueId == widget.leagues[index].id,
+              ),
             );
           },
         ),

@@ -22,10 +22,13 @@ class _StandingsScreenState extends State<StandingsScreen> {
   @override
   void initState() {
     super.initState();
-
-    context.read<SoccerCubit>().getStandings(
-      StandingsParams(leagueId: AppConstants.availableLeagues.first.toString()),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SoccerCubit>().getStandings(
+        StandingsParams(
+          leagueId: AppConstants.availableLeagues.first,
+        ),
+      );
+    });
   }
 
   @override
@@ -36,7 +39,7 @@ class _StandingsScreenState extends State<StandingsScreen> {
       physics: const BouncingScrollPhysics(),
 
       children: [
-        RectLeaguesHeader(leagues: cubit.filteredLeagues, getFixtures: false),
+        RectLeaguesHeader(leagues: cubit.availableLeagues, getFixtures: false),
         SizedBox(height: 5.height),
         BlocBuilder<SoccerCubit, SoccerStates>(
           buildWhen: (previous, current) {

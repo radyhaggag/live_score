@@ -36,8 +36,10 @@ class AppRouter {
           ),
           GoRoute(
             path: Routes.fixtures,
-            pageBuilder: (context, _) {
-              return NoTransitionPage(child: const FixturesScreen());
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: FixturesScreen(competitionId: state.extra as int?),
+              );
             },
           ),
           GoRoute(

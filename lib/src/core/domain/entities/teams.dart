@@ -14,15 +14,21 @@ class Team extends Equatable {
   final int id;
   final String name;
   final String logo;
-  final bool? winner;
+  final int? score;
+  final int? aggregatedScore;
+  final String? color;
+  final String? awayColor;
 
   const Team({
     required this.id,
     required this.name,
     required this.logo,
-    this.winner,
+    this.score,
+    this.aggregatedScore,
+    this.color,
+    this.awayColor,
   });
 
   @override
-  List<Object?> get props => [id, name, logo, winner];
+  List<Object?> get props => [id, name, logo, color, awayColor, score];
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
@@ -9,7 +8,6 @@ import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../cubit/soccer_cubit.dart';
 import 'fixture_card.dart';
 import 'live_fixtures_card.dart';
 import 'no_fixtures_today.dart';
@@ -40,14 +38,13 @@ class ViewDayFixtures extends StatelessWidget {
                   InkWell(
                     onTap: () {
                       context.push(Routes.fixtures);
-                      context.read<SoccerCubit>().currentFixtures = fixtures;
                     },
                     child: viewAll(context),
                   ),
                 ],
               ),
               ...List.generate(fixtures.length, (index) {
-                String fixtureTime = fixtures[index].fixture.date;
+                String fixtureTime = fixtures[index].startTime.toString();
                 final localTime = DateTime.parse(fixtureTime).toLocal();
                 final formattedTime = DateFormat("h:mm a").format(localTime);
                 int nowHour = int.parse(
@@ -58,12 +55,9 @@ class ViewDayFixtures extends StatelessWidget {
                 return InkWell(
                   onTap:
                       (timeIsBefore && nowHour + 1 >= fixtureHour) ||
-                              fixtures[index].fixture.status.elapsed != null
+                              fixtures[index].gameTime != null
                           ? () {
-                            context.push(
-                              Routes.fixtures,
-                              extra: fixtures[index],
-                            );
+                            context.push(Routes.fixtures);
                           }
                           : null,
                   child: FixtureCard(
@@ -105,7 +99,6 @@ class ViewLiveFixtures extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  context.read<SoccerCubit>().currentFixtures = fixtures;
                   context.push(Routes.fixtures);
                 },
                 child: viewAll(context),
@@ -121,7 +114,7 @@ class ViewLiveFixtures extends StatelessWidget {
               itemBuilder:
                   (context, index) => InkWell(
                     onTap: () {
-                      context.push(Routes.fixtures, extra: fixtures[index]);
+                      context.push(Routes.fixtures);
                     },
                     child: LiveFixtureCard(soccerFixture: fixtures[index]),
                   ),

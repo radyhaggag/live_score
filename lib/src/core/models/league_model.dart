@@ -21,7 +21,7 @@ class LeagueModel extends League {
     return LeagueModel(
       id: id,
       name: json['name'],
-      logo: AppConstants.competitionImage(id.toString()),
+      logo: AppConstants.competitionImage(id),
       countryId: json['countryId'],
       country: country,
       hexColor: json['color'],

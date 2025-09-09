@@ -59,8 +59,8 @@ class FixtureScreen extends StatelessWidget {
         child: tabBarButton(
           label: AppStrings.statistics,
           onPressed: () async {
-            if (soccerFixture.fixture.status.short != "NS") {
-              await cubit.getStatistics(soccerFixture.fixture.id.toString());
+            if (soccerFixture.status != SoccerFixtureStatus.scheduled) {
+              await cubit.getStatistics(soccerFixture.id.toString());
             } else {
               Fluttertoast.showToast(
                 msg: AppStrings.noStats,
@@ -74,7 +74,7 @@ class FixtureScreen extends StatelessWidget {
         child: tabBarButton(
           label: AppStrings.lineups,
           onPressed: () async {
-            await cubit.getLineups(soccerFixture.fixture.id.toString());
+            await cubit.getLineups(soccerFixture.id.toString());
           },
         ),
       ),
@@ -82,8 +82,8 @@ class FixtureScreen extends StatelessWidget {
         child: tabBarButton(
           label: AppStrings.events,
           onPressed: () async {
-            if (soccerFixture.fixture.status.short != "NS") {
-              await cubit.getEvents(soccerFixture.fixture.id.toString());
+            if (soccerFixture.status != SoccerFixtureStatus.scheduled) {
+              await cubit.getEvents(soccerFixture.id.toString());
             } else {
               Fluttertoast.showToast(
                 msg: AppStrings.noEvents,
@@ -111,7 +111,7 @@ class FixtureScreen extends StatelessWidget {
 
 Color getColor(SoccerFixture fixture) {
   Color color = AppColors.blueGrey;
-  if (fixture.goals.away != fixture.goals.home) {
+  if (fixture.teams.away.score != fixture.teams.home.score) {
     color = AppColors.lightRed;
   }
   return color;

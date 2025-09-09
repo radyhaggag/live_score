@@ -42,12 +42,12 @@ class LiveFixtureCard extends StatelessWidget {
           buildTeamTile(
             context: context,
             name: soccerFixture.teams.home.name,
-            goals: soccerFixture.goals.home.toString(),
+            goals: soccerFixture.teams.home.score.toString(),
           ),
           buildTeamTile(
             context: context,
             name: soccerFixture.teams.away.name,
-            goals: soccerFixture.goals.away.toString(),
+            goals: soccerFixture.teams.away.score.toString(),
           ),
           Container(
             padding: const EdgeInsets.symmetric(

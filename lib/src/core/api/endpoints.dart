@@ -1,5 +1,6 @@
 class Endpoints {
   Endpoints._();
+  static const currentRoundFixtures = "/games/current/";
   static const fixtures = "/games/fixtures/";
   static const leagues = "/competitions/";
   static const statistics = "/games/statistics/";

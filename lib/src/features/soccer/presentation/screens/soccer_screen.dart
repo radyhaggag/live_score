@@ -10,7 +10,6 @@ import '../../../../core/widgets/center_indicator.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
 import '../widgets/leagues_header.dart';
-import '../widgets/view_fixtures.dart';
 
 class SoccerScreen extends StatelessWidget {
   const SoccerScreen({super.key});
@@ -46,7 +45,7 @@ class SoccerScreen extends StatelessWidget {
             : RefreshIndicator(
               onRefresh: () async {
                 await cubit.getLiveFixtures();
-                await cubit.getFixtures();
+                // await cubit.getFixtures(); // todo: fetch today fixtures
               },
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -56,15 +55,15 @@ class SoccerScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (cubit.filteredLeagues.isNotEmpty) ...[
-                        CircleLeaguesHeader(leagues: cubit.filteredLeagues),
+                      if (cubit.availableLeagues.isNotEmpty) ...[
+                        CircleLeaguesHeader(leagues: cubit.availableLeagues),
                         SizedBox(height: 10.height),
                       ],
-                      if (cubit.currentFixtures.isNotEmpty) ...[
-                        ViewLiveFixtures(fixtures: cubit.currentFixtures),
-                        SizedBox(height: 10.height),
-                      ],
-                      ViewDayFixtures(fixtures: cubit.dayFixtures),
+                      // if (cubit.currentFixtures.isNotEmpty) ...[
+                      //   ViewLiveFixtures(fixtures: cubit.currentFixtures),
+                      //   SizedBox(height: 10.height),
+                      // ],
+                      // ViewDayFixtures(fixtures: cubit.dayFixtures),
                     ],
                   ),
                 ),
@@ -77,7 +76,7 @@ class SoccerScreen extends StatelessWidget {
 
 Gradient getGradientColor(SoccerFixture fixture) {
   Gradient color = AppColors.blueGradient;
-  if (fixture.goals.away != fixture.goals.home) {
+  if (fixture.teams.away.score != fixture.teams.home.score) {
     color = AppColors.redGradient;
   }
   return color;

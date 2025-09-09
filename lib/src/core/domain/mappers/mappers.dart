@@ -1,12 +1,8 @@
-import '../../models/fixture_league.dart';
-import '../../models/fixture_model.dart';
 import '../../models/goals_model.dart';
 import '../../models/league_model.dart';
 import '../../models/soccer_fixture_model.dart';
 import '../../models/status_model.dart';
 import '../../models/teams_model.dart';
-import '../entities/fixture.dart';
-import '../entities/fixture_league.dart';
 import '../entities/goals.dart';
 import '../entities/league.dart';
 import '../entities/soccer_fixture.dart';
@@ -18,7 +14,15 @@ extension StatusExtension on StatusModel {
 }
 
 extension TeamExtension on TeamModel {
-  Team toDomain() => Team(id: id, name: name, logo: logo, winner: winner);
+  Team toDomain() => Team(
+    id: id,
+    name: name,
+    logo: logo,
+    color: color,
+    awayColor: awayColor,
+    score: score,
+    aggregatedScore: aggregatedScore,
+  );
 }
 
 extension TeamsExtension on TeamsModel {
@@ -29,27 +33,17 @@ extension GoalsExtension on GoalsModel {
   Goals toDomain() => Goals(home: home, away: away);
 }
 
-extension FixtureLeagueExtension on FixtureLeagueModel {
-  FixtureLeague toDomain() => FixtureLeague(
-    id: id,
-    name: name,
-    logo: logo,
-    season: season,
-    round: round,
-  );
-}
-
-extension FixtureExtension on FixtureModel {
-  Fixture toDomain() =>
-      Fixture(id: id, date: date, referee: referee, status: status);
-}
-
 extension SoccerFixtureExtension on SoccerFixtureModel {
   SoccerFixture toDomain() => SoccerFixture(
-    fixture: fixture,
+    id: id,
     fixtureLeague: fixtureLeague,
     teams: teams,
-    goals: goals,
+    statusText: statusText,
+    startTime: startTime,
+    gameTime: gameTime,
+    roundNum: roundNum,
+    stageNum: stageNum,
+    seasonNum: seasonNum,
   );
 }
 

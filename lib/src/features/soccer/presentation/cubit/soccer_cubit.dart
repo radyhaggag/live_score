@@ -1,11 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../../../core/utils/app_constants.dart';
-import '../../domain/entities/league_of_fixture.dart';
 import '../../domain/use_cases/day_fixtures_usecase.dart';
 import '../../domain/use_cases/leagues_usecase.dart';
 import '../../domain/use_cases/live_fixtures_usecase.dart';
@@ -13,64 +11,41 @@ import '../../domain/use_cases/standings_usecase.dart';
 import 'soccer_state.dart';
 
 class SoccerCubit extends Cubit<SoccerStates> {
-  final DayFixturesUseCase dayFixturesUseCase;
+  final CurrentRoundFixturesUseCase currentRoundFixturesUseCase;
   final LeaguesUseCase leaguesUseCase;
   final LiveFixturesUseCase liveFixturesUseCase;
   final StandingsUseCase standingUseCase;
 
   SoccerCubit({
-    required this.dayFixturesUseCase,
+    required this.currentRoundFixturesUseCase,
     required this.leaguesUseCase,
     required this.liveFixturesUseCase,
     required this.standingUseCase,
   }) : super(ScoreInitial());
 
-  List<League> filteredLeagues = [];
-  Map<int, LeagueOfFixture> leaguesFixtures = {};
+  List<League> availableLeagues = [];
 
   Future<List<League>> getLeagues() async {
-    if (filteredLeagues.isNotEmpty) return filteredLeagues;
+    if (availableLeagues.isNotEmpty) return availableLeagues;
 
     emit(SoccerLeaguesLoading());
     final leagues = await leaguesUseCase(NoParams());
     leagues.fold((left) => emit(SoccerLeaguesLoadFailure(left.message)), (
       right,
     ) {
-      filteredLeagues = right;
-      for (League league in right) {
-        leaguesFixtures.putIfAbsent(
-          league.id,
-          () => LeagueOfFixture(league: league),
-        );
-      }
-      emit(SoccerLeaguesLoaded(filteredLeagues));
+      availableLeagues = right;
+      emit(SoccerLeaguesLoaded(availableLeagues));
     });
-    return filteredLeagues;
+    return availableLeagues;
   }
 
-  List<SoccerFixture> dayFixtures = [];
-
-  Future<List<SoccerFixture>> getFixtures() async {
+  Future<void> getCurrentRoundFixtures({required int competitionId}) async {
     emit(SoccerFixturesLoading());
-    String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
-    final fixtures = await dayFixturesUseCase(date);
-    List<SoccerFixture> filteredFixtures = [];
-    fixtures.fold((left) => emit(SoccerFixturesLoadFailure(left.message)), (
-      right,
-    ) {
-      leaguesFixtures.forEach((key, value) {
-        value.fixtures.clear();
-      });
-      for (SoccerFixture fixture in right) {
-        if (AppConstants.availableLeagues.contains(fixture.fixtureLeague.id)) {
-          filteredFixtures.add(fixture);
-          leaguesFixtures[fixture.fixtureLeague.id]!.fixtures.add(fixture);
-        }
-        dayFixtures = filteredFixtures;
-      }
-      emit(SoccerFixturesLoaded(filteredFixtures));
-    });
-    return filteredFixtures;
+    final fixtures = await currentRoundFixturesUseCase(competitionId);
+    fixtures.fold(
+      (left) => emit(SoccerFixturesLoadFailure(left.message)),
+      (right) => emit(SoccerCurrentRoundFixturesLoaded(right)),
+    );
   }
 
   List<SoccerFixture> liveFixtures = [];
@@ -94,13 +69,6 @@ class SoccerCubit extends Cubit<SoccerStates> {
       },
     );
     return filteredFixtures;
-  }
-
-  List<SoccerFixture> currentFixtures = [];
-
-  void loadCurrentFixtures(int leagueId) {
-    currentFixtures = leaguesFixtures[leagueId]?.fixtures ?? [];
-    emit(SoccerCurrentFixturesChanges());
   }
 
   Future<void> getStandings(StandingsParams params) async {

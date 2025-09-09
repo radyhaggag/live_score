@@ -22,12 +22,14 @@ class SoccerRepositoryImpl implements SoccerRepository {
   });
 
   @override
-  Future<Either<Failure, List<SoccerFixture>>> getDayFixtures({
-    required String date,
+  Future<Either<Failure, List<SoccerFixture>>> getCurrentRoundFixtures({
+    required int competitionId,
   }) async {
     if (await networkInfo.isConnected) {
       try {
-        final result = await soccerDataSource.getDayFixtures(date: date);
+        final result = await soccerDataSource.getCurrentRoundFixtures(
+          competitionId: competitionId,
+        );
         List<SoccerFixture> fixtures =
             result.map((fixture) => fixture.toDomain()).toList();
         return Right(fixtures);
