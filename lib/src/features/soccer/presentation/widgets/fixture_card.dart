@@ -95,7 +95,8 @@ class _FixtureCenter extends StatelessWidget {
     final awayTeam = soccerFixture.teams.away;
     final goalsAvailable = homeTeam.score != -1 && awayTeam.score != -1;
 
-    if (soccerFixture.status.isScheduled || (soccerFixture.status.isEnded && !goalsAvailable)) {
+    if (soccerFixture.status.isScheduled ||
+        (soccerFixture.status.isEnded && !goalsAvailable)) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -108,7 +109,7 @@ class _FixtureCenter extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 5.height),
-          _LeagueName(name: soccerFixture.fixtureLeague.name),
+          _LeagueSection(league: soccerFixture.fixtureLeague),
           SizedBox(height: 5.height),
           _StatusBadge(
             status: soccerFixture.status,
@@ -153,7 +154,7 @@ class _FixtureCenter extends StatelessWidget {
             ),
           ],
           SizedBox(height: 5.height),
-          _LeagueName(name: soccerFixture.fixtureLeague.name),
+          _LeagueSection(league: soccerFixture.fixtureLeague),
           SizedBox(height: 5.height),
           _StatusBadge(
             status: soccerFixture.status,
@@ -188,7 +189,7 @@ class _FixtureCenter extends StatelessWidget {
             ),
           ],
           SizedBox(height: 5.height),
-          _LeagueName(name: soccerFixture.fixtureLeague.name),
+          _LeagueSection(league: soccerFixture.fixtureLeague),
           SizedBox(height: 5.height),
           _StatusBadge(
             status: soccerFixture.status,
@@ -219,19 +220,33 @@ class _ScoreText extends StatelessWidget {
   }
 }
 
-class _LeagueName extends StatelessWidget {
-  final String name;
-  const _LeagueName({required this.name});
+class _LeagueSection extends StatelessWidget {
+  final FixtureLeague league;
+
+  const _LeagueSection({required this.league});
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      name,
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-        color: AppColors.blueGrey,
-        fontSize: FontSize.paragraph,
-      ),
-      textAlign: TextAlign.center,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CachedNetworkImage(
+          height: 15.radius,
+          width: 15.radius,
+          imageUrl: league.logo,
+          placeholder: (context, url) => const CircularProgressIndicator(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
+        SizedBox(width: 5.width),
+        Text(
+          league.name,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: AppColors.blueGrey,
+            fontSize: FontSize.paragraph,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

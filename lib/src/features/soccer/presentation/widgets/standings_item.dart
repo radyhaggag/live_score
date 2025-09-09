@@ -10,11 +10,13 @@ import 'standings_form.dart';
 class StandingsItem extends StatelessWidget {
   final TeamRank teamRank;
   final int totalTeams;
+  final bool isGrouped;
 
   const StandingsItem({
     super.key,
     required this.teamRank,
     required this.totalTeams,
+    this.isGrouped = false,
   });
 
   @override
@@ -31,11 +33,14 @@ class StandingsItem extends StatelessWidget {
     ];
 
     Color rankColor =
-        (teamRank.rank <= 3 || teamRank.rank > totalTeams - 3)
+        isGrouped
+            ? Colors.black
+            : (teamRank.rank <= 3 || teamRank.rank > totalTeams - 3)
             ? Colors.white
             : Colors.black;
 
     Color? rankBackground(int rank, int totalTeams) {
+      if (isGrouped) return AppColors.white;
       if (rank == 1) return AppColors.green; // champion
       if (rank == 2) return AppColors.blue; // 2nd place
       if (rank == 3) return AppColors.purple; // 3rd place

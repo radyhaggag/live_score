@@ -22,13 +22,14 @@ class FixturesScreen extends StatefulWidget {
 
 class _FixturesScreenState extends State<FixturesScreen> {
   int? selectedLeagueId;
+
   @override
   void initState() {
     super.initState();
+    final availableLeagues = context.read<SoccerCubit>().availableLeagues;
+    selectedLeagueId = widget.competitionId ?? availableLeagues.first.id;
+    if (availableLeagues.isEmpty) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final availableLeagues = context.read<SoccerCubit>().availableLeagues;
-      selectedLeagueId = widget.competitionId ?? availableLeagues.first.id;
-      if (availableLeagues.isEmpty) return;
       context.read<SoccerCubit>().getCurrentRoundFixtures(
         competitionId: selectedLeagueId!,
       );

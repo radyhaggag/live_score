@@ -7,7 +7,7 @@ class League extends Equatable {
   final String name;
   final String logo;
   final Country country;
-  final String hexColor;
+  final String? color;
 
   const League({
     required this.id,
@@ -15,7 +15,7 @@ class League extends Equatable {
     required this.logo,
     required this.countryId,
     required this.country,
-    required this.hexColor,
+    this.color,
   });
 
   @override

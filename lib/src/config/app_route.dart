@@ -23,7 +23,7 @@ class AppRouter {
       ShellRoute(
         builder: (_, _, child) {
           return BlocProvider(
-            create: (context) => sl<SoccerCubit>()..getLeagues(),
+            create: (context) => sl<SoccerCubit>(),
             child: SoccerLayout(child: child),
           );
         },

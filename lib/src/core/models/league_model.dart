@@ -10,7 +10,7 @@ class LeagueModel extends League {
     required super.logo,
     required super.countryId,
     required super.country,
-    required super.hexColor,
+    super.color,
   });
 
   factory LeagueModel.fromJson(
@@ -24,7 +24,7 @@ class LeagueModel extends League {
       logo: AppConstants.competitionImage(id),
       countryId: json['countryId'],
       country: country,
-      hexColor: json['color'],
+      color: json['color'],
     );
   }
 }

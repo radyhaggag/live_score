@@ -11,16 +11,25 @@ import '../cubit/soccer_state.dart';
 import '../widgets/leagues_header.dart';
 import '../widgets/view_fixtures.dart';
 
-class SoccerScreen extends StatelessWidget {
+class SoccerScreen extends StatefulWidget {
   const SoccerScreen({super.key});
+
+  @override
+  State<SoccerScreen> createState() => _SoccerScreenState();
+}
+
+class _SoccerScreenState extends State<SoccerScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<SoccerCubit>().getLeagues();
+    context.read<SoccerCubit>().getTodayFixtures();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<SoccerCubit, SoccerStates>(
       listener: (context, state) {
-        if (state is SoccerLeaguesLoaded) {
-          context.read<SoccerCubit>().getTodayFixtures();
-        }
         if (state is SoccerFixturesLoadFailure &&
             state.message ==
                 DataSource.networkConnectError.getFailure().message) {
@@ -111,9 +120,12 @@ class _ViewFixtures extends StatelessWidget {
           if (state.todayFixtures.isNotEmpty) {
             return Column(
               children: [
-                ViewLiveFixtures(fixtures: state.liveFixtures),
-                SizedBox(height: 10.height),
-                ViewDayFixtures(fixtures: state.todayFixtures),
+                if (state.liveFixtures.isNotEmpty) ...[
+                  ViewLiveFixtures(fixtures: state.liveFixtures),
+                  SizedBox(height: 10.height),
+                ],
+                if (state.todayFixtures.isNotEmpty)
+                  ViewDayFixtures(fixtures: state.todayFixtures),
               ],
             );
           } else {

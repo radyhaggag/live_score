@@ -1,5 +1,4 @@
 import 'package:live_score/src/core/domain/mappers/mappers.dart';
-import 'package:live_score/src/core/models/league_model.dart';
 
 import '../domain/entities/soccer_fixture.dart';
 import 'teams_model.dart';
@@ -22,7 +21,7 @@ class SoccerFixtureModel extends SoccerFixture {
 
   factory SoccerFixtureModel.fromJson(
     Map<String, dynamic> json, {
-    required LeagueModel fixtureLeague,
+    required FixtureLeague fixtureLeague,
   }) => SoccerFixtureModel(
     id: json['id'],
     teams: TeamsModel.fromJson(json).toDomain(),

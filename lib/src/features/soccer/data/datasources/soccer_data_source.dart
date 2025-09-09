@@ -4,6 +4,7 @@ import 'package:live_score/src/core/utils/app_constants.dart';
 
 import '../../../../core/api/dio_helper.dart';
 import '../../../../core/api/endpoints.dart';
+import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/models/league_model.dart';
 import '../../../../core/models/soccer_fixture_model.dart';
 import '../../domain/use_cases/standings_usecase.dart';
@@ -41,8 +42,6 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     }
   }
 
-  List<LeagueModel> _cacheLeagues = [];
-
   @override
   Future<List<LeagueModel>> getLeagues() async {
     try {
@@ -54,7 +53,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
       final countries = List<CountryModel>.from(
         response.data["countries"].map((item) => CountryModel.fromJson(item)),
       );
-      _cacheLeagues = List<LeagueModel>.from(
+      final leagues = List<LeagueModel>.from(
         result.map(
           (item) => LeagueModel.fromJson(
             item,
@@ -64,7 +63,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
           ),
         ),
       );
-      return _cacheLeagues;
+      return leagues;
     } catch (error) {
       rethrow;
     }
@@ -106,27 +105,39 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     }
   }
 
-  List<SoccerFixtureModel> _getResult(Response response) {
+  List<SoccerFixtureModel> _getResult(
+    Response response, {
+    bool removeOldFixturesByOneDay = true,
+  }) {
     List<dynamic> result = response.data["games"];
-    final List<int> competitionIds =
-        response.data['competitions']
-            .map<int>((competition) => competition['id'] as int)
-            .toSet()
-            .toList();
-    final availableId = competitionIds.lastWhere(
-      (id) => AppConstants.availableLeagues.contains(id),
-      orElse: () => -1,
-    );
 
     List<SoccerFixtureModel> fixtures = [];
     for (var fixture in result) {
-      if (availableId == -1) continue;
+      final competitionId = fixture['competitionId'] as int?;
+      if (competitionId == null ||
+          !AppConstants.availableLeagues.contains(competitionId)) {
+        continue;
+      }
       final model = SoccerFixtureModel.fromJson(
         fixture,
-        fixtureLeague: _cacheLeagues.firstWhere(
-          (league) => league.id == availableId,
+        fixtureLeague: FixtureLeague(
+          id: competitionId,
+          name: fixture['competitionDisplayName'],
         ),
       );
+      if (removeOldFixturesByOneDay && model.startTime != null) {
+        final now = DateTime(
+          DateTime.now().toUtc().year,
+          DateTime.now().toUtc().month,
+          DateTime.now().toUtc().day,
+        );
+        final fixtureDate = DateTime(
+          model.startTime!.toUtc().year,
+          model.startTime!.toUtc().month,
+          model.startTime!.toUtc().day,
+        );
+        if (fixtureDate.isBefore(now)) continue;
+      }
       fixtures.add(model);
     }
     return fixtures;

@@ -58,7 +58,7 @@ extension LeagueExtension on LeagueModel {
       logo: logo,
       countryId: countryId,
       country: country,
-      hexColor: hexColor,
+      color: color,
     );
   }
 }

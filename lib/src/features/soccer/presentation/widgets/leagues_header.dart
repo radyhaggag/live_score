@@ -62,7 +62,10 @@ class CircleLeaguesHeader extends StatelessWidget {
       );
     },
     child: CircleAvatar(
-      backgroundColor: HexColor(league.hexColor),
+      // backgroundColor: HexColor(league.color),
+      backgroundColor: league.color != null
+          ? HexColor(league.color!)
+          : AppColors.blueGrey,
       radius: 25.radius,
       child: CachedNetworkImage(
         fit: BoxFit.contain,

@@ -22,7 +22,12 @@ class LeagueCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.radius),
           gradient: isSelected ? AppColors.redGradient : null,
-          color: isSelected ? null : HexColor(league.hexColor),
+          color:
+              isSelected
+                  ? null
+                  : league.color != null
+                  ? HexColor(league.color!)
+                  : AppColors.blueGrey,
           border:
               isSelected
                   ? Border.all(
