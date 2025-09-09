@@ -13,7 +13,7 @@ abstract class SoccerRepository {
     required int competitionId,
   });
 
-  Future<Either<Failure, List<SoccerFixture>>> getLiveFixtures();
+  Future<Either<Failure, List<SoccerFixture>>> getTodayFixtures();
 
   Future<Either<Failure, Standings>> getStandings({
     required StandingsParams params,

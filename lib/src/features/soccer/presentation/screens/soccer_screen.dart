@@ -19,15 +19,14 @@ class SoccerScreen extends StatelessWidget {
     return BlocConsumer<SoccerCubit, SoccerStates>(
       listener: (context, state) {
         if (state is SoccerLeaguesLoaded) {
-          // context.read<SoccerCubit>().getFixtures();
-          // context.read<SoccerCubit>().getLiveFixtures();
+          // context.read<SoccerCubit>().getTodayFixtures();
         }
         if (state is SoccerFixturesLoadFailure &&
             state.message ==
                 DataSource.networkConnectError.getFailure().message) {
           buildBlockAlert(context: context, message: state.message);
         }
-        if (state is SoccerLiveFixturesLoadFailure &&
+        if (state is SoccerTodayFixturesLoadFailure &&
             state.message ==
                 DataSource.networkConnectError.getFailure().message) {
           buildBlockAlert(context: context, message: state.message);
@@ -44,8 +43,7 @@ class SoccerScreen extends StatelessWidget {
             ? centerIndicator()
             : RefreshIndicator(
               onRefresh: () async {
-                await cubit.getLiveFixtures();
-                // await cubit.getFixtures(); // todo: fetch today fixtures
+                await cubit.getTodayFixtures();
               },
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -55,10 +53,20 @@ class SoccerScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (cubit.availableLeagues.isNotEmpty) ...[
+                      if (state is SoccerLeaguesLoading)
+                        centerIndicator()
+                      else if (cubit.availableLeagues.isNotEmpty) ...[
                         CircleLeaguesHeader(leagues: cubit.availableLeagues),
                         SizedBox(height: 10.height),
                       ],
+                      if (state is SoccerFixturesLoading)
+                        centerIndicator()
+                      else if (state is SoccerTodayFixturesLoaded &&
+                          state.fixtures.isNotEmpty) ...[
+                        // ViewLiveFixtures(fixtures: state.fixtures),
+                        // SizedBox(height: 10.height),
+                      ],
+
                       // if (cubit.currentFixtures.isNotEmpty) ...[
                       //   ViewLiveFixtures(fixtures: cubit.currentFixtures),
                       //   SizedBox(height: 10.height),

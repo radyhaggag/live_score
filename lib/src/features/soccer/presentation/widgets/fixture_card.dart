@@ -58,6 +58,8 @@ class _TeamInfo extends StatelessWidget {
             height: 25.radius,
             width: 25.radius,
             imageUrl: logo,
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
           SizedBox(height: 10.height),
           FittedBox(
@@ -91,29 +93,80 @@ class _FixtureCenter extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeTeam = soccerFixture.teams.home;
     final awayTeam = soccerFixture.teams.away;
-    final isNotStarted = soccerFixture.status == SoccerFixtureStatus.scheduled;
     final goalsAvailable = homeTeam.score != null && awayTeam.score != null;
 
-    if (isNotStarted) {
+    if (soccerFixture.status.isScheduled) {
       return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            fixtureTime ?? "",
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(color: AppColors.deepOrange),
+            fixtureTime ?? "TBD",
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppColors.deepOrange,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
-
           SizedBox(height: 5.height),
           _LeagueName(name: soccerFixture.fixtureLeague.name),
           SizedBox(height: 5.height),
-          _StatusBadge(status: soccerFixture.status),
+          _StatusBadge(
+            status: soccerFixture.status,
+            statusText: soccerFixture.statusText,
+          ),
+        ],
+      );
+    }
+
+    if (soccerFixture.status.isLive && goalsAvailable) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            soccerFixture.gameTimeDisplay.isNotEmpty
+                ? soccerFixture.gameTimeDisplay
+                : "LIVE",
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: AppColors.red,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 5.height),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _ScoreText(value: homeTeam.score.toString()),
+              _ScoreText(value: ":"),
+              _ScoreText(value: awayTeam.score.toString()),
+            ],
+          ),
+          if (homeTeam.aggregatedScore != null &&
+              awayTeam.aggregatedScore != null) ...[
+            SizedBox(height: 5.height),
+            Text(
+              "Aggregate (${homeTeam.aggregatedScore} - ${awayTeam.aggregatedScore})",
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: AppColors.blueGrey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+          SizedBox(height: 5.height),
+          _LeagueName(name: soccerFixture.fixtureLeague.name),
+          SizedBox(height: 5.height),
+          _StatusBadge(
+            status: soccerFixture.status,
+            statusText: soccerFixture.statusText,
+          ),
         ],
       );
     }
 
     if (goalsAvailable) {
+      // Ended match
       return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -131,13 +184,16 @@ class _FixtureCenter extends StatelessWidget {
               style: Theme.of(
                 context,
               ).textTheme.labelSmall?.copyWith(color: AppColors.blueGrey),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 5.height),
           ],
+          SizedBox(height: 5.height),
           _LeagueName(name: soccerFixture.fixtureLeague.name),
           SizedBox(height: 5.height),
-          if (soccerFixture.gameTime != null)
-            _StatusBadge(status: soccerFixture.status),
+          _StatusBadge(
+            status: soccerFixture.status,
+            statusText: soccerFixture.statusText,
+          ),
         ],
       );
     }
@@ -154,9 +210,11 @@ class _ScoreText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       value,
-      style: Theme.of(
-        context,
-      ).textTheme.titleLarge?.copyWith(color: AppColors.deepOrange),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+        color: AppColors.deepOrange,
+        fontWeight: FontWeight.bold,
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }
@@ -180,7 +238,9 @@ class _LeagueName extends StatelessWidget {
 
 class _StatusBadge extends StatelessWidget {
   final SoccerFixtureStatus status;
-  const _StatusBadge({required this.status});
+  final String statusText;
+
+  const _StatusBadge({required this.status, required this.statusText});
 
   @override
   Widget build(BuildContext context) {
@@ -195,11 +255,7 @@ class _StatusBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.radius),
       ),
       child: Text(
-        switch (status) {
-          SoccerFixtureStatus.live => "Live",
-          SoccerFixtureStatus.ended => "Ended",
-          SoccerFixtureStatus.scheduled => "Scheduled",
-        },
+        statusText,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: AppColors.white,
           fontSize: FontSize.paragraph,

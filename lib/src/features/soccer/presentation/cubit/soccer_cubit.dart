@@ -13,13 +13,13 @@ import 'soccer_state.dart';
 class SoccerCubit extends Cubit<SoccerStates> {
   final CurrentRoundFixturesUseCase currentRoundFixturesUseCase;
   final LeaguesUseCase leaguesUseCase;
-  final LiveFixturesUseCase liveFixturesUseCase;
+  final TodayFixturesUseCase todayFixturesUseCase;
   final StandingsUseCase standingUseCase;
 
   SoccerCubit({
     required this.currentRoundFixturesUseCase,
     required this.leaguesUseCase,
-    required this.liveFixturesUseCase,
+    required this.todayFixturesUseCase,
     required this.standingUseCase,
   }) : super(ScoreInitial());
 
@@ -50,12 +50,12 @@ class SoccerCubit extends Cubit<SoccerStates> {
 
   List<SoccerFixture> liveFixtures = [];
 
-  Future<List<SoccerFixture>> getLiveFixtures() async {
+  Future<List<SoccerFixture>> getTodayFixtures() async {
     emit(SoccerFixturesLoading());
-    final liveFixtures = await liveFixturesUseCase(NoParams());
+    final todayFixtures = await todayFixturesUseCase(NoParams());
     List<SoccerFixture> filteredFixtures = [];
-    liveFixtures.fold(
-      (left) => emit(SoccerLiveFixturesLoadFailure(left.message)),
+    todayFixtures.fold(
+      (left) => emit(SoccerTodayFixturesLoadFailure(left.message)),
       (right) {
         filteredFixtures =
             right
@@ -65,7 +65,7 @@ class SoccerCubit extends Cubit<SoccerStates> {
                   ),
                 )
                 .toList();
-        emit(SoccerLiveFixturesLoaded(filteredFixtures));
+        emit(SoccerTodayFixturesLoaded(filteredFixtures));
       },
     );
     return filteredFixtures;

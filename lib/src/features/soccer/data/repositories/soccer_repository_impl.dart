@@ -58,10 +58,10 @@ class SoccerRepositoryImpl implements SoccerRepository {
   }
 
   @override
-  Future<Either<Failure, List<SoccerFixture>>> getLiveFixtures() async {
+  Future<Either<Failure, List<SoccerFixture>>> getTodayFixtures() async {
     if (await networkInfo.isConnected) {
       try {
-        final result = await soccerDataSource.getLiveFixtures();
+        final result = await soccerDataSource.getTodayFixtures();
         List<SoccerFixture> fixtures =
             result.map((fixture) => fixture.toDomain()).toList();
         return Right(fixtures);

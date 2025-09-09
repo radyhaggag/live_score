@@ -7,9 +7,12 @@ class SoccerFixture extends Equatable {
   final int id;
   final Teams teams;
   final String statusText;
+  final int gameTimeAndStatusDisplayType;
   final League fixtureLeague;
   final DateTime? startTime;
   final int? gameTime;
+  final int? addedTime;
+  final String gameTimeDisplay;
   final int? roundNum;
   final int? stageNum;
   final int? seasonNum;
@@ -18,9 +21,12 @@ class SoccerFixture extends Equatable {
     required this.id,
     required this.teams,
     required this.statusText,
+    required this.gameTimeAndStatusDisplayType,
     required this.fixtureLeague,
     this.startTime,
     this.gameTime,
+    this.addedTime,
+    this.gameTimeDisplay = '',
     this.roundNum,
     this.stageNum,
     this.seasonNum,
@@ -40,26 +46,21 @@ class SoccerFixture extends Equatable {
   ];
 
   SoccerFixtureStatus get status {
-    return switch (statusText.toLowerCase()) {
-      'not started' ||
-      'scheduled' ||
-      'canceled' ||
-      'postponed' => SoccerFixtureStatus.scheduled,
-      'live' ||
-      '1st half' ||
-      '2nd half' ||
-      'halftime' ||
-      'extra time' ||
-      'penalties' => SoccerFixtureStatus.live,
-      'finished' ||
-      'fulltime' ||
-      'ft' ||
-      'aet' ||
-      'pen.' ||
-      'ended' => SoccerFixtureStatus.ended,
+    return switch (gameTimeAndStatusDisplayType) {
+      1 => SoccerFixtureStatus.ended,
+      0 => SoccerFixtureStatus.scheduled,
+      2 => SoccerFixtureStatus.live,
       _ => SoccerFixtureStatus.scheduled,
     };
   }
 }
 
-enum SoccerFixtureStatus { scheduled, live, ended }
+enum SoccerFixtureStatus {
+  scheduled,
+  live,
+  ended;
+
+  bool get isLive => this == SoccerFixtureStatus.live;
+  bool get isEnded => this == SoccerFixtureStatus.ended;
+  bool get isScheduled => this == SoccerFixtureStatus.scheduled;
+}

@@ -16,7 +16,7 @@ abstract class SoccerDataSource {
     required int competitionId,
   });
 
-  Future<List<SoccerFixtureModel>> getLiveFixtures();
+  Future<List<SoccerFixtureModel>> getTodayFixtures();
 
   Future<StandingsModel> getStandings({required StandingsParams params});
 }
@@ -48,7 +48,9 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     try {
       final response = await dioHelper.get(
         url: Endpoints.leagues,
-        queryParams: {'competitions': AppConstants.availableLeagues.join(',')},
+        queryParams: {
+          'competitions': AppConstants.availableLeagues.join(','),
+        },
       );
       List<dynamic> result = response.data["competitions"];
       final countries = List<CountryModel>.from(
@@ -71,12 +73,17 @@ class SoccerDataSourceImpl implements SoccerDataSource {
   }
 
   @override
-  Future<List<SoccerFixtureModel>> getLiveFixtures() async {
+  Future<List<SoccerFixtureModel>> getTodayFixtures() async {
     try {
       final response = await dioHelper.get(
-        url: Endpoints.fixtures,
-        queryParams: {"live": "all"},
+        url: Endpoints.todayFixtures,
+        queryParams: {
+          'sports': 1,
+          'startDate': DateTime.now().toIso8601String().split('T').first,
+          'endDate': DateTime.now().toIso8601String().split('T').first,
+        },
       );
+
       return _getResult(response);
     } catch (error) {
       rethrow;
@@ -103,25 +110,41 @@ class SoccerDataSourceImpl implements SoccerDataSource {
 
   List<SoccerFixtureModel> _getResult(Response response) {
     List<dynamic> result = response.data["games"];
-    final competitionIds =
+    final List<int> competitionIds =
         response.data['competitions']
             .map<int>((competition) => competition['id'] as int)
             .toSet()
             .toList();
     final availableId = competitionIds.lastWhere(
       (id) => AppConstants.availableLeagues.contains(id),
+      orElse: () => -1,
     );
-    List<SoccerFixtureModel> fixtures = List<SoccerFixtureModel>.from(
-      result.map((fixture) {
-        final model = SoccerFixtureModel.fromJson(
-          fixture,
-          fixtureLeague: _cacheLeagues.firstWhere(
-            (league) => league.id == availableId,
-          ),
-        );
-        return model;
-      }),
-    );
+
+    // if availableId is -1, it means not in the available leagues, skip this fixture
+
+    // List<SoccerFixtureModel> fixtures = List<SoccerFixtureModel>.from(
+    //   result.map((fixture) {
+    //     final model = SoccerFixtureModel.fromJson(
+    //       fixture,
+    //       fixtureLeague: _cacheLeagues.firstWhere(
+    //         (league) => league.id == availableId,
+    //       ),
+    //     );
+    //     return model;
+    //   }),
+    // );
+
+    List<SoccerFixtureModel> fixtures = [];
+    for (var fixture in result) {
+      if (availableId == -1) continue;
+      final model = SoccerFixtureModel.fromJson(
+        fixture,
+        fixtureLeague: _cacheLeagues.firstWhere(
+          (league) => league.id == availableId,
+        ),
+      );
+      fixtures.add(model);
+    }
     return fixtures;
   }
 }
