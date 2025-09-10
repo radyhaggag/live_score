@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/utils/app_colors.dart';
 
+import '../../../../core/widgets/custom_image.dart';
 import '../../domain/entities/team_rank.dart';
 import 'standings_form.dart';
 
@@ -79,14 +79,10 @@ class StandingsItem extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 10.width), // Add spacing between rank and logo
-                CachedNetworkImage(
+                CustomImage(
                   width: 20.radius,
                   height: 20.radius,
                   imageUrl: teamRank.team.logo,
-                  placeholder: (context, url) {
-                    return const CircularProgressIndicator();
-                  },
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
                 SizedBox(width: 10.width),
                 Flexible(

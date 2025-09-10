@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/widgets/custom_image.dart';
 
 import '../domain/entities/league.dart';
 import '../utils/app_colors.dart';
@@ -20,7 +20,7 @@ class LeagueTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CachedNetworkImage(
+          CustomImage(
             width: 40.radius,
             height: 40.radius,
             imageUrl: league.logo,

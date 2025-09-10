@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_fonts.dart';
+import '../../../../core/widgets/custom_image.dart';
 
 class FixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
@@ -26,12 +26,14 @@ class FixtureCard extends StatelessWidget {
               name: soccerFixture.teams.home.name,
               logo: soccerFixture.teams.home.logo,
             ),
+            SizedBox(width: 10.width),
             Expanded(
               child: _FixtureCenter(
                 soccerFixture: soccerFixture,
                 fixtureTime: fixtureTime,
               ),
             ),
+            SizedBox(width: 10.width),
             _TeamInfo(
               name: soccerFixture.teams.away.name,
               logo: soccerFixture.teams.away.logo,
@@ -54,13 +56,7 @@ class _TeamInfo extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          CachedNetworkImage(
-            height: 25.radius,
-            width: 25.radius,
-            imageUrl: logo,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-          ),
+          CustomImage(height: 25.radius, width: 25.radius, imageUrl: logo),
           SizedBox(height: 10.height),
           FittedBox(
             child: Text(
@@ -230,21 +226,20 @@ class _LeagueSection extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        CachedNetworkImage(
-          height: 15.radius,
-          width: 15.radius,
-          imageUrl: league.logo,
-          placeholder: (context, url) => const CircularProgressIndicator(),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
+        CustomImage(height: 13.radius, width: 13.radius, imageUrl: league.logo),
         SizedBox(width: 5.width),
-        Text(
-          league.name,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: AppColors.blueGrey,
-            fontSize: FontSize.paragraph,
+        Flexible(
+          child: FittedBox(
+            child: Text(
+              league.name,
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: AppColors.blueGrey,
+                fontSize: FontSize.paragraph,
+              ),
+              maxLines: 1,
+              textAlign: TextAlign.center,
+            ),
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     );

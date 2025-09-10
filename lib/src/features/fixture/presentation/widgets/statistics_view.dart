@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
@@ -6,6 +5,7 @@ import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
+import '../../../../core/widgets/custom_image.dart';
 import '../../domain/entities/statistics.dart';
 
 class StatisticsView extends StatelessWidget {
@@ -61,17 +61,13 @@ class StatisticsView extends StatelessWidget {
 
   Padding buildStatsHeader() {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-        top: 10,
-      ),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              CachedNetworkImage(
+              CustomImage(
                 width: 20.radius,
                 height: 20.radius,
                 imageUrl: statistics[0].team.logo,
@@ -82,7 +78,7 @@ class StatisticsView extends StatelessWidget {
           ),
           Row(
             children: [
-              CachedNetworkImage(
+              CustomImage(
                 width: 20.radius,
                 height: 20.radius,
                 imageUrl: statistics[1].team.logo,

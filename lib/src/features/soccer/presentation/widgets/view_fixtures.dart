@@ -35,12 +35,7 @@ class ViewDayFixtures extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      context.push(Routes.fixtures);
-                    },
-                    child: viewAll(context),
-                  ),
+                  ViewAllTile(onTap: () => context.push(Routes.fixtures)),
                 ],
               ),
               ...List.generate(fixtures.length, (index) {
@@ -95,12 +90,6 @@ class ViewLiveFixtures extends StatelessWidget {
                   AppStrings.liveFixtures,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  // context.push(Routes.fixtures); // todo: replace with live fixtures screen
-                },
-                child: viewAll(context),
               ),
             ],
           ),

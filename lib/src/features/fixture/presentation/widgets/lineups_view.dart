@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
@@ -6,6 +5,7 @@ import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_fonts.dart';
 import '../../../../core/utils/app_strings.dart';
+import '../../../../core/widgets/custom_image.dart';
 import '../../domain/entities/lineups.dart';
 import 'items_not_available.dart';
 import 'teams_lineups.dart';
@@ -56,7 +56,7 @@ class LineupsView extends StatelessWidget {
       padding: const EdgeInsetsDirectional.all(5),
       child: Row(
         children: [
-          CachedNetworkImage(
+          CustomImage(
             fit: BoxFit.cover,
             width: 35.radius,
             height: 35.radius,

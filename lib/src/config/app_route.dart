@@ -44,8 +44,10 @@ class AppRouter {
           ),
           GoRoute(
             path: Routes.standings,
-            pageBuilder: (context, _) {
-              return NoTransitionPage(child: const StandingsScreen());
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: StandingsScreen(competitionId: state.extra as int?),
+              );
             },
           ),
         ],

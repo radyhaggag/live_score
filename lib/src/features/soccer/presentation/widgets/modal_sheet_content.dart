@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
@@ -7,7 +6,7 @@ import 'package:live_score/src/core/extensions/nums.dart';
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../domain/use_cases/standings_usecase.dart';
+import '../../../../core/widgets/custom_image.dart';
 import '../cubit/soccer_cubit.dart';
 
 Future<dynamic> buildBottomSheet({
@@ -44,7 +43,7 @@ class ModalSheetContent extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CachedNetworkImage(
+                CustomImage(
                   width: 20.radius,
                   height: 20.radius,
                   imageUrl: league.logo,
@@ -71,10 +70,8 @@ class ModalSheetContent extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                StandingsParams params = StandingsParams(leagueId: league.id);
-                context.push(Routes.standings);
+                context.push(Routes.standings, extra: league.id);
                 context.pop();
-                await cubit.getStandings(params);
               },
               child: const Text("View Standings"),
             ),

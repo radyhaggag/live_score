@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/color.dart';
@@ -7,6 +6,7 @@ import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/widgets/custom_image.dart';
 import 'view_team.dart';
 
 class FixtureDetails extends StatelessWidget {
@@ -25,7 +25,7 @@ class FixtureDetails extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CachedNetworkImage(
+              CustomImage(
                 fit: BoxFit.cover,
                 width: 20.radius,
                 height: 20.radius,

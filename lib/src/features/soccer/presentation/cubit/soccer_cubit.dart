@@ -1,9 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/domain/entities/league.dart';
-import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/usecase/usecase.dart';
-import '../../../../core/utils/app_constants.dart';
 import '../../domain/use_cases/day_fixtures_usecase.dart';
 import '../../domain/use_cases/leagues_usecase.dart';
 import '../../domain/use_cases/live_fixtures_usecase.dart';
@@ -48,36 +46,25 @@ class SoccerCubit extends Cubit<SoccerStates> {
     );
   }
 
-  Future<List<SoccerFixture>> getTodayFixtures() async {
+  Future<void> getTodayFixtures() async {
     emit(SoccerTodayFixturesLoading());
     final todayFixtures = await todayFixturesUseCase(NoParams());
-    List<SoccerFixture> filteredFixtures = [];
     todayFixtures.fold(
       (left) => emit(SoccerTodayFixturesLoadFailure(left.message)),
       (right) {
-        filteredFixtures =
-            right
-                .where(
-                  (fixture) => AppConstants.availableLeagues.contains(
-                    fixture.fixtureLeague.id,
-                  ),
-                )
-                .toList();
-
         final liveFixtures =
-            filteredFixtures.where((fixture) {
+            right.where((fixture) {
               return fixture.status.isLive;
             }).toList();
 
         emit(
           SoccerTodayFixturesLoaded(
-            todayFixtures: filteredFixtures,
+            todayFixtures: right,
             liveFixtures: liveFixtures,
           ),
         );
       },
     );
-    return filteredFixtures;
   }
 
   Future<void> getStandings(StandingsParams params) async {

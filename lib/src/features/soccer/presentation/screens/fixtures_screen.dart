@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
-import 'package:live_score/src/core/utils/app_fonts.dart';
+import 'package:live_score/src/core/utils/app_colors.dart';
 
-import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
-import '../widgets/fixture_card.dart';
+import '../widgets/grouped_fixtures_list.dart';
 import '../widgets/leagues_header.dart';
 import '../widgets/no_fixtures_today.dart';
 
@@ -21,18 +20,22 @@ class FixturesScreen extends StatefulWidget {
 }
 
 class _FixturesScreenState extends State<FixturesScreen> {
-  int? selectedLeagueId;
+  int? initialSelectedLeagueId;
 
   @override
   void initState() {
     super.initState();
+    initialSelectedLeagueId = widget.competitionId;
     final availableLeagues = context.read<SoccerCubit>().availableLeagues;
-    selectedLeagueId = widget.competitionId ?? availableLeagues.first.id;
     if (availableLeagues.isEmpty) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SoccerCubit>().getCurrentRoundFixtures(
-        competitionId: selectedLeagueId!,
-      );
+      if (initialSelectedLeagueId == null) {
+        context.read<SoccerCubit>().getTodayFixtures();
+      } else {
+        context.read<SoccerCubit>().getCurrentRoundFixtures(
+          competitionId: initialSelectedLeagueId!,
+        );
+      }
     });
   }
 
@@ -42,6 +45,9 @@ class _FixturesScreenState extends State<FixturesScreen> {
     return BlocBuilder<SoccerCubit, SoccerStates>(
       buildWhen: (previous, current) {
         return [
+          SoccerTodayFixturesLoading,
+          SoccerTodayFixturesLoadFailure,
+          SoccerTodayFixturesLoaded,
           SoccerCurrentRoundFixturesLoading,
           SoccerCurrentRoundFixturesLoadFailure,
           SoccerCurrentRoundFixturesLoaded,
@@ -54,51 +60,27 @@ class _FixturesScreenState extends State<FixturesScreen> {
             RectLeaguesHeader(
               leagues: cubit.availableLeagues,
               getFixtures: true,
-              selectedLeagueId: selectedLeagueId,
+              initialSelectedLeagueId: initialSelectedLeagueId,
+              prefixIcon: _getPrefixIcon(),
+              onPrefixIconTap: context.read<SoccerCubit>().getTodayFixtures,
             ),
             SizedBox(height: 10.height),
-            if (state is SoccerCurrentRoundFixturesLoading)
+            if (state is SoccerCurrentRoundFixturesLoading ||
+                state is SoccerTodayFixturesLoading)
               const LinearProgressIndicator()
             else if (state is SoccerCurrentRoundFixturesLoaded &&
                 state.fixtures.isNotEmpty)
+              Expanded(child: GroupedFixturesList(fixtures: state.fixtures))
+            else if (state is SoccerTodayFixturesLoaded &&
+                state.todayFixtures.isNotEmpty)
               Expanded(
-                child: ListView.builder(
-                  itemCount: _buildGroupedFixtures(state.fixtures).length,
-                  itemBuilder: (context, index) {
-                    final item = _buildGroupedFixtures(state.fixtures)[index];
-
-                    if (item is String) {
-                      // Date header
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 12,
-                        ),
-                        child: Text(
-                          item,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(fontWeight: FontWeights.semiBold),
-                        ),
-                      );
-                    } else {
-                      // FixtureCard
-                      final fixture = item;
-                      final gameTime = fixture.startTime.toString();
-                      final localTime = DateTime.parse(gameTime).toLocal();
-                      final formattedTime = DateFormat(
-                        "h:mm a",
-                      ).format(localTime);
-
-                      return FixtureCard(
-                        soccerFixture: fixture,
-                        fixtureTime: formattedTime,
-                      );
-                    }
-                  },
-                ),
+                child: GroupedFixturesList(fixtures: state.todayFixtures),
               )
             else if (state is SoccerCurrentRoundFixturesLoaded &&
                 state.fixtures.isEmpty)
+              NoFixturesView()
+            else if (state is SoccerTodayFixturesLoaded &&
+                state.todayFixtures.isEmpty)
               NoFixturesView()
             else
               const SizedBox.shrink(),
@@ -108,36 +90,23 @@ class _FixturesScreenState extends State<FixturesScreen> {
     );
   }
 
-  /// Groups fixtures by day and returns a mixed list of [String date headers + fixtures]
-  List<dynamic> _buildGroupedFixtures(List<SoccerFixture> fixtures) {
-    fixtures.sort((a, b) {
-      if (a.startTime == null || b.startTime == null) return 0;
-      return a.startTime!.compareTo(b.startTime!);
-    });
+  Widget _getPrefixIcon() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.radius),
+        gradient: AppColors.blueGradient,
+        border: Border.all(color: AppColors.white, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacitySafe(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
 
-    List<dynamic> groupedList = [];
-    String? lastDate;
-
-    final now = DateTime.now();
-
-    for (var fixture in fixtures) {
-      if (fixture.startTime == null) continue;
-
-      final localDate = fixture.startTime!.toLocal();
-      final isSameYear = localDate.year == now.year;
-
-      // Format: add year only if not current year
-      final fixtureDate = DateFormat(
-        isSameYear ? "EEEE, MMM d" : "EEEE, MMM d, yyyy",
-      ).format(localDate);
-
-      if (lastDate != fixtureDate) {
-        groupedList.add(fixtureDate); // Add header
-        lastDate = fixtureDate;
-      }
-      groupedList.add(fixture);
-    }
-
-    return groupedList;
+      child: const Icon(Icons.public, color: AppColors.white),
+    );
   }
 }

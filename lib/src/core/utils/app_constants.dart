@@ -5,6 +5,8 @@ class AppConstants {
   static const int timeOutDuration = 90;
   static const int maxNameLength = 3;
 
+  static const defaultLeagueId = 7; // English Premier League
+
   static const List<int> availableLeagues = [
     7, // English Premier League
     11, // La Liga

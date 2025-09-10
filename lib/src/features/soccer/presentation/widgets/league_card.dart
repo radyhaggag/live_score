@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:live_score/src/core/extensions/color.dart';
@@ -6,6 +5,7 @@ import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/utils/app_colors.dart';
 
 import '../../../../core/domain/entities/league.dart';
+import '../../../../core/widgets/custom_image.dart';
 
 class LeagueCard extends StatelessWidget {
   final League league;
@@ -48,12 +48,10 @@ class LeagueCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CachedNetworkImage(
+            CustomImage(
               width: 40.radius,
               height: 40.radius,
               imageUrl: league.logo,
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
             SizedBox(width: 5.width),
             Text(

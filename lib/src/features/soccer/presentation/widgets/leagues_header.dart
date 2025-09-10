@@ -1,12 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
-import 'package:live_score/src/core/utils/app_constants.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/widgets/custom_image.dart';
 import '../../domain/use_cases/standings_usecase.dart';
 import '../cubit/soccer_cubit.dart';
 import 'league_card.dart';
@@ -63,11 +62,10 @@ class CircleLeaguesHeader extends StatelessWidget {
     },
     child: CircleAvatar(
       // backgroundColor: HexColor(league.color),
-      backgroundColor: league.color != null
-          ? HexColor(league.color!)
-          : AppColors.blueGrey,
+      backgroundColor:
+          league.color != null ? HexColor(league.color!) : AppColors.blueGrey,
       radius: 25.radius,
-      child: CachedNetworkImage(
+      child: CustomImage(
         fit: BoxFit.contain,
         width: 25.radius,
         height: 25.radius,
@@ -80,13 +78,17 @@ class CircleLeaguesHeader extends StatelessWidget {
 class RectLeaguesHeader extends StatefulWidget {
   final List<League> leagues;
   final bool getFixtures;
-  final int? selectedLeagueId;
+  final int? initialSelectedLeagueId;
+  final Widget? prefixIcon;
+  final VoidCallback? onPrefixIconTap;
 
   const RectLeaguesHeader({
     super.key,
     required this.leagues,
     required this.getFixtures,
-    this.selectedLeagueId,
+    this.initialSelectedLeagueId,
+    this.prefixIcon,
+    this.onPrefixIconTap,
   });
 
   @override
@@ -99,8 +101,7 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
   @override
   initState() {
     super.initState();
-    selectedLeagueId =
-        widget.selectedLeagueId ?? AppConstants.availableLeagues.first;
+    selectedLeagueId = widget.initialSelectedLeagueId;
   }
 
   @override
@@ -109,35 +110,55 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: SizedBox(
         height: 40.height,
-        child: ListView.separated(
-          physics: const AlwaysScrollableScrollPhysics(),
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: widget.leagues.length,
-          separatorBuilder: (_, _) {
-            return SizedBox(width: 5.width);
-          },
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                if (widget.getFixtures == false) {
-                  StandingsParams params = StandingsParams(
-                    leagueId: widget.leagues[index].id,
-                  );
-                  context.read<SoccerCubit>().getStandings(params);
-                } else {
-                  context.read<SoccerCubit>().getCurrentRoundFixtures(
-                    competitionId: widget.leagues[index].id,
-                  );
-                }
-                setState(() => selectedLeagueId = widget.leagues[index].id);
-              },
-              child: LeagueCard(
-                league: widget.leagues[index],
-                isSelected: selectedLeagueId == widget.leagues[index].id,
+        child: Row(
+          children: [
+            if (widget.prefixIcon != null) ...[
+              GestureDetector(
+                onTap: () {
+                  if (widget.onPrefixIconTap != null) {
+                    widget.onPrefixIconTap!();
+                  }
+                  setState(() => selectedLeagueId = null);
+                },
+                child: widget.prefixIcon,
               ),
-            );
-          },
+              SizedBox(width: 5.width),
+            ],
+            Expanded(
+              child: ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.leagues.length,
+                separatorBuilder: (_, _) {
+                  return SizedBox(width: 5.width);
+                },
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      if (widget.getFixtures == false) {
+                        final params = StandingsParams(
+                          leagueId: widget.leagues[index].id,
+                        );
+                        context.read<SoccerCubit>().getStandings(params);
+                      } else {
+                        context.read<SoccerCubit>().getCurrentRoundFixtures(
+                          competitionId: widget.leagues[index].id,
+                        );
+                      }
+                      setState(
+                        () => selectedLeagueId = widget.leagues[index].id,
+                      );
+                    },
+                    child: LeagueCard(
+                      league: widget.leagues[index],
+                      isSelected: selectedLeagueId == widget.leagues[index].id,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

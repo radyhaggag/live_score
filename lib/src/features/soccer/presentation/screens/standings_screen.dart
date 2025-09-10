@@ -12,7 +12,9 @@ import '../widgets/leagues_header.dart';
 import '../widgets/standings_item.dart';
 
 class StandingsScreen extends StatefulWidget {
-  const StandingsScreen({super.key});
+  const StandingsScreen({super.key, this.competitionId});
+
+  final int? competitionId;
 
   @override
   State<StandingsScreen> createState() => _StandingsScreenState();
@@ -24,7 +26,9 @@ class _StandingsScreenState extends State<StandingsScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SoccerCubit>().getStandings(
-        StandingsParams(leagueId: AppConstants.availableLeagues.first),
+        StandingsParams(
+          leagueId: widget.competitionId ?? AppConstants.defaultLeagueId,
+        ),
       );
     });
   }
@@ -36,7 +40,12 @@ class _StandingsScreenState extends State<StandingsScreen> {
     return ListView(
       physics: const BouncingScrollPhysics(),
       children: [
-        RectLeaguesHeader(leagues: cubit.availableLeagues, getFixtures: false),
+        RectLeaguesHeader(
+          leagues: cubit.availableLeagues,
+          getFixtures: false,
+          initialSelectedLeagueId:
+              widget.competitionId ?? AppConstants.defaultLeagueId,
+        ),
         SizedBox(height: 5.height),
         BlocBuilder<SoccerCubit, SoccerStates>(
           buildWhen: (previous, current) {
