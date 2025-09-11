@@ -56,7 +56,6 @@ extension LeagueExtension on LeagueModel {
       id: id,
       name: name,
       logo: logo,
-      countryId: countryId,
       country: country,
       color: color,
     );

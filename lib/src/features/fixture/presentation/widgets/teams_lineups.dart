@@ -1,22 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../domain/entities/lineups.dart';
-import '../../domain/entities/player.dart';
+import '../../domain/entities/fixture_details.dart';
 
 class TeamsLineups extends StatelessWidget {
-  final List<Lineup> lineups;
+  final FixtureDetails fixtureDetails;
 
-  const TeamsLineups({super.key, required this.lineups});
+  const TeamsLineups({super.key, required this.fixtureDetails});
 
   @override
   Widget build(BuildContext context) {
-    final teamOnePlan = lineups[0].formation.split("-");
-    final teamTwoPlan = lineups[1].formation.split("-").reversed;
-    final teamOnePlayers = lineups[0].startXI;
-    final teamTwoPlayers = lineups[1].startXI.reversed;
+    final homeTeam = fixtureDetails.fixture.teams.home;
+    final awayTeam = fixtureDetails.fixture.teams.away;
+    final homePlan = homeTeam.lineup?.formation.split("-").toList();
+    final awayPlan = awayTeam.lineup?.formation.split("-").reversed.toList();
+    final homePlayers =
+        fixtureDetails.homePlayersInfo
+            .where((player) => player.lineupMember.isStarting)
+            .toList();
+    final awayPlayers =
+        fixtureDetails.awayPlayersInfo
+            .where((player) => player.lineupMember.isStarting)
+            .toList();
+
+    // Sort players by field position
+    if (homePlayers.any((player) => player.lineupMember.yardInfo != null)) {
+      homePlayers.sort((a, b) {
+        return a.lineupMember.yardInfo!.fieldPosition.compareTo(
+          b.lineupMember.yardInfo!.fieldPosition,
+        );
+      });
+    }
+
+    if (awayPlayers.any((player) => player.lineupMember.yardInfo != null)) {
+      awayPlayers.sort((a, b) {
+        return b.lineupMember.yardInfo!.fieldPosition.compareTo(
+          a.lineupMember.yardInfo!.fieldPosition,
+        );
+      });
+    }
 
     int lineOneIndex = 0;
     int lineTwoIndex = -1;
@@ -26,10 +51,10 @@ class TeamsLineups extends StatelessWidget {
         Expanded(
           child: _buildTeamColumn(
             context,
-            plan: teamOnePlan,
-            players: teamOnePlayers,
-            primaryColor: HexColor("#${lineups[0].team.colors.player.primary}"),
-            numberColor: HexColor("#${lineups[0].team.colors.player.number}"),
+            plan: homePlan!,
+            players: homePlayers,
+            primaryColor: HexColor("#${homeTeam.color}"),
+            numberColor: HexColor("#${awayTeam.color}"),
             isReversed: false,
             lineIndex: () => ++lineOneIndex,
           ),
@@ -37,10 +62,10 @@ class TeamsLineups extends StatelessWidget {
         Expanded(
           child: _buildTeamColumn(
             context,
-            plan: teamTwoPlan,
-            players: teamTwoPlayers,
-            primaryColor: HexColor("#${lineups[1].team.colors.player.primary}"),
-            numberColor: HexColor("#${lineups[1].team.colors.player.number}"),
+            plan: awayPlan!,
+            players: awayPlayers,
+            primaryColor: HexColor("#${awayTeam.color}"),
+            numberColor: HexColor("#${homeTeam.color}"),
             isReversed: true,
             lineIndex: () => ++lineTwoIndex,
           ),
@@ -52,15 +77,13 @@ class TeamsLineups extends StatelessWidget {
   /// Build column for a team (top or bottom)
   Widget _buildTeamColumn(
     BuildContext context, {
-    required Iterable<String> plan,
-    required Iterable<Player> players,
+    required List<String> plan,
+    required List<FixturePlayerInfo> players,
     required Color primaryColor,
     required Color numberColor,
     required bool isReversed,
     required int Function() lineIndex,
   }) {
-    final playersList = players.toList();
-
     return Column(
       mainAxisAlignment:
           isReversed
@@ -68,31 +91,48 @@ class TeamsLineups extends StatelessWidget {
               : MainAxisAlignment.spaceEvenly,
       children: [
         if (!isReversed)
-          _buildCaptain(context, playersList.first, primaryColor, numberColor),
+          _buildPlayer(context, players.first, primaryColor, numberColor),
         ListView.separated(
           shrinkWrap: true,
           physics: const BouncingScrollPhysics(),
           itemCount: plan.length,
           separatorBuilder: (_, _) => SizedBox(height: 10.height),
           itemBuilder: (_, index) {
+            /// Generates a list of [FixturePlayerInfo] objects representing the players in a specific line,
+            /// based on the number of players specified by `plan.elementAt(index)`.
+            ///
+            /// - Parses the number of players for the current line from the `plan`.
+            /// - Uses [List.generate] to create a list of players by repeatedly calling `lineIndex()`
+            ///   to get the appropriate index from the `players` list.
+            /// - If [isReversed] is true, reverses the order of the players in the line.
+            final numPlayers = int.parse(plan.elementAt(index));
+            List<FixturePlayerInfo> linePlayers = List.generate(numPlayers, (
+              _,
+            ) {
+              final idx = lineIndex();
+              return players[idx];
+            });
+            if (isReversed) {
+              linePlayers = linePlayers.reversed.toList();
+            }
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(int.parse(plan.elementAt(index)), (_) {
-                final idx = lineIndex();
-                return Expanded(
-                  child: _buildPlayer(
-                    context,
-                    playersList[idx],
-                    primaryColor,
-                    numberColor,
-                  ),
-                );
-              }),
+              children:
+                  linePlayers.map((player) {
+                    return Expanded(
+                      child: _buildPlayer(
+                        context,
+                        player,
+                        primaryColor,
+                        numberColor,
+                      ),
+                    );
+                  }).toList(),
             );
           },
         ),
         if (isReversed)
-          _buildCaptain(context, playersList.last, primaryColor, numberColor),
+          _buildPlayer(context, players.last, primaryColor, numberColor),
       ],
     );
   }
@@ -100,70 +140,38 @@ class TeamsLineups extends StatelessWidget {
   /// Common player widget
   Widget _buildPlayer(
     BuildContext context,
-    Player player,
+    FixturePlayerInfo player,
     Color primaryColor,
     Color numberColor,
   ) {
-    final parts = player.name.split(" ");
-    final displayName =
-        parts.length >= 3
-            ? parts[1] + parts[2]
-            : parts.length == 2
-            ? parts[1]
-            : parts[0];
-
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 15.radius,
-          backgroundColor: AppColors.white,
-          child: CircleAvatar(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+      child: Column(
+        children: [
+          CircleAvatar(
             radius: 13.radius,
-            backgroundColor: primaryColor,
-            child: Text(
-              player.number.toString(),
-              style: TextStyle(color: numberColor),
+            backgroundColor: AppColors.white,
+            child: CircleAvatar(
+              radius: 11.radius,
+              backgroundColor: primaryColor,
+              child: Text(
+                player.player.number.toString(),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelMedium?.copyWith(color: numberColor),
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 2.height),
-        Text(
-          displayName,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
-    );
-  }
-
-  /// Special widget for captain (GK usually)
-  Widget _buildCaptain(
-    BuildContext context,
-    Player player,
-    Color primaryColor,
-    Color numberColor,
-  ) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 15.radius,
-          backgroundColor: AppColors.white,
-          child: CircleAvatar(
-            radius: 13.radius,
-            backgroundColor: primaryColor,
-            child: Text(
-              player.number.toString(),
-              style: TextStyle(color: numberColor),
-            ),
+          SizedBox(height: 2.height),
+          Text(
+            player.player.name.playerName,
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.labelMedium?.copyWith(color: AppColors.white),
           ),
-        ),
-        Text(
-          player.name,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: AppColors.white),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

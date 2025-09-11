@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/domain/entities/league.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_fonts.dart';
 import '../../../../core/widgets/custom_image.dart';
+import '../../../fixture/domain/enums.dart';
 
 class FixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
@@ -23,7 +26,7 @@ class FixtureCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _TeamInfo(
-              name: soccerFixture.teams.home.name,
+              name: soccerFixture.teams.home.name.teamName,
               logo: soccerFixture.teams.home.logo,
             ),
             SizedBox(width: 10.width),
@@ -35,7 +38,7 @@ class FixtureCard extends StatelessWidget {
             ),
             SizedBox(width: 10.width),
             _TeamInfo(
-              name: soccerFixture.teams.away.name,
+              name: soccerFixture.teams.away.name.teamName,
               logo: soccerFixture.teams.away.logo,
             ),
           ],
@@ -217,7 +220,7 @@ class _ScoreText extends StatelessWidget {
 }
 
 class _LeagueSection extends StatelessWidget {
-  final FixtureLeague league;
+  final League league;
 
   const _LeagueSection({required this.league});
 

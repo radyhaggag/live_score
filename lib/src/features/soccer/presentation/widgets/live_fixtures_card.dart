@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -67,13 +68,13 @@ class LiveFixtureCard extends StatelessWidget {
           SizedBox(height: 15.height),
           _buildTeamTile(
             context: context,
-            name: soccerFixture.teams.home.name,
+            name: soccerFixture.teams.home.name.teamName,
             goals: soccerFixture.teams.home.score.toString(),
           ),
           SizedBox(height: 5.height),
           _buildTeamTile(
             context: context,
-            name: soccerFixture.teams.away.name,
+            name: soccerFixture.teams.away.name.teamName,
             goals: soccerFixture.teams.away.score.toString(),
           ),
           SizedBox(height: 10.height),

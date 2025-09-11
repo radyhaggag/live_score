@@ -4,7 +4,7 @@ import 'package:live_score/src/core/utils/app_constants.dart';
 
 import '../../../../core/api/dio_helper.dart';
 import '../../../../core/api/endpoints.dart';
-import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../../core/domain/entities/league.dart';
 import '../../../../core/models/league_model.dart';
 import '../../../../core/models/soccer_fixture_model.dart';
 import '../../domain/use_cases/standings_usecase.dart';
@@ -120,7 +120,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
       }
       final model = SoccerFixtureModel.fromJson(
         fixture,
-        fixtureLeague: FixtureLeague(
+        fixtureLeague: League.light(
           id: competitionId,
           name: fixture['competitionDisplayName'],
         ),

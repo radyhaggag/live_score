@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:live_score/src/features/fixture/presentation/cubit/fixture_cubit.dart';
 
 import '../container_injector.dart';
+import '../core/domain/entities/soccer_fixture.dart';
 import '../core/utils/app_strings.dart';
+import '../features/fixture/presentation/screens/fixture_screen.dart';
 import '../features/soccer/presentation/cubit/soccer_cubit.dart';
 import '../features/soccer/presentation/screens/fixtures_screen.dart';
 import '../features/soccer/presentation/screens/soccer_layout.dart';
@@ -14,6 +17,7 @@ class Routes {
   static const String soccer = "/soccer";
   static const String fixtures = "/fixtures";
   static const String standings = "/standings";
+  static const String fixtureDetails = "/fixture_details";
 }
 
 class AppRouter {
@@ -51,6 +55,17 @@ class AppRouter {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: Routes.fixtureDetails,
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: BlocProvider(
+              create: (context) => sl<FixtureCubit>(),
+              child: FixtureScreen(soccerFixture: state.extra as SoccerFixture),
+            ),
+          );
+        },
       ),
     ],
   );

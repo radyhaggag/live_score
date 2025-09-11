@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../features/fixture/domain/entities/lineups.dart';
+
 class Teams extends Equatable {
   final Team home;
   final Team away;
@@ -18,6 +20,7 @@ class Team extends Equatable {
   final int? aggregatedScore;
   final String? color;
   final String? awayColor;
+  final Lineup? lineup;
 
   const Team({
     required this.id,
@@ -27,6 +30,7 @@ class Team extends Equatable {
     this.aggregatedScore,
     this.color,
     this.awayColor,
+    this.lineup,
   });
 
   @override

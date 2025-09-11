@@ -10,7 +10,7 @@ class FixtureChangeBar extends FixtureState {}
 class FixtureStatisticsLoading extends FixtureState {}
 
 class FixtureStatisticsLoaded extends FixtureState {
-  final List<Statistics> statistics;
+  final Statistics statistics;
 
   FixtureStatisticsLoaded({required this.statistics});
 }
@@ -21,30 +21,16 @@ class FixtureStatisticsLoadingFailure extends FixtureState {
   FixtureStatisticsLoadingFailure({required this.message});
 }
 
-class FixtureLineupsLoading extends FixtureState {}
+class FixtureDetailsLoading extends FixtureState {}
 
-class FixtureLineupsLoaded extends FixtureState {
-  final List<Lineup> lineups;
+class FixtureDetailsLoaded extends FixtureState {
+  final FixtureDetails fixtureDetails;
 
-  FixtureLineupsLoaded({required this.lineups});
+  FixtureDetailsLoaded({required this.fixtureDetails});
 }
 
-class FixtureLineupsLoadingFailure extends FixtureState {
+class FixtureDetailsLoadingFailure extends FixtureState {
   final String message;
 
-  FixtureLineupsLoadingFailure({required this.message});
-}
-
-class FixtureEventsLoading extends FixtureState {}
-
-class FixtureEventsLoaded extends FixtureState {
-  final List<Event> events;
-
-  FixtureEventsLoaded({required this.events});
-}
-
-class FixtureEventsLoadingFailure extends FixtureState {
-  final String message;
-
-  FixtureEventsLoadingFailure({required this.message});
+  FixtureDetailsLoadingFailure({required this.message});
 }

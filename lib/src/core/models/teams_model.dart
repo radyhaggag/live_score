@@ -1,14 +1,14 @@
-import 'package:live_score/src/core/domain/mappers/mappers.dart';
 import 'package:live_score/src/core/utils/app_constants.dart';
 
+import '../../features/fixture/data/models/lineups_model.dart';
 import '../domain/entities/teams.dart';
 
 class TeamsModel extends Teams {
   const TeamsModel({required super.home, required super.away});
 
   factory TeamsModel.fromJson(Map<String, dynamic> json) => TeamsModel(
-    home: TeamModel.fromJson(json['homeCompetitor']).toDomain(),
-    away: TeamModel.fromJson(json['awayCompetitor']).toDomain(),
+    home: TeamModel.fromJson(json['homeCompetitor']),
+    away: TeamModel.fromJson(json['awayCompetitor']),
   );
 }
 
@@ -21,6 +21,7 @@ class TeamModel extends Team {
     super.awayColor,
     super.score,
     super.aggregatedScore,
+    super.lineup,
   });
 
   factory TeamModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +34,10 @@ class TeamModel extends Team {
       awayColor: json['awayColor'],
       score: (json['score'] as num?)?.toInt() ?? -1,
       aggregatedScore: (json['aggregatedScore'] as num?)?.toInt(),
+      lineup:
+          json['lineups'] != null
+              ? LineupModel.fromJson(json['lineups'])
+              : null,
     );
   }
 }

@@ -27,7 +27,9 @@ class CustomImage extends StatelessWidget {
       width: width,
       fit: fit,
       placeholder: (_, _) => placeholder ?? const CircularProgressIndicator(),
-      errorWidget: (_, _, _) => errorWidget ?? SizedBox.shrink(),
+      errorWidget: (_, _, _) {
+        return errorWidget ?? SizedBox.shrink();
+      },
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -11,10 +13,25 @@ import '../widgets/fixture_details.dart';
 import '../widgets/lineups_view.dart';
 import '../widgets/statistics_view.dart';
 
-class FixtureScreen extends StatelessWidget {
+class FixtureScreen extends StatefulWidget {
   final SoccerFixture soccerFixture;
 
   const FixtureScreen({super.key, required this.soccerFixture});
+
+  @override
+  State<FixtureScreen> createState() => _FixtureScreenState();
+}
+
+class _FixtureScreenState extends State<FixtureScreen> {
+  int selectedTabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<FixtureCubit>().getFixtureDetails(widget.soccerFixture.id);
+    context.read<FixtureCubit>().getStatistics(widget.soccerFixture.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,27 +41,35 @@ class FixtureScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(
-              "${soccerFixture.teams.home.name} ${AppStrings.vs} ${soccerFixture.teams.away.name}",
+            title: FittedBox(
+              child: Text(
+                "${widget.soccerFixture.teams.home.name.teamName} ${AppStrings.vs} ${widget.soccerFixture.teams.away.name.teamName}",
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new, size: 15.radius),
+              onPressed: () => context.pop(),
             ),
           ),
           body: ListView(
             physics: const BouncingScrollPhysics(),
             children: [
-              FixtureDetails(soccerFixture: soccerFixture),
+              FixtureDetails(soccerFixture: widget.soccerFixture),
               buildTabBar(cubit),
               if (state is FixtureStatisticsLoading ||
-                  state is FixtureLineupsLoading ||
-                  state is FixtureEventsLoading)
-                LinearProgressIndicator(color: getColor(soccerFixture)),
-              if (state is FixtureStatisticsLoaded)
-                StatisticsView(statistics: state.statistics),
-              if (state is FixtureLineupsLoaded)
-                LineupsView(lineups: state.lineups),
-              if (state is FixtureEventsLoaded)
+                  state is FixtureDetailsLoading)
+                LinearProgressIndicator(color: getColor(widget.soccerFixture)),
+              if (selectedTabIndex == 0)
+                StatisticsView(statistics: cubit.statistics),
+              if (selectedTabIndex == 1)
+                LineupsView(fixtureDetails: cubit.fixtureDetails),
+              if (selectedTabIndex == 2)
                 EventsView(
-                  events: state.events,
-                  color: getColor(soccerFixture),
+                  fixtureDetails: cubit.fixtureDetails,
+                  color: getColor(widget.soccerFixture),
                 ),
             ],
           ),
@@ -58,39 +83,19 @@ class FixtureScreen extends StatelessWidget {
       Expanded(
         child: tabBarButton(
           label: AppStrings.statistics,
-          onPressed: () async {
-            if (soccerFixture.status != SoccerFixtureStatus.scheduled) {
-              await cubit.getStatistics(soccerFixture.id.toString());
-            } else {
-              Fluttertoast.showToast(
-                msg: AppStrings.noStats,
-                backgroundColor: AppColors.blueGrey,
-              );
-            }
-          },
+          onPressed: () => setState(() => selectedTabIndex = 0),
         ),
       ),
       Expanded(
         child: tabBarButton(
           label: AppStrings.lineups,
-          onPressed: () async {
-            await cubit.getLineups(soccerFixture.id.toString());
-          },
+          onPressed: () => setState(() => selectedTabIndex = 1),
         ),
       ),
       Expanded(
         child: tabBarButton(
           label: AppStrings.events,
-          onPressed: () async {
-            if (soccerFixture.status != SoccerFixtureStatus.scheduled) {
-              await cubit.getEvents(soccerFixture.id.toString());
-            } else {
-              Fluttertoast.showToast(
-                msg: AppStrings.noEvents,
-                backgroundColor: AppColors.blueGrey,
-              );
-            }
-          },
+          onPressed: () => setState(() => selectedTabIndex = 2),
         ),
       ),
     ],
@@ -101,7 +106,7 @@ class FixtureScreen extends StatelessWidget {
     required void Function()? onPressed,
   }) => MaterialButton(
     onPressed: onPressed,
-    color: getColor(soccerFixture),
+    color: getColor(widget.soccerFixture),
     elevation: 0.0,
     padding: const EdgeInsets.all(16),
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),

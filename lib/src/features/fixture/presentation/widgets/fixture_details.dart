@@ -17,7 +17,7 @@ class FixtureDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
       decoration: BoxDecoration(gradient: soccerFixture.gradientColor),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -32,12 +32,16 @@ class FixtureDetails extends StatelessWidget {
                 imageUrl: soccerFixture.fixtureLeague.logo,
               ),
               SizedBox(width: 5.width),
-              Text(
-                soccerFixture.fixtureLeague.name,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: AppColors.white),
-                textAlign: TextAlign.center,
+              Flexible(
+                child: FittedBox(
+                  child: Text(
+                    soccerFixture.fixtureLeague.name,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: AppColors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ],
           ),

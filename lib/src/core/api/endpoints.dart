@@ -4,8 +4,7 @@ class Endpoints {
   static const fixtures = "/games/fixtures/";
   static const todayFixtures = "/games/allscores/";
   static const leagues = "/competitions/";
-  static const statistics = "/games/statistics/";
-  static const lineups = "/games/lineups/";
-  static const events = "/games/events/";
+  static const matchStatistics = "/game/stats/";
+  static const fixtureDetails = "/game/";
   static const standings = "/standings/";
 }

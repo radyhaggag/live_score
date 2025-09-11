@@ -1,18 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/custom_image.dart';
-import '../../domain/entities/events.dart';
+import '../../domain/entities/event.dart';
+import '../../domain/entities/fixture_details.dart';
 import 'items_not_available.dart';
 
-class EventsView extends StatelessWidget {
-  final List<Event> events;
+class EventsView extends StatefulWidget {
+  final FixtureDetails? fixtureDetails;
   final Color color;
 
-  const EventsView({super.key, required this.events, required this.color});
+  const EventsView({
+    super.key,
+    required this.fixtureDetails,
+    required this.color,
+  });
+
+  @override
+  State<EventsView> createState() => _EventsViewState();
+}
+
+class _EventsViewState extends State<EventsView> {
+  List<Event> events = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final fetchedEvents = widget.fixtureDetails?.sortedEvents ?? [];
+    if (widget.fixtureDetails == null) return;
+    events =
+        fetchedEvents.map((event) {
+          // Main player
+          final player = widget.fixtureDetails!.members.firstWhere(
+            (member) => member.id == event.playerId,
+          );
+          // Main team
+          final teams = widget.fixtureDetails!.fixture.teams;
+          final team = teams.home.id == event.teamId ? teams.home : teams.away;
+          // Extra players
+          final extraPlayers =
+              widget.fixtureDetails!.members
+                  .where((member) => event.extraPlayers.contains(member.id))
+                  .toList();
+          return event.copyWith(
+            player: player,
+            team: team,
+            extraPlayerDetails: extraPlayers,
+          );
+        }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +76,7 @@ class EventsView extends StatelessWidget {
                     ),
                   ),
                 ),
-            itemCount: events.length,
+            itemCount: widget.fixtureDetails!.sortedEvents.length,
           ),
         )
         : const ItemsNotAvailable(
@@ -48,14 +88,17 @@ class EventsView extends StatelessWidget {
   Widget eventDetails(Event event, BuildContext context) => Row(
     children: [
       CircleAvatar(
-        radius: 15.radius,
-        backgroundColor: color,
+        radius: 12.5.radius,
+        backgroundColor: widget.color,
         child: Text(
-          event.time.toString(),
-          style: Theme.of(context).textTheme.bodySmall,
+          event.gameTimeDisplay,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      SizedBox(width: 10.width),
+      SizedBox(width: 15.width),
       Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,17 +107,26 @@ class EventsView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  event.type,
+                  event.type.name +
+                      (event.type.subTypeName != null &&
+                              !event.type.id.isGoal(event.type.subTypeId)
+                          ? ' - ${event.type.subTypeName}'
+                          : ''),
                   textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
-                Text(event.detail, textAlign: TextAlign.end),
+                Text(
+                  event.player?.name.playerName ?? '',
+                  textAlign: TextAlign.end,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
               ],
             ),
-            const SizedBox(height: 10),
-            if (event.type == AppStrings.goal) eventGoal(event, context),
-            if (event.type == AppStrings.card) eventCard(event, context),
-            if (event.type == AppStrings.subst) eventSubset(event, context),
+            SizedBox(height: 10.height),
+            if (event.type.id.isGoalOrOwnGoal || event.type.id.isMissedPenalty)
+              eventGoal(event, context),
+            if (event.type.id.isCard) eventCard(event, context),
+            if (event.type.id.isSubstitute) eventSubset(event, context),
           ],
         ),
       ),
@@ -87,14 +139,14 @@ class EventsView extends StatelessWidget {
       CustomImage(
         width: 20.radius,
         height: 20.radius,
-        imageUrl: event.team.logo,
+        imageUrl: event.team?.logo ?? '',
       ),
       SizedBox(width: 10.width),
       Text(
-        event.team.name,
+        event.team?.name.teamName ?? '',
         style: Theme.of(
           context,
-        ).textTheme.bodyMedium?.copyWith(color: AppColors.blueGrey),
+        ).textTheme.titleSmall?.copyWith(color: AppColors.blueGrey),
       ),
     ],
   );
@@ -104,25 +156,33 @@ class EventsView extends StatelessWidget {
     children: [
       Expanded(
         child: Text(
-          event.assistName,
+          event.player?.name.playerName ?? '',
           textAlign: TextAlign.start,
           style: Theme.of(
             context,
-          ).textTheme.bodyMedium?.copyWith(color: AppColors.red),
+          ).textTheme.titleSmall?.copyWith(color: AppColors.red),
         ),
       ),
+      SizedBox(width: 10.width),
       Image(
-        width: 40.radius,
-        height: 40.radius,
+        width: 30.radius,
+        height: 30.radius,
         image: AssetImage(AppAssets.subs),
       ),
+      SizedBox(width: 10.width),
       Expanded(
-        child: Text(
-          event.playerName,
-          textAlign: TextAlign.end,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: AppColors.green),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            event.extraPlayerDetails != null &&
+                    event.extraPlayerDetails!.isNotEmpty
+                ? event.extraPlayerDetails!.first.name
+                : '',
+            textAlign: TextAlign.end,
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(color: AppColors.green),
+          ),
         ),
       ),
     ],
@@ -132,18 +192,16 @@ class EventsView extends StatelessWidget {
     children: [
       Expanded(
         child: Text(
-          event.playerName,
+          event.player?.name.playerName ?? '',
           textAlign: TextAlign.start,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.titleSmall,
         ),
       ),
+      SizedBox(width: 10.width),
       Container(
-        color:
-            event.detail == AppStrings.yellowCard
-                ? AppColors.yellow
-                : AppColors.red,
-        width: 20.radius,
-        height: 30.radius,
+        color: event.type.id.isYellowCard ? AppColors.yellow : AppColors.red,
+        width: 20.width,
+        height: 25.height,
       ),
       Expanded(child: Container()),
     ],
@@ -153,32 +211,39 @@ class EventsView extends StatelessWidget {
     children: [
       Expanded(
         child: Text(
-          event.playerName,
+          event.player?.name.playerName ?? '',
           textAlign: TextAlign.start,
           style: Theme.of(
             context,
-          ).textTheme.bodyMedium?.copyWith(color: AppColors.blue),
+          ).textTheme.titleSmall?.copyWith(color: AppColors.blue),
         ),
       ),
-      event.detail != AppStrings.missedPenalty
-          ? Icon(Icons.sports_soccer, size: 30.radius)
+      SizedBox(width: 10.width),
+      event.type.id.isGoalOrOwnGoal
+          ? Icon(Icons.sports_soccer, size: 25.radius)
           : penaltyMissed(),
-      Expanded(
-        child: Text(
-          "${AppStrings.assist}: ${event.assistName.split(" ").last}",
-          textAlign: TextAlign.end,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: AppColors.red),
+      SizedBox(width: 10.width),
+      if (event.extraPlayerDetails != null &&
+          event.extraPlayerDetails!.isNotEmpty)
+        Expanded(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "${AppStrings.assist}: ${event.extraPlayerDetails!.map((e) => e.name.playerName).join(', ')}",
+              textAlign: TextAlign.end,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(color: AppColors.red),
+            ),
+          ),
         ),
-      ),
     ],
   );
 
   Widget penaltyMissed() => Stack(
     alignment: AlignmentDirectional.bottomEnd,
     children: [
-      Icon(Icons.sports_soccer, size: 30.radius),
+      Icon(Icons.sports_soccer, size: 25.radius),
       CircleAvatar(
         radius: 8.radius,
         backgroundColor: AppColors.red,

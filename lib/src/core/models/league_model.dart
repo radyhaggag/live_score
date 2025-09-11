@@ -8,21 +8,19 @@ class LeagueModel extends League {
     required super.id,
     required super.name,
     required super.logo,
-    required super.countryId,
-    required super.country,
+    super.country,
     super.color,
   });
 
   factory LeagueModel.fromJson(
     Map<String, dynamic> json, {
-    required CountryModel country,
+    CountryModel? country,
   }) {
     final id = json['id'];
     return LeagueModel(
       id: id,
       name: json['name'],
       logo: AppConstants.competitionImage(id),
-      countryId: json['countryId'],
       country: country,
       color: json['color'],
     );

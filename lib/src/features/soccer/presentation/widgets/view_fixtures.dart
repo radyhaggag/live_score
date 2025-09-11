@@ -102,9 +102,7 @@ class ViewLiveFixtures extends StatelessWidget {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    // context.push(
-                    //   Routes.fixtures,
-                    // ); // todo: replace with match details
+                    context.push(Routes.fixtureDetails, extra: fixtures[index]);
                   },
                   child: LiveFixtureCard(soccerFixture: fixtures[index]),
                 );

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:live_score/src/core/utils/app_constants.dart';
+import 'package:live_score/src/core/domain/entities/league.dart';
 
+import '../../../features/fixture/domain/enums.dart';
 import 'teams.dart';
 
 class SoccerFixture extends Equatable {
@@ -8,7 +9,7 @@ class SoccerFixture extends Equatable {
   final Teams teams;
   final String statusText;
   final int gameTimeAndStatusDisplayType;
-  final FixtureLeague fixtureLeague;
+  final League fixtureLeague;
   final DateTime? startTime;
   final int? gameTime;
   final int? addedTime;
@@ -53,26 +54,4 @@ class SoccerFixture extends Equatable {
       _ => SoccerFixtureStatus.scheduled,
     };
   }
-}
-
-enum SoccerFixtureStatus {
-  scheduled,
-  live,
-  ended;
-
-  bool get isLive => this == SoccerFixtureStatus.live;
-  bool get isEnded => this == SoccerFixtureStatus.ended;
-  bool get isScheduled => this == SoccerFixtureStatus.scheduled;
-}
-
-class FixtureLeague extends Equatable {
-  final int id;
-  final String name;
-
-  const FixtureLeague({required this.id, required this.name});
-
-  String get logo => AppConstants.competitionImage(id);
-
-  @override
-  List<Object?> get props => [id, name];
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/core/utils/app_colors.dart';
 
 import '../../../../core/widgets/custom_image.dart';
@@ -87,7 +88,7 @@ class StandingsItem extends StatelessWidget {
                 SizedBox(width: 10.width),
                 Flexible(
                   child: Text(
-                    teamRank.team.name,
+                    teamRank.team.name.teamName,
                     style: Theme.of(context).textTheme.titleSmall,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
