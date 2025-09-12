@@ -10,8 +10,14 @@ import '../../../../core/widgets/custom_image.dart';
 class LeagueCard extends StatelessWidget {
   final League league;
   final bool isSelected;
+  final bool viewCountryName;
 
-  const LeagueCard({super.key, required this.league, this.isSelected = false});
+  const LeagueCard({
+    super.key,
+    required this.league,
+    this.isSelected = false,
+    this.viewCountryName = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +61,10 @@ class LeagueCard extends StatelessWidget {
             ),
             SizedBox(width: 5.width),
             Text(
-              league.name,
+              league.name +
+                  (viewCountryName && league.country != null
+                      ? ' (${league.country?.name})'
+                      : ''),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppColors.white,
                 fontWeight:

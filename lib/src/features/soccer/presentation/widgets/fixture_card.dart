@@ -12,8 +12,14 @@ import '../../../fixture/domain/enums.dart';
 class FixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
   final String? fixtureTime;
+  final bool showLeagueLogo;
 
-  const FixtureCard({super.key, required this.soccerFixture, this.fixtureTime});
+  const FixtureCard({
+    super.key,
+    required this.soccerFixture,
+    this.fixtureTime,
+    this.showLeagueLogo = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +30,25 @@ class FixtureCard extends StatelessWidget {
       shadowColor: AppColors.lightGrey,
       surfaceTintColor: AppColors.white,
       child: Padding(
-        padding: const EdgeInsetsDirectional.all(10),
+        padding: const EdgeInsetsDirectional.symmetric(
+          vertical: 15,
+          horizontal: 10,
+        ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _TeamInfo(
               name: soccerFixture.teams.home.name.teamName,
               logo: soccerFixture.teams.home.logo,
             ),
-            SizedBox(width: 10.width),
+            SizedBox(width: 5.width),
             Expanded(
               child: _FixtureCenter(
                 soccerFixture: soccerFixture,
                 fixtureTime: fixtureTime,
+                showLeagueLogo: showLeagueLogo,
               ),
             ),
-            SizedBox(width: 10.width),
+            SizedBox(width: 5.width),
             _TeamInfo(
               name: soccerFixture.teams.away.name.teamName,
               logo: soccerFixture.teams.away.logo,
@@ -85,10 +94,12 @@ class _TeamInfo extends StatelessWidget {
 class _FixtureCenter extends StatelessWidget {
   final SoccerFixture soccerFixture;
   final String? fixtureTime;
+  final bool showLeagueLogo;
 
   const _FixtureCenter({
     required this.soccerFixture,
     required this.fixtureTime,
+    this.showLeagueLogo = true,
   });
 
   @override
@@ -111,7 +122,11 @@ class _FixtureCenter extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 5.height),
-          _LeagueSection(league: soccerFixture.fixtureLeague),
+          _LeagueSection(
+            league: soccerFixture.fixtureLeague,
+            roundNum: soccerFixture.roundNum,
+            showLogo: showLeagueLogo,
+          ),
           SizedBox(height: 5.height),
           _StatusBadge(
             status: soccerFixture.status,
@@ -224,29 +239,53 @@ class _ScoreText extends StatelessWidget {
 
 class _LeagueSection extends StatelessWidget {
   final League league;
+  final int? roundNum;
+  final bool showLogo;
 
-  const _LeagueSection({required this.league});
+  const _LeagueSection({
+    required this.league,
+    this.roundNum,
+    this.showLogo = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return Column(
       children: [
-        CustomImage(height: 13.radius, width: 13.radius, imageUrl: league.logo),
-        SizedBox(width: 5.width),
-        Flexible(
-          child: FittedBox(
-            child: Text(
-              league.name,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: AppColors.blueGrey,
-                fontSize: FontSize.paragraph,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showLogo) ...[
+              CustomImage(
+                height: 13.radius,
+                width: 13.radius,
+                imageUrl: league.logo,
               ),
-              maxLines: 1,
-              textAlign: TextAlign.center,
+              SizedBox(width: 5.width),
+            ],
+            Flexible(
+              child: FittedBox(
+                child: Text(
+                  league.name,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(color: AppColors.blueGrey),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
+        if (roundNum != null) ...[
+          SizedBox(height: 3.height),
+          Text(
+            "Round ${roundNum.toString()}",
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: AppColors.blueGrey),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ],
     );
   }

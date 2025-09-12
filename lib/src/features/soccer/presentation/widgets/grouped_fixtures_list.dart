@@ -8,8 +8,13 @@ import 'fixture_card.dart';
 
 class GroupedFixturesList extends StatelessWidget {
   final List<SoccerFixture> fixtures;
+  final bool showLeagueLogo;
 
-  const GroupedFixturesList({super.key, required this.fixtures});
+  const GroupedFixturesList({
+    super.key,
+    required this.fixtures,
+    this.showLeagueLogo = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +24,6 @@ class GroupedFixturesList extends StatelessWidget {
       itemCount: groupedItems.length,
       itemBuilder: (context, index) {
         final item = groupedItems[index];
-        print(
-          'Fixtures Start Time: ${item is SoccerFixture ? item.startTime : 'N/A'}',
-        );
-
         if (item is String) {
           // Date header
           return Padding(
@@ -41,7 +42,14 @@ class GroupedFixturesList extends StatelessWidget {
           final localTime = DateTime.parse(gameTime).toUtc();
           final formattedTime = DateFormat("h:mm a").format(localTime);
 
-          return FixtureCard(soccerFixture: item, fixtureTime: formattedTime);
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: FixtureCard(
+              soccerFixture: item,
+              fixtureTime: formattedTime,
+              showLeagueLogo: showLeagueLogo,
+            ),
+          );
         }
 
         return const SizedBox.shrink();

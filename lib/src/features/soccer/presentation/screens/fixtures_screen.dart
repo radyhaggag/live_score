@@ -70,11 +70,19 @@ class _FixturesScreenState extends State<FixturesScreen> {
               const LinearProgressIndicator()
             else if (state is SoccerCurrentRoundFixturesLoaded &&
                 state.fixtures.isNotEmpty)
-              Expanded(child: GroupedFixturesList(fixtures: state.fixtures))
+              Expanded(
+                child: GroupedFixturesList(
+                  fixtures: state.fixtures,
+                  showLeagueLogo: true,
+                ),
+              )
             else if (state is SoccerTodayFixturesLoaded &&
                 state.todayFixtures.isNotEmpty)
               Expanded(
-                child: GroupedFixturesList(fixtures: state.todayFixtures),
+                child: GroupedFixturesList(
+                  fixtures: state.todayFixtures,
+                  showLeagueLogo: true,
+                ),
               )
             else if (state is SoccerCurrentRoundFixturesLoaded &&
                 state.fixtures.isEmpty)

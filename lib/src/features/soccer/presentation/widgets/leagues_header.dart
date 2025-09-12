@@ -61,7 +61,6 @@ class CircleLeaguesHeader extends StatelessWidget {
       );
     },
     child: CircleAvatar(
-      // backgroundColor: HexColor(league.color),
       backgroundColor:
           league.color != null ? HexColor(league.color!) : AppColors.blueGrey,
       radius: 25.radius,
@@ -134,6 +133,10 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
                   return SizedBox(width: 5.width);
                 },
                 itemBuilder: (context, index) {
+                  final viewCountryName = widget.leagues.any((l) {
+                    return l.name == widget.leagues[index].name &&
+                        l.id != widget.leagues[index].id;
+                  });
                   return InkWell(
                     onTap: () {
                       if (widget.getFixtures == false) {
@@ -153,6 +156,7 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
                     child: LeagueCard(
                       league: widget.leagues[index],
                       isSelected: selectedLeagueId == widget.leagues[index].id,
+                      viewCountryName: viewCountryName,
                     ),
                   );
                 },

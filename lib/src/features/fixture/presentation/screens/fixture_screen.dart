@@ -61,15 +61,15 @@ class _FixtureScreenState extends State<FixtureScreen> {
               buildTabBar(cubit),
               if (state is FixtureStatisticsLoading ||
                   state is FixtureDetailsLoading)
-                LinearProgressIndicator(color: getColor(widget.soccerFixture)),
-              if (selectedTabIndex == 0)
-                StatisticsView(statistics: cubit.statistics),
-              if (selectedTabIndex == 1)
+                LinearProgressIndicator(color: getColor(widget.soccerFixture))
+              else if (selectedTabIndex == 0)
+                StatisticsView(statistics: cubit.statistics)
+              else if (selectedTabIndex == 1)
                 LineupsView(
                   fixtureDetails: cubit.fixtureDetails,
                   color: getColor(widget.soccerFixture),
-                ),
-              if (selectedTabIndex == 2)
+                )
+              else if (selectedTabIndex == 2)
                 EventsView(
                   fixtureDetails: cubit.fixtureDetails,
                   color: getColor(widget.soccerFixture),

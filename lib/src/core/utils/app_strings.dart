@@ -22,7 +22,7 @@ class AppStrings {
   static const String subst = "subst";
   static const String viewFixtures = "View Fixtures";
   static const String liveFixtures = "Live Fixtures";
-  static const String viewAll = "VIEW ALL";
+  static const String viewAll = "View All";
   static const String reachedLimits =
       "You have reached the request limit for the day";
   static const String reload = "Reload";
