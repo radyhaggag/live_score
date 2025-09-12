@@ -15,14 +15,16 @@ import 'teams_lineups.dart';
 
 class LineupsView extends StatelessWidget {
   final FixtureDetails? fixtureDetails;
+  final Color? color;
 
-  const LineupsView({super.key, required this.fixtureDetails});
+  const LineupsView({super.key, required this.fixtureDetails, this.color});
 
   @override
   Widget build(BuildContext context) {
     final homeTeam = fixtureDetails?.fixture.teams.home;
     final awayTeam = fixtureDetails?.fixture.teams.away;
-    return homeTeam?.lineup != null && awayTeam?.lineup != null
+    return (homeTeam?.lineup?.formation ?? '').isNotEmpty &&
+            (awayTeam?.lineup?.formation ?? '').isNotEmpty
         ? Column(
           children: [
             buildTeamHeader(context: context, team: homeTeam!),
@@ -45,9 +47,10 @@ class LineupsView extends StatelessWidget {
             buildTeamHeader(context: context, team: awayTeam!),
           ],
         )
-        : const ItemsNotAvailable(
+        : ItemsNotAvailable(
           icon: Icons.people,
           message: AppStrings.noLineups,
+          color: color,
         );
   }
 
@@ -57,11 +60,7 @@ class LineupsView extends StatelessWidget {
       padding: const EdgeInsetsDirectional.all(5),
       child: Row(
         children: [
-          CustomImage(
-            width: 35.radius,
-            height: 35.radius,
-            imageUrl: team.logo,
-          ),
+          CustomImage(width: 35.radius, height: 35.radius, imageUrl: team.logo),
           SizedBox(width: 10.width),
           Text(
             team.name.teamName,

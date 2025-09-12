@@ -8,6 +8,9 @@ class StatisticsModel extends Statistics {
   const StatisticsModel({required super.teams, required super.statistics});
 
   factory StatisticsModel.fromJson(Map<String, dynamic> json) {
+    if (json["games"] == null || (json["games"] as List).isEmpty) {
+      return const StatisticsModel(teams: null, statistics: null);
+    }
     final firstMatch = (json["games"] as List).first;
     return StatisticsModel(
       teams: TeamsModel.fromJson(firstMatch).toDomain(),

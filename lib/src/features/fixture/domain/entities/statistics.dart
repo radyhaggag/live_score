@@ -3,22 +3,26 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/domain/entities/teams.dart';
 
 class Statistics extends Equatable {
-  final Teams teams;
-  final List<Statistic> statistics;
+  final Teams? teams;
+  final List<Statistic>? statistics;
 
   const Statistics({required this.teams, required this.statistics});
 
-  List<Statistic> get homeStatistics {
+  List<Statistic>? get homeStatistics {
     final stats =
-        statistics.where((stat) => stat.competitorId == teams.home.id).toList();
-    stats.sort((a, b) => a.order.compareTo(b.order));
+        statistics
+            ?.where((stat) => stat.competitorId == teams?.home.id)
+            .toList();
+    stats?.sort((a, b) => a.order.compareTo(b.order));
     return stats;
   }
 
-  List<Statistic> get awayStatistics {
+  List<Statistic>? get awayStatistics {
     final stats =
-        statistics.where((stat) => stat.competitorId == teams.away.id).toList();
-    stats.sort((a, b) => a.order.compareTo(b.order));
+        statistics
+            ?.where((stat) => stat.competitorId == teams?.away.id)
+            .toList();
+    stats?.sort((a, b) => a.order.compareTo(b.order));
     return stats;
   }
 

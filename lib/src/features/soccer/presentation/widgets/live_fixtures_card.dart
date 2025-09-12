@@ -30,19 +30,14 @@ class LiveFixtureCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                backgroundColor: AppColors.white,
-                radius: 10.radius,
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: CustomImage(
-                    height: 10.radius,
-                    width: 10.radius,
-                    imageUrl: soccerFixture.fixtureLeague.logo,
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: CustomImage(
+                  height: 30.radius,
+                  width: 30.radius,
+                  imageUrl: soccerFixture.fixtureLeague.logo,
                 ),
               ),
-              SizedBox(width: 5.width),
               Flexible(
                 child: Text(
                   soccerFixture.fixtureLeague.name,

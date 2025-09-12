@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
 
+import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_strings.dart';
 
 class SoccerLayout extends StatelessWidget {
@@ -21,7 +23,20 @@ class SoccerLayout extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppStrings.bottomNavTitles[currentIndex])),
+      appBar: AppBar(
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(AppAssets.appLogo, height: 40.height),
+            Text(
+              AppStrings.bottomNavTitles[currentIndex],
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+      ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,

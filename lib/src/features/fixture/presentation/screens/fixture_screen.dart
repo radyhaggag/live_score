@@ -65,7 +65,10 @@ class _FixtureScreenState extends State<FixtureScreen> {
               if (selectedTabIndex == 0)
                 StatisticsView(statistics: cubit.statistics),
               if (selectedTabIndex == 1)
-                LineupsView(fixtureDetails: cubit.fixtureDetails),
+                LineupsView(
+                  fixtureDetails: cubit.fixtureDetails,
+                  color: getColor(widget.soccerFixture),
+                ),
               if (selectedTabIndex == 2)
                 EventsView(
                   fixtureDetails: cubit.fixtureDetails,

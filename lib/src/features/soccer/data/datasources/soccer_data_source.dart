@@ -36,7 +36,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
         url: Endpoints.currentRoundFixtures,
         queryParams: {"competitions": competitionId},
       );
-      return _getResult(response);
+      return _getResult(response, getOnlyCurrentDayFixtures: false);
     } catch (error) {
       rethrow;
     }
@@ -81,7 +81,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
         },
       );
 
-      return _getResult(response);
+      return _getResult(response, getOnlyCurrentDayFixtures: true);
     } catch (error) {
       rethrow;
     }
@@ -107,7 +107,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
 
   List<SoccerFixtureModel> _getResult(
     Response response, {
-    bool removeOldFixturesByOneDay = true,
+    bool getOnlyCurrentDayFixtures = true,
   }) {
     List<dynamic> result = response.data["games"];
 
@@ -125,7 +125,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
           name: fixture['competitionDisplayName'],
         ),
       );
-      if (removeOldFixturesByOneDay && model.startTime != null) {
+      if (getOnlyCurrentDayFixtures && model.startTime != null) {
         final now = DateTime(
           DateTime.now().toUtc().year,
           DateTime.now().toUtc().month,
@@ -136,7 +136,8 @@ class SoccerDataSourceImpl implements SoccerDataSource {
           model.startTime!.toUtc().month,
           model.startTime!.toUtc().day,
         );
-        if (fixtureDate.isBefore(now)) continue;
+
+        if (fixtureDate.isAfter(now)) continue;
       }
       fixtures.add(model);
     }

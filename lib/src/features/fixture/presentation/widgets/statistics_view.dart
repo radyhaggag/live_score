@@ -18,18 +18,20 @@ class StatisticsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (statistics == null || statistics!.statistics.isEmpty) {
+    if (statistics?.statistics == null ||
+        (statistics?.statistics ?? []).isEmpty ||
+        statistics?.teams == null) {
       return const NoStatistics();
     }
 
     final grouped = _groupStats(
-      homeStats: statistics!.homeStatistics,
-      awayStats: statistics!.awayStatistics,
+      homeStats: statistics!.homeStatistics!,
+      awayStats: statistics!.awayStatistics!,
     );
 
     return Column(
       children: [
-        StatsHeader(teams: statistics!.teams),
+        StatsHeader(teams: statistics!.teams!),
         ListView.separated(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(20),
@@ -127,8 +129,8 @@ class NoStatistics extends StatelessWidget {
         children: [
           Image(
             image: AssetImage(AppAssets.noStats),
-            width: 200.radius,
-            height: 200.radius,
+            width: 100.radius,
+            height: 100.radius,
           ),
           SizedBox(height: 10.height),
           Text(

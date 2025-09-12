@@ -18,8 +18,11 @@ class FixtureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 3.radius,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      elevation: 4,
+      color: AppColors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shadowColor: AppColors.lightGrey,
+      surfaceTintColor: AppColors.white,
       child: Padding(
         padding: const EdgeInsetsDirectional.all(10),
         child: Row(

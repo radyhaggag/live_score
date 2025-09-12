@@ -79,9 +79,10 @@ class _EventsViewState extends State<EventsView> {
             itemCount: widget.fixtureDetails!.sortedEvents.length,
           ),
         )
-        : const ItemsNotAvailable(
+        : ItemsNotAvailable(
           message: AppStrings.noEvents,
           icon: Icons.event_busy,
+          color: widget.color,
         );
   }
 

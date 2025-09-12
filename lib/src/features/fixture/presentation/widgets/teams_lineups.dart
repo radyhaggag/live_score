@@ -26,6 +26,7 @@ class TeamsLineups extends StatelessWidget {
             .where((player) => player.lineupMember.isStarting)
             .toList();
 
+
     // Sort players by field position
     if (homePlayers.any((player) => player.lineupMember.yardInfo != null)) {
       homePlayers.sort((a, b) {

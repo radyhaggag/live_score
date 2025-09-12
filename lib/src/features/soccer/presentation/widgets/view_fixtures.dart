@@ -42,19 +42,10 @@ class ViewDayFixtures extends StatelessWidget {
                 String fixtureTime = fixtures[index].startTime.toString();
                 final localTime = DateTime.parse(fixtureTime).toLocal();
                 final formattedTime = DateFormat("h:mm a").format(localTime);
-                int nowHour = int.parse(
-                  DateFormat.jm().format(DateTime.now()).split(":").first,
-                );
-                bool timeIsBefore = DateTime.now().isBefore(localTime);
-                int fixtureHour = int.parse(formattedTime.split(":").first);
                 return InkWell(
-                  onTap:
-                      (timeIsBefore && nowHour + 1 >= fixtureHour) ||
-                              fixtures[index].gameTime != null
-                          ? () {
-                            // context.push(Routes.fixtures); // todo: replace with match details
-                          }
-                          : null,
+                  onTap: () {
+                    context.push(Routes.fixtureDetails, extra: fixtures[index]);
+                  },
                   child: FixtureCard(
                     soccerFixture: fixtures[index],
                     fixtureTime: formattedTime,

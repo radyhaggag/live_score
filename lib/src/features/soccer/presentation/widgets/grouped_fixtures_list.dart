@@ -19,6 +19,9 @@ class GroupedFixturesList extends StatelessWidget {
       itemCount: groupedItems.length,
       itemBuilder: (context, index) {
         final item = groupedItems[index];
+        print(
+          'Fixtures Start Time: ${item is SoccerFixture ? item.startTime : 'N/A'}',
+        );
 
         if (item is String) {
           // Date header
@@ -35,7 +38,7 @@ class GroupedFixturesList extends StatelessWidget {
         } else if (item is SoccerFixture) {
           // Fixture card
           final gameTime = item.startTime.toString();
-          final localTime = DateTime.parse(gameTime).toLocal();
+          final localTime = DateTime.parse(gameTime).toUtc();
           final formattedTime = DateFormat("h:mm a").format(localTime);
 
           return FixtureCard(soccerFixture: item, fixtureTime: formattedTime);
@@ -61,7 +64,7 @@ class GroupedFixturesList extends StatelessWidget {
     for (var fixture in fixtures) {
       if (fixture.startTime == null) continue;
 
-      final localDate = fixture.startTime!.toLocal();
+      final localDate = fixture.startTime!.toUtc();
       final isSameYear = localDate.year == now.year;
 
       // Format: add year only if not current year
