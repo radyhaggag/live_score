@@ -7,6 +7,7 @@ import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_fonts.dart';
 import '../../../../core/widgets/custom_image.dart';
+import '../../../../core/widgets/match_time_with_progress.dart';
 import '../../../fixture/domain/enums.dart';
 
 class FixtureCard extends StatelessWidget {
@@ -23,12 +24,20 @@ class FixtureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      color: AppColors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      shadowColor: AppColors.lightGrey,
-      surfaceTintColor: AppColors.white,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4).copyWith(top: 10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          const BoxShadow(
+            color: AppColors.lightGrey,
+            spreadRadius: 2,
+            blurRadius: 3,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsetsDirectional.symmetric(
           vertical: 15,
@@ -140,15 +149,11 @@ class _FixtureCenter extends StatelessWidget {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            soccerFixture.gameTimeDisplay.isNotEmpty
-                ? soccerFixture.gameTimeDisplay
-                : 'LIVE',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: AppColors.red,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+          MatchTimeWithProgress(
+            time:
+                soccerFixture.gameTimeDisplay.isNotEmpty
+                    ? soccerFixture.gameTimeDisplay
+                    : 'LIVE',
           ),
           SizedBox(height: 5.height),
           Row(

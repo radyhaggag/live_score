@@ -43,6 +43,8 @@ class ViewDayFixtures extends StatelessWidget {
                 final localTime = DateTime.parse(fixtureTime).toLocal();
                 final formattedTime = DateFormat('h:mm a').format(localTime);
                 return InkWell(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
                   onTap: () {
                     context.push(Routes.fixtureDetails, extra: fixtures[index]);
                   },

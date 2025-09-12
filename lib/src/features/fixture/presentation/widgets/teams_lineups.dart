@@ -85,9 +85,9 @@ class TeamsLineups extends StatelessWidget {
     // Calculate luminance using the relative luminance formula
     // Luminance = 0.299R + 0.587G + 0.114B
     final double luminance =
-        (0.299 * backgroundColor.r +
-            0.587 * backgroundColor.g +
-            0.114 * backgroundColor.b) /
+        (0.299 * backgroundColor.r * 255.0 +
+            0.587 * backgroundColor.g * 255.0 +
+            0.114 * backgroundColor.b * 255.0) /
         255;
 
     // If luminance is high (light color), use black; otherwise, use white

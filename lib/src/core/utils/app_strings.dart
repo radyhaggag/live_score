@@ -21,6 +21,7 @@ class AppStrings {
   static const String yellowCard = 'Yellow Card';
   static const String subst = 'subst';
   static const String viewFixtures = 'View Fixtures';
+  static const String viewStandings = 'View Standings';
   static const String liveFixtures = 'Live Fixtures';
   static const String viewAll = 'View All';
   static const String reachedLimits =

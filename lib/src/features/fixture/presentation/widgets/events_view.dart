@@ -108,19 +108,16 @@ class _EventsViewState extends State<EventsView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  event.type.name +
-                      (event.type.subTypeName != null &&
-                              !event.type.id.isGoal(event.type.subTypeId)
-                          ? ' - ${event.type.subTypeName}'
-                          : ''),
+                  event.type.name,
                   textAlign: TextAlign.start,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
-                Text(
-                  event.player?.name.playerName ?? '',
-                  textAlign: TextAlign.end,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
+                if (event.type.subTypeName != null)
+                  Text(
+                    event.type.subTypeName ?? '',
+                    textAlign: TextAlign.end,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
               ],
             ),
             SizedBox(height: 10.height),
@@ -234,10 +231,12 @@ class _EventsViewState extends State<EventsView> {
               textAlign: TextAlign.end,
               style: Theme.of(
                 context,
-              ).textTheme.titleSmall?.copyWith(color: AppColors.red),
+              ).textTheme.titleSmall?.copyWith(color: AppColors.green),
             ),
           ),
-        ),
+        )
+      else
+        const Expanded(child: SizedBox.shrink()),
     ],
   );
 

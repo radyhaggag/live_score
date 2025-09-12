@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
@@ -18,10 +20,21 @@ class SoccerScreen extends StatefulWidget {
 }
 
 class _SoccerScreenState extends State<SoccerScreen> {
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
     context.read<SoccerCubit>().getTodayFixtures();
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      context.read<SoccerCubit>().getTodayFixtures(isTimerLoading: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -117,8 +130,10 @@ class _ViewFixtures extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SoccerCubit, SoccerStates>(
       buildWhen: (context, state) {
+        if (state is SoccerTodayFixturesLoading && !state.isTimerLoading) {
+          return true;
+        }
         return [
-          SoccerTodayFixturesLoading,
           SoccerTodayFixturesLoaded,
           SoccerTodayFixturesLoadFailure,
         ].contains(state.runtimeType);

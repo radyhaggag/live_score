@@ -37,12 +37,14 @@ class _FixtureScreenState extends State<FixtureScreen> {
   @override
   Widget build(BuildContext context) {
     final FixtureCubit cubit = context.read<FixtureCubit>();
+    final homeTeam = widget.soccerFixture.teams.home;
+    final awayTeam = widget.soccerFixture.teams.away;
 
     return Scaffold(
       appBar: AppBar(
         title: FittedBox(
           child: Text(
-            '${widget.soccerFixture.teams.home.name.teamName} ${AppStrings.vs} ${widget.soccerFixture.teams.away.name.teamName}',
+            '${homeTeam.name.teamName} ${AppStrings.vs} ${awayTeam.name.teamName}',
             style: Theme.of(
               context,
             ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -69,14 +71,25 @@ class _FixtureScreenState extends State<FixtureScreen> {
                     state is FixtureDetailsLoading)
                   LinearProgressIndicator(color: _fixtureColor)
                 else if (selectedTabIndex == 0)
-                  StatisticsView(statistics: cubit.statistics)
+                  StatisticsView(
+                    key: ValueKey(
+                      cubit.statistics?.hashCode ?? 'no_statistics',
+                    ),
+                    statistics: cubit.statistics,
+                  )
                 else if (selectedTabIndex == 1)
                   LineupsView(
+                    key: ValueKey(
+                      cubit.fixtureDetails?.hashCode ?? 'no_details',
+                    ),
                     fixtureDetails: cubit.fixtureDetails,
                     color: _fixtureColor,
                   )
                 else if (selectedTabIndex == 2)
                   EventsView(
+                    key: ValueKey(
+                      cubit.fixtureDetails?.hashCode ?? 'no_details',
+                    ),
                     fixtureDetails: cubit.fixtureDetails,
                     color: _fixtureColor,
                   ),

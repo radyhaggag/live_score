@@ -51,21 +51,17 @@ class SoccerCubit extends Cubit<SoccerStates> {
     );
   }
 
-  Future<void> getTodayFixtures() async {
-    emit(SoccerTodayFixturesLoading());
+  Future<void> getTodayFixtures({bool isTimerLoading = false}) async {
+    emit(SoccerTodayFixturesLoading(isTimerLoading: isTimerLoading));
     final todayFixtures = await todayFixturesUseCase(NoParams());
     todayFixtures.fold(
       (left) => emit(SoccerTodayFixturesLoadFailure(left.message)),
       (right) {
-        final liveFixtures =
-            right.where((fixture) {
-              return fixture.status.isLive;
-            }).toList();
-
+        final liveFixtures = right.where((fixture) => fixture.status.isLive);
         emit(
           SoccerTodayFixturesLoaded(
             todayFixtures: right,
-            liveFixtures: liveFixtures,
+            liveFixtures: liveFixtures.toList(),
           ),
         );
       },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/utils/app_colors.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/media_query.dart';
@@ -37,6 +38,7 @@ class ModalSheetContent extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15),
       height: context.height / 5,
+      decoration: const BoxDecoration(gradient: AppColors.blueGradient),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -48,11 +50,14 @@ class ModalSheetContent extends StatelessWidget {
                   height: 20.radius,
                   imageUrl: league.logo,
                 ),
-                SizedBox(width: 10.width),
+                SizedBox(width: 5.width),
                 Flexible(
                   child: Text(
                     league.name,
-                    style: const TextStyle(fontSize: 16),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     // softWrap: true,
@@ -63,17 +68,27 @@ class ModalSheetContent extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                context.pop();
                 context.push(Routes.fixtures, extra: league.id);
+                context.pop();
               },
-              child: const Text(AppStrings.viewFixtures),
+              child: Text(
+                AppStrings.viewFixtures,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: AppColors.darkBlue),
+              ),
             ),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 context.push(Routes.standings, extra: league.id);
                 context.pop();
               },
-              child: const Text('View Standings'),
+              child: Text(
+                AppStrings.viewStandings,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: AppColors.darkBlue),
+              ),
             ),
           ],
         ),

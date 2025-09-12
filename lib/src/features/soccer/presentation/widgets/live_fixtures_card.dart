@@ -6,6 +6,7 @@ import 'package:live_score/src/core/extensions/strings.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/custom_image.dart';
+import '../../../../core/widgets/match_time_with_progress.dart';
 
 class LiveFixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
@@ -73,20 +74,10 @@ class LiveFixtureCard extends StatelessWidget {
             goals: soccerFixture.teams.away.score.toString(),
           ),
           SizedBox(height: 10.height),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(20.radius),
-            ),
-            child: Text(
-              soccerFixture.gameTimeDisplay,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: AppColors.red,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
+          MatchTimeWithProgress(
+            time: soccerFixture.gameTimeDisplay,
+            mainColor: AppColors.white,
+            widthFactor: 3,
           ),
           SizedBox(height: 10.height),
           // Status badge

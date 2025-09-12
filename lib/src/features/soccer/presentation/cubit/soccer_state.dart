@@ -35,7 +35,11 @@ class SoccerCurrentRoundFixturesLoadFailure extends SoccerStates {
   SoccerCurrentRoundFixturesLoadFailure(this.message, {this.competitionId});
 }
 
-class SoccerTodayFixturesLoading extends SoccerStates {}
+class SoccerTodayFixturesLoading extends SoccerStates {
+  final bool isTimerLoading;
+
+  SoccerTodayFixturesLoading({this.isTimerLoading = false});
+}
 
 class SoccerTodayFixturesLoaded extends SoccerStates {
   final List<SoccerFixture> todayFixtures;
