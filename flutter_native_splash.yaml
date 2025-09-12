@@ -1,9 +1,13 @@
 flutter_native_splash:
   color: "#FFFFFF"
-  image: assets/images/app_logo.png
+  color_dark: "#FFFFFF"
+  image: "assets/images/app_logo.png"
+  image_dark: "assets/images/app_logo.png"
   android_gravity: fill
 
   android_12:
     color: "#FFFFFF"
-    image: assets/images/android_12_splash_screen.png
+    color_dark: "#FFFFFF"
+    image: "assets/images/android_12_splash_screen.png"
+    image_dark: "assets/images/android_12_splash_screen.png"
     android_gravity: fill

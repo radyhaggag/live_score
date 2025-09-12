@@ -8,14 +8,14 @@ class StatisticsModel extends Statistics {
   const StatisticsModel({required super.teams, required super.statistics});
 
   factory StatisticsModel.fromJson(Map<String, dynamic> json) {
-    if (json["games"] == null || (json["games"] as List).isEmpty) {
+    if (json['games'] == null || (json['games'] as List).isEmpty) {
       return const StatisticsModel(teams: null, statistics: null);
     }
-    final firstMatch = (json["games"] as List).first;
+    final firstMatch = (json['games'] as List).first;
     return StatisticsModel(
       teams: TeamsModel.fromJson(firstMatch).toDomain(),
       statistics: List<Statistic>.from(
-        json["statistics"].map(
+        json['statistics'].map(
           (statistic) => StatisticModel.fromJson(statistic),
         ),
       ),
@@ -37,14 +37,14 @@ class StatisticModel extends Statistic {
   });
 
   factory StatisticModel.fromJson(Map<String, dynamic> json) => StatisticModel(
-    id: json["id"],
-    competitorId: json["competitorId"],
-    name: json["name"],
-    value: json["value"]?.toString() ?? "0",
-    valuePercentage: json["valuePercentage"]?.toDouble() ?? 0.0,
-    order: toInt(json["order"]) ?? 0,
-    categoryId: toInt(json["categoryId"]),
-    categoryName: json["categoryName"] as String?,
-    isTop: json["isTop"] == true,
+    id: json['id'],
+    competitorId: json['competitorId'],
+    name: json['name'],
+    value: json['value']?.toString() ?? '0',
+    valuePercentage: json['valuePercentage']?.toDouble() ?? 0.0,
+    order: toInt(json['order']) ?? 0,
+    categoryId: toInt(json['categoryId']),
+    categoryName: json['categoryName'] as String?,
+    isTop: json['isTop'] == true,
   );
 }

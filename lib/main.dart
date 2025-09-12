@@ -22,8 +22,8 @@ Future<void> loadEnvFiles() async {
   // Load environment variables from .env files
   // This is a placeholder for the actual implementation
   try {
-    await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: '.env');
   } catch (e) {
-    log("An error occurred during load the .env file");
+    log('An error occurred during load the .env file');
   }
 }

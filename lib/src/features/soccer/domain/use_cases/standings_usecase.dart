@@ -26,7 +26,7 @@ class StandingsParams extends Equatable {
   List<Object?> get props => [leagueId];
 
   Map<String, dynamic> toJson() => {
-    "competitions": leagueId,
-    "withSeasonsFilter": "false",
+    'competitions': leagueId,
+    'withSeasonsFilter': 'false',
   };
 }

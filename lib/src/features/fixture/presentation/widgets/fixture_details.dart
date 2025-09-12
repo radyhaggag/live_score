@@ -59,7 +59,10 @@ class FixtureDetails extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             decoration: BoxDecoration(
-              color: AppColors.lightRed,
+              color:
+                  soccerFixture.isThereWinner
+                      ? AppColors.lightRed
+                      : AppColors.darkBlue,
               borderRadius: BorderRadius.circular(20.radius),
             ),
             child: Text(
@@ -75,7 +78,7 @@ class FixtureDetails extends StatelessWidget {
   }
 
   Widget buildFixtureResult(BuildContext context) {
-    TextStyle? displaySmall = Theme.of(
+    final TextStyle? displaySmall = Theme.of(
       context,
     ).textTheme.displaySmall?.copyWith(color: AppColors.white);
 
@@ -89,7 +92,7 @@ class FixtureDetails extends StatelessWidget {
               style: displaySmall,
             ),
             SizedBox(width: 10.width),
-            Text(":", style: displaySmall),
+            Text(':', style: displaySmall),
             SizedBox(width: 10.width),
             Text(
               soccerFixture.teams.away.score.toString(),
@@ -104,9 +107,9 @@ class FixtureDetails extends StatelessWidget {
   }
 
   Widget buildFixtureTime(BuildContext context) {
-    String fixtureTime = soccerFixture.startTime.toString();
+    final String fixtureTime = soccerFixture.startTime.toString();
     final localTime = DateTime.parse(fixtureTime).toLocal();
-    final formattedTime = DateFormat("h:mm a").format(localTime);
+    final formattedTime = DateFormat('h:mm a').format(localTime);
     return Column(
       children: [
         Text(
@@ -123,8 +126,8 @@ class FixtureDetails extends StatelessWidget {
 
   Widget buildFixtureRound(BuildContext context) => Text(
     soccerFixture.roundNum != null
-        ? "Round ${soccerFixture.roundNum}"
-        : "Season ${soccerFixture.seasonNum}",
+        ? 'Round ${soccerFixture.roundNum}'
+        : 'Season ${soccerFixture.seasonNum}',
     maxLines: 1,
     overflow: TextOverflow.ellipsis,
     style: Theme.of(context).textTheme.bodySmall?.copyWith(

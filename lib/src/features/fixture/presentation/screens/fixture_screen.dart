@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
@@ -23,7 +24,7 @@ class FixtureScreen extends StatefulWidget {
 }
 
 class _FixtureScreenState extends State<FixtureScreen> {
-  int selectedTabIndex = 0;
+  int selectedTabIndex = 1;
 
   @override
   void initState() {
@@ -35,49 +36,55 @@ class _FixtureScreenState extends State<FixtureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FixtureCubit cubit = context.read<FixtureCubit>();
+    final FixtureCubit cubit = context.read<FixtureCubit>();
 
-    return BlocBuilder<FixtureCubit, FixtureState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: FittedBox(
-              child: Text(
-                "${widget.soccerFixture.teams.home.name.teamName} ${AppStrings.vs} ${widget.soccerFixture.teams.away.name.teamName}",
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new, size: 15.radius),
-              onPressed: () => context.pop(),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: FittedBox(
+          child: Text(
+            '${widget.soccerFixture.teams.home.name.teamName} ${AppStrings.vs} ${widget.soccerFixture.teams.away.name.teamName}',
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
-          body: ListView(
-            physics: const BouncingScrollPhysics(),
-            children: [
-              FixtureDetails(soccerFixture: widget.soccerFixture),
-              buildTabBar(cubit),
-              if (state is FixtureStatisticsLoading ||
-                  state is FixtureDetailsLoading)
-                LinearProgressIndicator(color: getColor(widget.soccerFixture))
-              else if (selectedTabIndex == 0)
-                StatisticsView(statistics: cubit.statistics)
-              else if (selectedTabIndex == 1)
-                LineupsView(
-                  fixtureDetails: cubit.fixtureDetails,
-                  color: getColor(widget.soccerFixture),
-                )
-              else if (selectedTabIndex == 2)
-                EventsView(
-                  fixtureDetails: cubit.fixtureDetails,
-                  color: getColor(widget.soccerFixture),
-                ),
-            ],
-          ),
-        );
-      },
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, size: 15.radius),
+          onPressed: () => context.pop(),
+        ),
+      ),
+      body: BlocBuilder<FixtureCubit, FixtureState>(
+        builder: (context, state) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              await cubit.getFixtureDetails(widget.soccerFixture.id);
+              await cubit.getStatistics(widget.soccerFixture.id);
+            },
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
+              children: [
+                FixtureDetails(soccerFixture: widget.soccerFixture),
+                buildTabBar(cubit),
+                if (state is FixtureStatisticsLoading ||
+                    state is FixtureDetailsLoading)
+                  LinearProgressIndicator(color: _fixtureColor)
+                else if (selectedTabIndex == 0)
+                  StatisticsView(statistics: cubit.statistics)
+                else if (selectedTabIndex == 1)
+                  LineupsView(
+                    fixtureDetails: cubit.fixtureDetails,
+                    color: _fixtureColor,
+                  )
+                else if (selectedTabIndex == 2)
+                  EventsView(
+                    fixtureDetails: cubit.fixtureDetails,
+                    color: _fixtureColor,
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -109,18 +116,21 @@ class _FixtureScreenState extends State<FixtureScreen> {
     required void Function()? onPressed,
   }) => MaterialButton(
     onPressed: onPressed,
-    color: getColor(widget.soccerFixture),
+    color: _fixtureColor,
     elevation: 0.0,
     padding: const EdgeInsets.all(16),
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-    child: Text(label, style: const TextStyle(color: AppColors.white)),
+    child: Text(
+      label,
+      style: Theme.of(
+        context,
+      ).textTheme.titleSmall?.copyWith(color: AppColors.white),
+    ),
   );
-}
 
-Color getColor(SoccerFixture fixture) {
-  Color color = AppColors.blueGrey;
-  if (fixture.teams.away.score != fixture.teams.home.score) {
-    color = AppColors.lightRed;
+  Color get _fixtureColor {
+    return widget.soccerFixture.isThereWinner
+        ? AppColors.lightRed
+        : AppColors.darkBlue;
   }
-  return color;
 }

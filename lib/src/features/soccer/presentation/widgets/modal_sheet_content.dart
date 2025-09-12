@@ -73,7 +73,7 @@ class ModalSheetContent extends StatelessWidget {
                 context.push(Routes.standings, extra: league.id);
                 context.pop();
               },
-              child: const Text("View Standings"),
+              child: const Text('View Standings'),
             ),
           ],
         ),

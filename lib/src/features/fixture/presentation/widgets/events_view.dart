@@ -168,7 +168,7 @@ class _EventsViewState extends State<EventsView> {
       Image(
         width: 30.radius,
         height: 30.radius,
-        image: AssetImage(AppAssets.subs),
+        image: const AssetImage(AppAssets.subs),
       ),
       SizedBox(width: 10.width),
       Expanded(

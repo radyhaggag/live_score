@@ -34,7 +34,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     try {
       final response = await dioHelper.get(
         url: Endpoints.currentRoundFixtures,
-        queryParams: {"competitions": competitionId},
+        queryParams: {'competitions': competitionId},
       );
       return _getResult(response, getOnlyCurrentDayFixtures: false);
     } catch (error) {
@@ -49,16 +49,16 @@ class SoccerDataSourceImpl implements SoccerDataSource {
         url: Endpoints.leagues,
         queryParams: {'competitions': AppConstants.availableLeagues.join(',')},
       );
-      List<dynamic> result = response.data["competitions"];
+      final List<dynamic> result = response.data['competitions'];
       final countries = List<CountryModel>.from(
-        response.data["countries"].map((item) => CountryModel.fromJson(item)),
+        response.data['countries'].map((item) => CountryModel.fromJson(item)),
       );
       final leagues = List<LeagueModel>.from(
         result.map(
           (item) => LeagueModel.fromJson(
             item,
             country: countries.firstWhere(
-              (country) => country.id == item["countryId"],
+              (country) => country.id == item['countryId'],
             ),
           ),
         ),
@@ -94,8 +94,8 @@ class SoccerDataSourceImpl implements SoccerDataSource {
         url: Endpoints.standings,
         queryParams: params.toJson(),
       );
-      List<dynamic> result = response.data["standings"];
-      StandingsModel standings =
+      final List<dynamic> result = response.data['standings'];
+      final StandingsModel standings =
           result.isNotEmpty
               ? StandingsModel.fromJson(result.first)
               : const StandingsModel(standings: []);
@@ -109,9 +109,9 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     Response response, {
     bool getOnlyCurrentDayFixtures = true,
   }) {
-    List<dynamic> result = response.data["games"];
+    final List<dynamic> result = response.data['games'];
 
-    List<SoccerFixtureModel> fixtures = [];
+    final List<SoccerFixtureModel> fixtures = [];
     for (var fixture in result) {
       final competitionId = fixture['competitionId'] as int?;
       if (competitionId == null ||

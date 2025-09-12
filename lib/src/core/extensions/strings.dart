@@ -4,7 +4,7 @@ extension NameFormatter on String {
   String shortenByWords([int maxWords = 3]) {
     final words = split(RegExp(r'\s+')); // split by whitespace
     if (words.length <= maxWords) return this;
-    return words.take(maxWords).join(" ");
+    return words.take(maxWords).join(' ');
   }
 
   /// League name formatting (default: 2 words)
@@ -18,13 +18,13 @@ extension NameFormatter on String {
     final words = split(RegExp(r'\s+')); // split by whitespace
     if (words.length <= 2) return this;
     if (words.length == 3) {
-      return "${words[0]} ${words[1][0]}. ${words[2]}";
+      return '${words[0]} ${words[1][0]}. ${words[2]}';
     }
     // 4 or more words - keep first and last, initials for middle
     final middleInitials = words
         .sublist(1, words.length - 1)
-        .map((w) => "${w[0]}.")
-        .join(" ");
-    return "${words.first} $middleInitials ${words.last}";
+        .map((w) => '${w[0]}.')
+        .join(' ');
+    return '${words.first} $middleInitials ${words.last}';
   }
 }

@@ -76,7 +76,7 @@ class _StandingsScreenState extends State<StandingsScreen> {
                       ...List.generate(state.standings.standings.length, (
                         teamIndex,
                       ) {
-                        TeamRank team = state.standings.standings[teamIndex];
+                        final TeamRank team = state.standings.standings[teamIndex];
                         return StandingsItem(
                           teamRank: team,
                           totalTeams: state.standings.standings.length,
@@ -121,7 +121,7 @@ class _StandingsScreenState extends State<StandingsScreen> {
                             const StandingsHeaders(),
                             SizedBox(height: 10.height),
                             ...List.generate(groupTeams.length, (teamIndex) {
-                              TeamRank team = groupTeams[teamIndex];
+                              final TeamRank team = groupTeams[teamIndex];
                               return StandingsItem(
                                 teamRank: team,
                                 totalTeams: groupTeams.length,

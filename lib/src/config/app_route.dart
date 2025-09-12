@@ -14,10 +14,10 @@ import '../features/soccer/presentation/screens/soccer_screen.dart';
 import '../features/soccer/presentation/screens/standings_screen.dart';
 
 class Routes {
-  static const String soccer = "/soccer";
-  static const String fixtures = "/fixtures";
-  static const String standings = "/standings";
-  static const String fixtureDetails = "/fixture_details";
+  static const String soccer = '/soccer';
+  static const String fixtures = '/fixtures';
+  static const String standings = '/standings';
+  static const String fixtureDetails = '/fixture_details';
 }
 
 class AppRouter {
@@ -35,7 +35,7 @@ class AppRouter {
           GoRoute(
             path: Routes.soccer,
             pageBuilder: (context, _) {
-              return NoTransitionPage(child: const SoccerScreen());
+              return const NoTransitionPage(child: SoccerScreen());
             },
           ),
           GoRoute(

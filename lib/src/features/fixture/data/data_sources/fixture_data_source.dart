@@ -20,11 +20,10 @@ class FixtureDataSourceImpl implements FixtureDataSource {
     try {
       final response = await dioHelper.get(
         url: Endpoints.fixtureDetails,
-        queryParams: {"gameId": fixtureId},
+        queryParams: {'gameId': fixtureId},
       );
-      final result = response.data["game"];
-      final fixtureDetails = FixtureDetailsModel.fromJson(result);
-      return fixtureDetails;
+      final result = response.data['game'];
+      return FixtureDetailsModel.fromJson(result);
     } catch (error) {
       rethrow;
     }
@@ -35,11 +34,10 @@ class FixtureDataSourceImpl implements FixtureDataSource {
     try {
       final response = await dioHelper.get(
         url: Endpoints.matchStatistics,
-        queryParams: {"games": fixtureId},
+        queryParams: {'games': fixtureId},
       );
       final result = response.data;
-      StatisticsModel statistics = StatisticsModel.fromJson(result);
-      return statistics;
+      return StatisticsModel.fromJson(result);
     } catch (error) {
       rethrow;
     }

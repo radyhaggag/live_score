@@ -39,9 +39,9 @@ class ViewDayFixtures extends StatelessWidget {
                 ],
               ),
               ...List.generate(fixtures.length, (index) {
-                String fixtureTime = fixtures[index].startTime.toString();
+                final String fixtureTime = fixtures[index].startTime.toString();
                 final localTime = DateTime.parse(fixtureTime).toLocal();
-                final formattedTime = DateFormat("h:mm a").format(localTime);
+                final formattedTime = DateFormat('h:mm a').format(localTime);
                 return InkWell(
                   onTap: () {
                     context.push(Routes.fixtureDetails, extra: fixtures[index]);

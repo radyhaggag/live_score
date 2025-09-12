@@ -94,10 +94,10 @@ class _LeaguesHeader extends StatelessWidget {
         ].contains(state.runtimeType);
       },
       builder: (context, state) {
-        SoccerCubit cubit = context.read<SoccerCubit>();
+        final SoccerCubit cubit = context.read<SoccerCubit>();
         if (state is SoccerLeaguesLoading) {
-          return Padding(
-            padding: const EdgeInsets.all(50.0),
+          return const Padding(
+            padding: EdgeInsets.all(50.0),
             child: CenterIndicator(),
           );
         } else if (cubit.availableLeagues.isNotEmpty) {
@@ -125,7 +125,7 @@ class _ViewFixtures extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is SoccerTodayFixturesLoading) {
-          return CenterIndicator();
+          return const CenterIndicator();
         } else if (state is SoccerTodayFixturesLoaded) {
           if (state.todayFixtures.isNotEmpty) {
             return Column(

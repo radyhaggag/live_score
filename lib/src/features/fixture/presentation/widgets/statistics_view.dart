@@ -128,7 +128,7 @@ class NoStatistics extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image(
-            image: AssetImage(AppAssets.noStats),
+            image: const AssetImage(AppAssets.noStats),
             width: 100.radius,
             height: 100.radius,
           ),

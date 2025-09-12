@@ -40,7 +40,7 @@ class GroupedFixturesList extends StatelessWidget {
           // Fixture card
           final gameTime = item.startTime.toString();
           final localTime = DateTime.parse(gameTime).toUtc();
-          final formattedTime = DateFormat("h:mm a").format(localTime);
+          final formattedTime = DateFormat('h:mm a').format(localTime);
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -64,7 +64,7 @@ class GroupedFixturesList extends StatelessWidget {
       return a.startTime!.compareTo(b.startTime!);
     });
 
-    List<dynamic> groupedList = [];
+    final List<dynamic> groupedList = [];
     String? lastDate;
 
     final now = DateTime.now();
@@ -77,7 +77,7 @@ class GroupedFixturesList extends StatelessWidget {
 
       // Format: add year only if not current year
       final fixtureDate = DateFormat(
-        isSameYear ? "EEEE, MMM d" : "EEEE, MMM d, yyyy",
+        isSameYear ? 'EEEE, MMM d' : 'EEEE, MMM d, yyyy',
       ).format(localDate);
 
       if (lastDate != fixtureDate) {

@@ -9,14 +9,14 @@ class StandingsModel extends Standings {
 
   factory StandingsModel.fromJson(Map<dynamic, dynamic> json) => StandingsModel(
     standings: List<TeamRank>.from(
-      json["rows"].map((item) {
+      json['rows'].map((item) {
         return TeamRankModel.fromJson(item).toDomain();
       }).toList(),
     ),
     groups:
-        json["groups"] != null
+        json['groups'] != null
             ? List<StandingsGroup>.from(
-              json["groups"].map((item) {
+              json['groups'].map((item) {
                 return StandingsGroupModel.fromJson(item);
               }).toList(),
             )
@@ -29,7 +29,7 @@ class StandingsGroupModel extends StandingsGroup {
 
   factory StandingsGroupModel.fromJson(Map<String, dynamic> json) =>
       StandingsGroupModel(
-        name: json["name"],
-        number: (json["num"] as num).toInt(),
+        name: json['name'],
+        number: (json['num'] as num).toInt(),
       );
 }

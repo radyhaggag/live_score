@@ -41,7 +41,7 @@ class _FixturesScreenState extends State<FixturesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SoccerCubit cubit = context.read<SoccerCubit>();
+    final SoccerCubit cubit = context.read<SoccerCubit>();
     return BlocBuilder<SoccerCubit, SoccerStates>(
       buildWhen: (previous, current) {
         return [
@@ -86,10 +86,10 @@ class _FixturesScreenState extends State<FixturesScreen> {
               )
             else if (state is SoccerCurrentRoundFixturesLoaded &&
                 state.fixtures.isEmpty)
-              NoFixturesView()
+              const NoFixturesView()
             else if (state is SoccerTodayFixturesLoaded &&
                 state.todayFixtures.isEmpty)
-              NoFixturesView()
+              const NoFixturesView()
             else
               const SizedBox.shrink(),
           ],

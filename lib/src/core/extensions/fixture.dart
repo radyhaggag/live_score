@@ -4,9 +4,10 @@ import 'package:live_score/src/core/utils/app_colors.dart';
 
 extension FixtureExtension on SoccerFixture {
   Gradient get gradientColor {
-    Gradient color = AppColors.blueGradient;
-    if (teams.away.score != teams.home.score) color = AppColors.redGradient;
+    return isThereWinner ? AppColors.redGradient : AppColors.blueGradient;
+  }
 
-    return color;
+  bool get isThereWinner {
+    return teams.away.score != teams.home.score;
   }
 }

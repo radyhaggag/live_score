@@ -30,7 +30,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
         final result = await soccerDataSource.getCurrentRoundFixtures(
           competitionId: competitionId,
         );
-        List<SoccerFixture> fixtures =
+        final List<SoccerFixture> fixtures =
             result.map((fixture) => fixture.toDomain()).toList();
         return Right(fixtures);
       } on DioException catch (error) {
@@ -46,7 +46,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
     if (await networkInfo.isConnected) {
       try {
         final result = await soccerDataSource.getLeagues();
-        List<League> leagues =
+        final List<League> leagues =
             result.map((league) => league.toDomain()).toList();
         return Right(leagues);
       } on DioException catch (error) {
@@ -62,7 +62,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
     if (await networkInfo.isConnected) {
       try {
         final result = await soccerDataSource.getTodayFixtures();
-        List<SoccerFixture> fixtures =
+        final List<SoccerFixture> fixtures =
             result.map((fixture) => fixture.toDomain()).toList();
         return Right(fixtures);
       } on DioException catch (error) {
@@ -80,7 +80,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
     if (await networkInfo.isConnected) {
       try {
         final result = await soccerDataSource.getStandings(params: params);
-        Standings standings = result;
+        final Standings standings = result;
         return Right(standings);
       } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);

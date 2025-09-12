@@ -22,18 +22,18 @@ class StandingsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> headersNumbers = [
-      "${teamRank.stats.played}",
-      "${teamRank.stats.win}",
-      "${teamRank.stats.draw}",
-      "${teamRank.stats.lose}",
-      "${teamRank.stats.scored}",
-      "${teamRank.stats.received}",
-      "${teamRank.goalsDiff}",
-      "${teamRank.points}",
+    final List<String> headersNumbers = [
+      '${teamRank.stats.played}',
+      '${teamRank.stats.win}',
+      '${teamRank.stats.draw}',
+      '${teamRank.stats.lose}',
+      '${teamRank.stats.scored}',
+      '${teamRank.stats.received}',
+      '${teamRank.goalsDiff}',
+      '${teamRank.points}',
     ];
 
-    Color rankColor =
+    final Color rankColor =
         isGrouped
             ? Colors.black
             : (teamRank.rank <= 3 || teamRank.rank > totalTeams - 3)
@@ -121,14 +121,14 @@ class StandingsItem extends StatelessWidget {
 class StandingsHeaders extends StatelessWidget {
   const StandingsHeaders({super.key});
   static const List<String> _headers = [
-    "PL",
-    "W",
-    "D",
-    "L",
-    "GF",
-    "GA",
-    "GD",
-    "Pts",
+    'PL',
+    'W',
+    'D',
+    'L',
+    'GF',
+    'GA',
+    'GD',
+    'Pts',
   ];
 
   @override
@@ -143,12 +143,12 @@ class StandingsHeaders extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  "#",
+                  '#',
                   textAlign: TextAlign.center,
                   style: _getHeaderTextStyle(context),
                 ),
                 SizedBox(width: 18.width),
-                Text("Team name", style: _getHeaderTextStyle(context)),
+                Text('Team name', style: _getHeaderTextStyle(context)),
               ],
             ),
           ),
@@ -169,7 +169,7 @@ class StandingsHeaders extends StatelessWidget {
           SizedBox(
             width: 100.width,
             child: Text(
-              "Form",
+              'Form',
               textAlign: TextAlign.center,
               style: _getHeaderTextStyle(context),
             ),

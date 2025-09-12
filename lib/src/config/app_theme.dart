@@ -23,6 +23,10 @@ ThemeData getAppTheme() => ThemeData(
     surfaceTintColor: AppColors.white,
   ),
   scaffoldBackgroundColor: AppColors.white,
+  primaryColor: AppColors.blue,
+  progressIndicatorTheme: const ProgressIndicatorThemeData(
+    color: AppColors.blue,
+  ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     backgroundColor: AppColors.white,
     selectedItemColor: AppColors.blue,

@@ -15,7 +15,7 @@ class SoccerLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final String location = GoRouterState.of(context).uri.toString();
 
-    int currentIndex = switch (location) {
+    final int currentIndex = switch (location) {
       Routes.soccer => 0,
       Routes.fixtures => 1,
       Routes.standings => 2,

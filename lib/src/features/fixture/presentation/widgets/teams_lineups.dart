@@ -15,8 +15,8 @@ class TeamsLineups extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeTeam = fixtureDetails.fixture.teams.home;
     final awayTeam = fixtureDetails.fixture.teams.away;
-    final homePlan = homeTeam.lineup?.formation.split("-").toList();
-    final awayPlan = awayTeam.lineup?.formation.split("-").reversed.toList();
+    final homePlan = homeTeam.lineup?.formation.split('-').toList();
+    final awayPlan = awayTeam.lineup?.formation.split('-').reversed.toList();
     final homePlayers =
         fixtureDetails.homePlayersInfo
             .where((player) => player.lineupMember.isStarting)
@@ -25,7 +25,6 @@ class TeamsLineups extends StatelessWidget {
         fixtureDetails.awayPlayersInfo
             .where((player) => player.lineupMember.isStarting)
             .toList();
-
 
     // Sort players by field position
     if (homePlayers.any((player) => player.lineupMember.yardInfo != null)) {
@@ -54,8 +53,11 @@ class TeamsLineups extends StatelessWidget {
             context,
             plan: homePlan!,
             players: homePlayers,
-            primaryColor: HexColor("#${homeTeam.color}"),
-            numberColor: HexColor("#${awayTeam.color}"),
+            primaryColor: HexColor('#${homeTeam.awayColor ?? homeTeam.color}'),
+            // Dynamically compute number color based on primaryColor
+            numberColor: getContrastingNumberColor(
+              HexColor('#${homeTeam.awayColor ?? homeTeam.color}'),
+            ),
             isReversed: false,
             lineIndex: () => ++lineOneIndex,
           ),
@@ -65,14 +67,31 @@ class TeamsLineups extends StatelessWidget {
             context,
             plan: awayPlan!,
             players: awayPlayers,
-            primaryColor: HexColor("#${awayTeam.color}"),
-            numberColor: HexColor("#${homeTeam.color}"),
+            primaryColor: HexColor('#${awayTeam.color ?? awayTeam.awayColor}'),
+            // Dynamically compute number color based on primaryColor
+            numberColor: getContrastingNumberColor(
+              HexColor('#${awayTeam.color ?? awayTeam.awayColor}'),
+            ),
             isReversed: true,
             lineIndex: () => ++lineTwoIndex,
           ),
         ),
       ],
     );
+  }
+
+  // Helper function to calculate luminance and pick a contrasting color
+  Color getContrastingNumberColor(Color backgroundColor) {
+    // Calculate luminance using the relative luminance formula
+    // Luminance = 0.299R + 0.587G + 0.114B
+    final double luminance =
+        (0.299 * backgroundColor.r +
+            0.587 * backgroundColor.g +
+            0.114 * backgroundColor.b) /
+        255;
+
+    // If luminance is high (light color), use black; otherwise, use white
+    return luminance > 0.5 ? Colors.black : Colors.white;
   }
 
   /// Build column for a team (top or bottom)
