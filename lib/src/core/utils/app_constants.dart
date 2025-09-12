@@ -2,8 +2,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConstants {
   AppConstants._();
-  static const int timeOutDuration = 90;
-  static const int maxNameLength = 3;
 
   static const defaultLeagueId = 7; // English Premier League
 

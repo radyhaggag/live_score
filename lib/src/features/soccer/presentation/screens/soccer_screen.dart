@@ -97,7 +97,7 @@ class _LeaguesHeader extends StatelessWidget {
         SoccerCubit cubit = context.read<SoccerCubit>();
         if (state is SoccerLeaguesLoading) {
           return Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(50.0),
             child: CenterIndicator(),
           );
         } else if (cubit.availableLeagues.isNotEmpty) {
