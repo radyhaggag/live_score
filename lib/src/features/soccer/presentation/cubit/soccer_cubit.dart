@@ -41,7 +41,12 @@ class SoccerCubit extends Cubit<SoccerStates> {
     emit(SoccerCurrentRoundFixturesLoading());
     final fixtures = await currentRoundFixturesUseCase(competitionId);
     fixtures.fold(
-      (left) => emit(SoccerCurrentRoundFixturesLoadFailure(left.message)),
+      (left) => emit(
+        SoccerCurrentRoundFixturesLoadFailure(
+          left.message,
+          competitionId: competitionId,
+        ),
+      ),
       (right) => emit(SoccerCurrentRoundFixturesLoaded(right)),
     );
   }

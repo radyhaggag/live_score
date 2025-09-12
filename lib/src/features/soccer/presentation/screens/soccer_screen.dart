@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
-import 'package:live_score/src/features/soccer/presentation/widgets/block_dialog.dart';
+import 'package:live_score/src/features/soccer/presentation/widgets/error_dialog.dart';
 import 'package:live_score/src/features/soccer/presentation/widgets/no_fixtures_today.dart';
 
-import '../../../../core/error/response_status.dart';
 import '../../../../core/widgets/center_indicator.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
@@ -29,20 +28,32 @@ class _SoccerScreenState extends State<SoccerScreen> {
   Widget build(BuildContext context) {
     return BlocListener<SoccerCubit, SoccerStates>(
       listener: (context, state) {
-        if (state is SoccerCurrentRoundFixturesLoadFailure &&
-            state.message ==
-                DataSource.networkConnectError.getFailure().message) {
-          buildBlockAlert(context: context, message: state.message);
+        if (state is SoccerCurrentRoundFixturesLoadFailure) {
+          ErrorDialog.show(
+            context: context,
+            message: state.message,
+            onRetry: () {
+              if (state.competitionId != null) {
+                context.read<SoccerCubit>().getCurrentRoundFixtures(
+                  competitionId: state.competitionId!,
+                );
+              }
+            },
+          );
         }
-        if (state is SoccerTodayFixturesLoadFailure &&
-            state.message ==
-                DataSource.networkConnectError.getFailure().message) {
-          buildBlockAlert(context: context, message: state.message);
+        if (state is SoccerTodayFixturesLoadFailure) {
+          ErrorDialog.show(
+            context: context,
+            message: state.message,
+            onRetry: context.read<SoccerCubit>().getTodayFixtures,
+          );
         }
-        if (state is SoccerLeaguesLoadFailure &&
-            state.message ==
-                DataSource.networkConnectError.getFailure().message) {
-          buildBlockAlert(context: context, message: state.message);
+        if (state is SoccerLeaguesLoadFailure) {
+          ErrorDialog.show(
+            context: context,
+            message: state.message,
+            onRetry: context.read<SoccerCubit>().getLeagues,
+          );
         }
       },
       child: RefreshIndicator(

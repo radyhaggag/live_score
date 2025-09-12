@@ -6,10 +6,27 @@ import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 
-class BlockAlert extends StatelessWidget {
+class ErrorDialog extends StatelessWidget {
   final String message;
+  final VoidCallback? onRetry;
 
-  const BlockAlert({super.key, required this.message});
+  const ErrorDialog({super.key, required this.message, this.onRetry});
+
+  static Future<void> show({
+    required BuildContext context,
+    required String message,
+    VoidCallback? onRetry,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) {
+        return AlertDialog(
+          content: ErrorDialog(message: message, onRetry: onRetry),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +46,7 @@ class BlockAlert extends StatelessWidget {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue),
             onPressed: () {
+              onRetry?.call();
               context.pop();
             },
             child: Text(
@@ -42,12 +60,4 @@ class BlockAlert extends StatelessWidget {
       ],
     );
   }
-}
-
-void buildBlockAlert({required BuildContext context, required String message}) {
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    builder: (_) => AlertDialog(content: BlockAlert(message: message)),
-  );
 }

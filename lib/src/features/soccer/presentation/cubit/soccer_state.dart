@@ -30,8 +30,9 @@ class SoccerCurrentRoundFixturesLoaded extends SoccerStates {
 
 class SoccerCurrentRoundFixturesLoadFailure extends SoccerStates {
   final String message;
+  final int? competitionId;
 
-  SoccerCurrentRoundFixturesLoadFailure(this.message);
+  SoccerCurrentRoundFixturesLoadFailure(this.message, {this.competitionId});
 }
 
 class SoccerTodayFixturesLoading extends SoccerStates {}
