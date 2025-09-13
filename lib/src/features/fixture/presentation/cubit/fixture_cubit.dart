@@ -42,20 +42,16 @@ class FixtureCubit extends Cubit<FixtureState> {
     int fixtureId, {
     bool isTimerLoading = false,
   }) async {
-    if (fixtureDetails == null) {
-      emit(FixtureDetailsLoading(isTimerLoading: isTimerLoading));
-      final result = await fixtureDetailsUseCase(fixtureId);
-      result.fold(
-        (left) {
-          emit(FixtureDetailsLoadingFailure(message: left.message));
-        },
-        (right) {
-          fixtureDetails = right;
-          emit(FixtureDetailsLoaded(fixtureDetails: right));
-        },
-      );
-    } else {
-      emit(FixtureDetailsLoaded(fixtureDetails: fixtureDetails!));
-    }
+    emit(FixtureDetailsLoading(isTimerLoading: isTimerLoading));
+    final result = await fixtureDetailsUseCase(fixtureId);
+    result.fold(
+      (left) {
+        emit(FixtureDetailsLoadingFailure(message: left.message));
+      },
+      (right) {
+        fixtureDetails = right;
+        emit(FixtureDetailsLoaded(fixtureDetails: right));
+      },
+    );
   }
 }
