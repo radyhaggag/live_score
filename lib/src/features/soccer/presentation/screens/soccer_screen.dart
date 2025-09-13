@@ -22,6 +22,13 @@ class SoccerScreen extends StatefulWidget {
 class _SoccerScreenState extends State<SoccerScreen> {
   Timer? _timer;
 
+  @override
+  void initState() {
+    super.initState();
+    // Initial fetch of leagues and today's fixtures
+    context.read<SoccerCubit>().getTodayFixtures();
+  }
+
   void _activateTimerFetching() {
     _timer ??= Timer.periodic(const Duration(minutes: 1), (timer) {
       context.read<SoccerCubit>().getTodayFixtures(isTimerLoading: true);

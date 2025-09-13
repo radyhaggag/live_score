@@ -149,12 +149,7 @@ class _FixtureCenter extends StatelessWidget {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          MatchTimeWithProgress(
-            time:
-                soccerFixture.gameTimeDisplay.isNotEmpty
-                    ? soccerFixture.gameTimeDisplay
-                    : 'LIVE',
-          ),
+          MatchTimeWithProgress(time: soccerFixture.gameTimeDisplay),
           SizedBox(height: 5.height),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

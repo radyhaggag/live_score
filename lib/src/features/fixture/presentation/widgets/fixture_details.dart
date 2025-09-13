@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/widgets/match_time_with_progress.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -72,6 +73,14 @@ class FixtureDetails extends StatelessWidget {
               ).textTheme.bodyMedium?.copyWith(color: AppColors.white),
             ),
           ),
+          if (soccerFixture.status.isLive) ...[
+            SizedBox(height: 10.height),
+            MatchTimeWithProgress(
+              time: soccerFixture.gameTimeDisplay,
+              mainColor: AppColors.white,
+              widthFactor: 4,
+            ),
+          ],
         ],
       ),
     );
