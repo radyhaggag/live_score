@@ -124,7 +124,7 @@ class TeamsLineups extends StatelessWidget {
             /// - Parses the number of players for the current line from the `plan`.
             /// - Uses [List.generate] to create a list of players by repeatedly calling `lineIndex()`
             ///   to get the appropriate index from the `players` list.
-            /// - If [isReversed] is true, reverses the order of the players in the line.
+            /// - Reverses the order of the players in the line.
             final numPlayers = int.parse(plan.elementAt(index));
             List<FixturePlayerInfo> linePlayers = List.generate(numPlayers, (
               _,
@@ -132,9 +132,7 @@ class TeamsLineups extends StatelessWidget {
               final idx = lineIndex();
               return players[idx];
             });
-            if (isReversed) {
-              linePlayers = linePlayers.reversed.toList();
-            }
+            linePlayers = linePlayers.reversed.toList();
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children:
