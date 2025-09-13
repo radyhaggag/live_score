@@ -7,7 +7,11 @@ class FixtureInitial extends FixtureState {}
 
 class FixtureChangeBar extends FixtureState {}
 
-class FixtureStatisticsLoading extends FixtureState {}
+class FixtureStatisticsLoading extends FixtureState {
+  final bool isTimerLoading;
+
+  FixtureStatisticsLoading({this.isTimerLoading = false});
+}
 
 class FixtureStatisticsLoaded extends FixtureState {
   final Statistics statistics;
@@ -21,7 +25,11 @@ class FixtureStatisticsLoadingFailure extends FixtureState {
   FixtureStatisticsLoadingFailure({required this.message});
 }
 
-class FixtureDetailsLoading extends FixtureState {}
+class FixtureDetailsLoading extends FixtureState {
+  final bool isTimerLoading;
+
+  FixtureDetailsLoading({this.isTimerLoading = false});
+}
 
 class FixtureDetailsLoaded extends FixtureState {
   final FixtureDetails fixtureDetails;

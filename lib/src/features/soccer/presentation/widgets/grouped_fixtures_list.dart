@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:live_score/src/config/app_route.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -42,12 +44,17 @@ class GroupedFixturesList extends StatelessWidget {
           final localTime = DateTime.parse(gameTime).toUtc();
           final formattedTime = DateFormat('h:mm a').format(localTime);
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: FixtureCard(
-              soccerFixture: item,
-              fixtureTime: formattedTime,
-              showLeagueLogo: showLeagueLogo,
+          return InkWell(
+            onTap: () {
+              context.push(Routes.fixtureDetails, extra: item);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: FixtureCard(
+                soccerFixture: item,
+                fixtureTime: formattedTime,
+                showLeagueLogo: showLeagueLogo,
+              ),
             ),
           );
         }

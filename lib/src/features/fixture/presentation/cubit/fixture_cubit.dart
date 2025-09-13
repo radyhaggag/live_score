@@ -19,8 +19,11 @@ class FixtureCubit extends Cubit<FixtureState> {
 
   Statistics? statistics;
 
-  Future<void> getStatistics(int fixtureId) async {
-    emit(FixtureStatisticsLoading());
+  Future<void> getStatistics(
+    int fixtureId, {
+    bool isTimerLoading = false,
+  }) async {
+    emit(FixtureStatisticsLoading(isTimerLoading: isTimerLoading));
     final result = await statisticsUseCase(fixtureId);
     result.fold(
       (left) {
@@ -35,9 +38,12 @@ class FixtureCubit extends Cubit<FixtureState> {
 
   FixtureDetails? fixtureDetails;
 
-  Future<void> getFixtureDetails(int fixtureId) async {
+  Future<void> getFixtureDetails(
+    int fixtureId, {
+    bool isTimerLoading = false,
+  }) async {
     if (fixtureDetails == null) {
-      emit(FixtureDetailsLoading());
+      emit(FixtureDetailsLoading(isTimerLoading: isTimerLoading));
       final result = await fixtureDetailsUseCase(fixtureId);
       result.fold(
         (left) {

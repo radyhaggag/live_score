@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
@@ -26,12 +29,35 @@ class FixtureScreen extends StatefulWidget {
 class _FixtureScreenState extends State<FixtureScreen> {
   int selectedTabIndex = 1;
 
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
 
+    if (widget.soccerFixture.status.isLive) _activateTimerFetching();
+
     context.read<FixtureCubit>().getFixtureDetails(widget.soccerFixture.id);
     context.read<FixtureCubit>().getStatistics(widget.soccerFixture.id);
+  }
+
+  void _activateTimerFetching() {
+    _timer ??= Timer.periodic(const Duration(minutes: 1), (timer) {
+      context.read<FixtureCubit>().getFixtureDetails(
+        widget.soccerFixture.id,
+        isTimerLoading: true,
+      );
+      context.read<FixtureCubit>().getStatistics(
+        widget.soccerFixture.id,
+        isTimerLoading: true,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -65,10 +91,14 @@ class _FixtureScreenState extends State<FixtureScreen> {
             child: ListView(
               physics: const BouncingScrollPhysics(),
               children: [
-                FixtureDetails(soccerFixture: widget.soccerFixture),
+                FixtureDetails(
+                  soccerFixture:
+                      cubit.fixtureDetails?.fixture ?? widget.soccerFixture,
+                ),
                 buildTabBar(cubit),
-                if (state is FixtureStatisticsLoading ||
-                    state is FixtureDetailsLoading)
+                if ((state is FixtureStatisticsLoading &&
+                        !state.isTimerLoading) ||
+                    (state is FixtureDetailsLoading && !state.isTimerLoading))
                   LinearProgressIndicator(color: _fixtureColor)
                 else if (selectedTabIndex == 0)
                   StatisticsView(
@@ -107,18 +137,21 @@ class _FixtureScreenState extends State<FixtureScreen> {
         child: tabBarButton(
           label: AppStrings.statistics,
           onPressed: () => setState(() => selectedTabIndex = 0),
+          isSelected: selectedTabIndex == 0,
         ),
       ),
       Expanded(
         child: tabBarButton(
           label: AppStrings.lineups,
           onPressed: () => setState(() => selectedTabIndex = 1),
+          isSelected: selectedTabIndex == 1,
         ),
       ),
       Expanded(
         child: tabBarButton(
           label: AppStrings.events,
           onPressed: () => setState(() => selectedTabIndex = 2),
+          isSelected: selectedTabIndex == 2,
         ),
       ),
     ],
@@ -127,9 +160,10 @@ class _FixtureScreenState extends State<FixtureScreen> {
   Widget tabBarButton({
     required String label,
     required void Function()? onPressed,
+    bool isSelected = false,
   }) => MaterialButton(
     onPressed: onPressed,
-    color: _fixtureColor,
+    color: isSelected ? _fixtureColor : _fixtureColor.withOpacitySafe(0.85),
     elevation: 0.0,
     padding: const EdgeInsets.all(16),
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
