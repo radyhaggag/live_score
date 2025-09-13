@@ -1,5 +1,3 @@
-
-
 class AppConstants {
   AppConstants._();
 
@@ -17,6 +15,7 @@ class AppConstants {
     573, // UEFA Europa League
     73, // Liga Portugal
     57, // Eredivisie
+    649, // Saudi Pro League
   ];
 
   static const apiBaseUrl = 'https://webws.365scores.com/web';
