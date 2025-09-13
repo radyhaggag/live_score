@@ -47,6 +47,10 @@ class SoccerFixture extends Equatable {
   ];
 
   SoccerFixtureStatus get status {
+    if (gameTimeAndStatusDisplayType == 1 &&
+        (gameTime != null && gameTime! < 90)) {
+      return SoccerFixtureStatus.live;
+    }
     return switch (gameTimeAndStatusDisplayType) {
       1 => SoccerFixtureStatus.ended,
       0 => SoccerFixtureStatus.scheduled,
