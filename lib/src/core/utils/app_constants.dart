@@ -1,4 +1,4 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class AppConstants {
   AppConstants._();
@@ -19,13 +19,14 @@ class AppConstants {
     57, // Eredivisie
   ];
 
+  static const apiBaseUrl = 'https://webws.365scores.com/web';
+  static const baseImageUrl = 'https://imagecache.365scores.com/image/upload/';
+
   static String clubImage(String clubId, {String size = '24'}) {
-    return '${dotenv.env['BASE_IMAGE_URL']!}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Competitors:default1.png/v7/Competitors/$clubId';
+    return '${baseImageUrl}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Competitors:default1.png/v7/Competitors/$clubId';
   }
 
   static String competitionImage(int competitionId, {String size = '24'}) {
-    return '${dotenv.env['BASE_IMAGE_URL']!}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Countries:default1.png/v7/Competitions/$competitionId';
+    return '${baseImageUrl}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Countries:default1.png/v7/Competitions/$competitionId';
   }
-
-  static final String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
 }

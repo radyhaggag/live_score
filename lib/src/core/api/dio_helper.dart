@@ -14,7 +14,7 @@ class DioHelper {
   DioHelper({required this.dio}) {
     final Map<String, dynamic> headers = {_contentType: _applicationJson};
     dio.options = BaseOptions(
-      baseUrl: AppConstants.baseUrl,
+      baseUrl: AppConstants.apiBaseUrl,
       receiveDataWhenStatusError: true,
       receiveTimeout: const Duration(milliseconds: _timeOut),
       connectTimeout: const Duration(milliseconds: _timeOut),
