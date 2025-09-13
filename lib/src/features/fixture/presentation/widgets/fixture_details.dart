@@ -27,7 +27,6 @@ class FixtureDetails extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomImage(
-                fit: BoxFit.cover,
                 width: 20.radius,
                 height: 20.radius,
                 imageUrl: soccerFixture.fixtureLeague.logo,

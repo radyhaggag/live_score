@@ -105,7 +105,6 @@ class LiveFixtureCard extends StatelessWidget {
     backgroundColor: AppColors.white,
     radius: 15.radius,
     child: CustomImage(
-      fit: BoxFit.cover,
       width: 25.radius,
       height: 25.radius,
       imageUrl: logo,
