@@ -22,11 +22,8 @@ class SoccerScreen extends StatefulWidget {
 class _SoccerScreenState extends State<SoccerScreen> {
   Timer? _timer;
 
-  @override
-  void initState() {
-    super.initState();
-    context.read<SoccerCubit>().getTodayFixtures();
-    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+  void _activateTimerFetching() {
+    _timer ??= Timer.periodic(const Duration(minutes: 1), (timer) {
       context.read<SoccerCubit>().getTodayFixtures(isTimerLoading: true);
     });
   }
@@ -67,6 +64,14 @@ class _SoccerScreenState extends State<SoccerScreen> {
             message: state.message,
             onRetry: context.read<SoccerCubit>().getLeagues,
           );
+        }
+        if (state is SoccerTodayFixturesLoaded) {
+          // Activate timer only when there are live fixtures
+          if (state.liveFixtures.isNotEmpty) {
+            _activateTimerFetching();
+          } else {
+            _timer?.cancel();
+          }
         }
       },
       child: RefreshIndicator(
