@@ -5,13 +5,13 @@ import '../../../../core/usecase/usecase.dart';
 import '../entities/statistics.dart';
 import '../repositories/fixture_repository.dart';
 
-class StatisticsUseCase implements UseCase<List<Statistics>, String> {
+class StatisticsUseCase implements UseCase<Statistics, int> {
   final FixtureRepository fixtureRepository;
 
   StatisticsUseCase({required this.fixtureRepository});
 
   @override
-  Future<Either<Failure, List<Statistics>>> call(String params) async {
+  Future<Either<Failure, Statistics>> call(int params) async {
     return await fixtureRepository.getStatistics(params);
   }
 }

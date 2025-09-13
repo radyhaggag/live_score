@@ -38,10 +38,10 @@ class StatusCode {
 
 class StatusMessage {
   static const String clientClosedRequest =
-      "Something went wrong while fetching details. Try again later.";
+      'Something went wrong while fetching details. Try again later.';
   static const String internalServerError =
-      "Something went wrong. Try again later.";
+      'Something went wrong. Try again later.';
   static const String networkConnectError =
-      "Internet connection timeout. Try again later.";
-  static const String unexpected = "Unexpected Error.";
+      'Internet connection timeout. Try again later.';
+  static const String unexpected = 'Unexpected Error.';
 }

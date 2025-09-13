@@ -22,12 +22,15 @@ class SoccerRepositoryImpl implements SoccerRepository {
   });
 
   @override
-  Future<Either<Failure, List<SoccerFixture>>> getDayFixtures(
-      {required String date}) async {
+  Future<Either<Failure, List<SoccerFixture>>> getCurrentRoundFixtures({
+    required int competitionId,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
-        final result = await soccerDataSource.getDayFixtures(date: date);
-        List<SoccerFixture> fixtures =
+        final result = await soccerDataSource.getCurrentRoundFixtures(
+          competitionId: competitionId,
+        );
+        final List<SoccerFixture> fixtures =
             result.map((fixture) => fixture.toDomain()).toList();
         return Right(fixtures);
       } on DioException catch (error) {
@@ -43,7 +46,7 @@ class SoccerRepositoryImpl implements SoccerRepository {
     if (await networkInfo.isConnected) {
       try {
         final result = await soccerDataSource.getLeagues();
-        List<League> leagues =
+        final List<League> leagues =
             result.map((league) => league.toDomain()).toList();
         return Right(leagues);
       } on DioException catch (error) {
@@ -55,11 +58,11 @@ class SoccerRepositoryImpl implements SoccerRepository {
   }
 
   @override
-  Future<Either<Failure, List<SoccerFixture>>> getLiveFixtures() async {
+  Future<Either<Failure, List<SoccerFixture>>> getTodayFixtures() async {
     if (await networkInfo.isConnected) {
       try {
-        final result = await soccerDataSource.getLiveFixtures();
-        List<SoccerFixture> fixtures =
+        final result = await soccerDataSource.getTodayFixtures();
+        final List<SoccerFixture> fixtures =
             result.map((fixture) => fixture.toDomain()).toList();
         return Right(fixtures);
       } on DioException catch (error) {
@@ -71,12 +74,13 @@ class SoccerRepositoryImpl implements SoccerRepository {
   }
 
   @override
-  Future<Either<Failure, Standings>> getStandings(
-      {required StandingsParams params}) async {
+  Future<Either<Failure, Standings>> getStandings({
+    required StandingsParams params,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
         final result = await soccerDataSource.getStandings(params: params);
-        Standings standings = result;
+        final Standings standings = result;
         return Right(standings);
       } on DioException catch (error) {
         return Left(ErrorHandler.handle(error).failure);

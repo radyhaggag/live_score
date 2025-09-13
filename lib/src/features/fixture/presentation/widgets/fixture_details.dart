@@ -1,13 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/color.dart';
+import 'package:live_score/src/core/extensions/fixture.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/widgets/match_time_with_progress.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
-import '../../../../core/utils/app_values.dart';
-import '../../../soccer/presentation/screens/soccer_screen.dart';
+import '../../../../core/widgets/custom_image.dart';
 import 'view_team.dart';
 
 class FixtureDetails extends StatelessWidget {
@@ -18,71 +18,77 @@ class FixtureDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppPadding.p20),
-      decoration: BoxDecoration(gradient: getGradientColor(soccerFixture)),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      decoration: BoxDecoration(gradient: soccerFixture.gradientColor),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CachedNetworkImage(
-                fit: BoxFit.cover,
-                width: AppSize.s20,
-                height: AppSize.s20,
+              CustomImage(
+                width: 20.radius,
+                height: 20.radius,
                 imageUrl: soccerFixture.fixtureLeague.logo,
               ),
-              const SizedBox(width: AppSize.s5),
-              Text(
-                soccerFixture.fixtureLeague.name,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(color: AppColors.white),
-                textAlign: TextAlign.center,
+              SizedBox(width: 5.width),
+              Flexible(
+                child: FittedBox(
+                  child: Text(
+                    soccerFixture.fixtureLeague.name,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: AppColors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ],
           ),
-          const SizedBox(height: AppSize.s10),
+          SizedBox(height: 10.height),
           Row(
             children: [
-              Expanded(
-                child: ViewTeam(team: soccerFixture.teams.home),
-              ),
-              (soccerFixture.fixture.status.elapsed != null)
+              Expanded(child: ViewTeam(team: soccerFixture.teams.home)),
+              (soccerFixture.gameTime != null && soccerFixture.gameTime! > 0)
                   ? Expanded(child: buildFixtureResult(context))
                   : Expanded(child: buildFixtureTime(context)),
-              Expanded(
-                child: ViewTeam(team: soccerFixture.teams.away),
-              ),
+              Expanded(child: ViewTeam(team: soccerFixture.teams.away)),
             ],
           ),
-          const SizedBox(height: AppSize.s10),
+          SizedBox(height: 10.height),
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppPadding.p20, vertical: AppPadding.p5),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             decoration: BoxDecoration(
-              color: AppColors.lightRed,
-              borderRadius: BorderRadius.circular(AppSize.s20),
+              color:
+                  soccerFixture.isThereWinner
+                      ? AppColors.lightRed
+                      : AppColors.darkBlue,
+              borderRadius: BorderRadius.circular(20.radius),
             ),
             child: Text(
-              soccerFixture.fixture.status.long,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: AppColors.white),
+              soccerFixture.statusText,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.white),
             ),
           ),
+          if (soccerFixture.status.isLive) ...[
+            SizedBox(height: 10.height),
+            MatchTimeWithProgress(
+              time: soccerFixture.gameTimeDisplay,
+              mainColor: AppColors.white,
+              widthFactor: 4,
+            ),
+          ],
         ],
       ),
     );
   }
 
   Widget buildFixtureResult(BuildContext context) {
-    TextStyle? displaySmall = Theme.of(context)
-        .textTheme
-        .displaySmall
-        ?.copyWith(color: AppColors.white);
+    final TextStyle? displaySmall = Theme.of(
+      context,
+    ).textTheme.displaySmall?.copyWith(color: AppColors.white);
 
     return Column(
       children: [
@@ -90,52 +96,50 @@ class FixtureDetails extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              soccerFixture.goals.home.toString(),
+              soccerFixture.teams.home.score.toString(),
               style: displaySmall,
             ),
-            const SizedBox(width: AppSize.s10),
+            SizedBox(width: 10.width),
+            Text(':', style: displaySmall),
+            SizedBox(width: 10.width),
             Text(
-              ":",
-              style: displaySmall,
-            ),
-            const SizedBox(width: AppSize.s10),
-            Text(
-              soccerFixture.goals.away.toString(),
+              soccerFixture.teams.away.score.toString(),
               style: displaySmall,
             ),
           ],
         ),
-        const SizedBox(height: AppSize.s5),
+        SizedBox(height: 5.height),
         buildFixtureRound(context),
       ],
     );
   }
 
   Widget buildFixtureTime(BuildContext context) {
-    String fixtureTime = soccerFixture.fixture.date;
+    final String fixtureTime = soccerFixture.startTime.toString();
     final localTime = DateTime.parse(fixtureTime).toLocal();
-    final formattedTime = DateFormat("h:mm a").format(localTime);
+    final formattedTime = DateFormat('h:mm a').format(localTime);
     return Column(
       children: [
         Text(
           formattedTime,
-          style: Theme.of(context)
-              .textTheme
-              .headlineSmall
-              ?.copyWith(color: AppColors.white),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(color: AppColors.white),
         ),
-        const SizedBox(height: AppSize.s5),
+        SizedBox(height: 5.height),
         buildFixtureRound(context),
       ],
     );
   }
 
   Widget buildFixtureRound(BuildContext context) => Text(
-        soccerFixture.fixtureLeague.round,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.white.withOpacitySafe(0.9),
-            ),
-      );
+    soccerFixture.roundNum != null
+        ? 'Round ${soccerFixture.roundNum}'
+        : 'Season ${soccerFixture.seasonNum}',
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+      color: AppColors.white.withOpacitySafe(0.9),
+    ),
+  );
 }

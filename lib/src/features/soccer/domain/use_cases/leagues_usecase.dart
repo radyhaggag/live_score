@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/error/error_handler.dart';
 import '../../../../core/usecase/usecase.dart';

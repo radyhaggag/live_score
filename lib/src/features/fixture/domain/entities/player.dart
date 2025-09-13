@@ -2,19 +2,21 @@ import 'package:equatable/equatable.dart';
 
 class Player extends Equatable {
   final int id;
+  final int competitorId;
   final String name;
+  final String shortName;
+  final String nameForURL;
   final int number;
-  final String pos;
-  final String grid;
 
   const Player({
     required this.id,
+    required this.competitorId,
     required this.name,
     required this.number,
-    required this.grid,
-    required this.pos,
+    required this.shortName,
+    required this.nameForURL,
   });
 
   @override
-  List<Object?> get props => [id, name, number, pos, grid];
+  List<Object?> get props => [id, name, number, shortName, nameForURL];
 }

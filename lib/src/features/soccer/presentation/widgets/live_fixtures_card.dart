@@ -1,13 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/fixture.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
-import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
-import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
-import '../screens/soccer_screen.dart';
+import '../../../../core/widgets/custom_image.dart';
+import '../../../../core/widgets/match_time_with_progress.dart';
 
 class LiveFixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
@@ -17,54 +16,83 @@ class LiveFixtureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsetsDirectional.all(AppPadding.p20),
-      width: context.width / 2.4,
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: 15,
+        vertical: 10,
+      ),
+      width: 180.width,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSize.s20),
-        gradient: getGradientColor(soccerFixture),
+        borderRadius: BorderRadius.circular(20.radius),
+        gradient: soccerFixture.gradientColor,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            soccerFixture.fixtureLeague.name,
-            style: const TextStyle(color: AppColors.white),
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.fade,
-            softWrap: false,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: CustomImage(
+                  height: 30.radius,
+                  width: 30.radius,
+                  imageUrl: soccerFixture.fixtureLeague.logo,
+                ),
+              ),
+              Flexible(
+                child: Text(
+                  soccerFixture.fixtureLeague.name,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  softWrap: true,
+                ),
+              ),
+            ],
           ),
+          SizedBox(height: 15.height),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              buildTeamLogo(soccerFixture.teams.home.logo),
-              buildTeamLogo(soccerFixture.teams.away.logo),
+              _buildTeamLogo(soccerFixture.teams.home.logo),
+              _buildTeamLogo(soccerFixture.teams.away.logo),
             ],
           ),
-          buildTeamTile(
+          SizedBox(height: 15.height),
+          _buildTeamTile(
             context: context,
-            name: soccerFixture.teams.home.name,
-            goals: soccerFixture.goals.home.toString(),
+            name: soccerFixture.teams.home.name.teamName,
+            goals: soccerFixture.teams.home.score.toString(),
           ),
-          buildTeamTile(
+          SizedBox(height: 5.height),
+          _buildTeamTile(
             context: context,
-            name: soccerFixture.teams.away.name,
-            goals: soccerFixture.goals.away.toString(),
+            name: soccerFixture.teams.away.name.teamName,
+            goals: soccerFixture.teams.away.score.toString(),
           ),
+          SizedBox(height: 10.height),
+          MatchTimeWithProgress(
+            time: soccerFixture.gameTimeDisplay,
+            mainColor: AppColors.white,
+            widthFactor: 3,
+          ),
+          SizedBox(height: 10.height),
+          // Status badge
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppPadding.p20,
-              vertical: AppPadding.p5,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(AppSize.s20),
+              borderRadius: BorderRadius.circular(20.radius),
             ),
             child: Text(
-              AppStrings.live,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: AppColors.red),
+              soccerFixture.statusText,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppColors.red,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -72,45 +100,43 @@ class LiveFixtureCard extends StatelessWidget {
       ),
     );
   }
-}
 
-Widget buildTeamLogo(String logo) => CircleAvatar(
-      backgroundColor: AppColors.white,
-      radius: AppSize.s25,
-      child: CachedNetworkImage(
-        fit: BoxFit.cover,
-        width: AppSize.s30,
-        height: AppSize.s30,
-        imageUrl: logo,
-      ),
-    );
+  Widget _buildTeamLogo(String logo) => CircleAvatar(
+    backgroundColor: AppColors.white,
+    radius: 15.radius,
+    child: CustomImage(
+      width: 25.radius,
+      height: 25.radius,
+      imageUrl: logo,
+    ),
+  );
 
-Widget buildTeamTile(
-        {required String name,
-        required String goals,
-        required BuildContext context}) =>
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            name,
-            softWrap: false,
-            overflow: TextOverflow.fade,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: AppColors.white),
-          ),
-        ),
-        const SizedBox(width: AppSize.s10),
-        Text(
-          goals.toString(),
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge
-              ?.copyWith(color: AppColors.white),
+  Widget _buildTeamTile({
+    required String name,
+    required String goals,
+    required BuildContext context,
+  }) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Expanded(
+        child: Text(
+          name,
+          softWrap: false,
           overflow: TextOverflow.fade,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppColors.white),
         ),
-      ],
-    );
+      ),
+      SizedBox(width: 10.width),
+      Text(
+        goals,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: AppColors.white,
+          fontWeight: FontWeight.bold,
+        ),
+        overflow: TextOverflow.fade,
+      ),
+    ],
+  );
+}

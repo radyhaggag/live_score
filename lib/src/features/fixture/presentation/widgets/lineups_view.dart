@@ -1,77 +1,80 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/domain/entities/teams.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
+import 'package:live_score/src/core/media_query.dart';
+import 'package:live_score/src/features/fixture/domain/entities/fixture_details.dart';
 
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
+import '../../../../core/utils/app_fonts.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
-import '../../domain/entities/lineups.dart';
+import '../../../../core/widgets/custom_image.dart';
 import 'items_not_available.dart';
 import 'teams_lineups.dart';
 
 class LineupsView extends StatelessWidget {
-  final List<Lineup> lineups;
+  final FixtureDetails? fixtureDetails;
+  final Color? color;
 
-  const LineupsView({super.key, required this.lineups});
+  const LineupsView({super.key, required this.fixtureDetails, this.color});
 
   @override
   Widget build(BuildContext context) {
-    return lineups.isNotEmpty
+    final homeTeam = fixtureDetails?.fixture.teams.home;
+    final awayTeam = fixtureDetails?.fixture.teams.away;
+    return (homeTeam?.lineup?.formation ?? '').isNotEmpty &&
+            (awayTeam?.lineup?.formation ?? '').isNotEmpty
         ? Column(
-            children: [
-              buildTeamHeader(context: context, lineup: lineups[0]),
-              Container(
-                width: double.infinity,
-                height: AppSize.s625,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage(AppAssets.playground),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppPadding.p15,
-                    horizontal: AppPadding.p15,
-                  ),
-                  child: TeamsLineups(lineups: lineups),
+          children: [
+            buildTeamHeader(context: context, team: homeTeam!),
+            Container(
+              width: double.infinity,
+              height: context.height * .8,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage(AppAssets.playground),
                 ),
               ),
-              buildTeamHeader(context: context, lineup: lineups[1]),
-            ],
-          )
-        : const ItemsNotAvailable(
-            icon: Icons.people,
-            message: AppStrings.noLineups,
-          );
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                ).copyWith(top: 20),
+                child: TeamsLineups(fixtureDetails: fixtureDetails!),
+              ),
+            ),
+            buildTeamHeader(context: context, team: awayTeam!),
+          ],
+        )
+        : ItemsNotAvailable(
+          icon: Icons.people,
+          message: AppStrings.noLineups,
+          color: color,
+        );
   }
 
-  Widget buildTeamHeader(
-      {required BuildContext context, required Lineup lineup}) {
+  Widget buildTeamHeader({required BuildContext context, required Team team}) {
     return Container(
       color: AppColors.darkGreen,
-      padding: const EdgeInsetsDirectional.all(AppPadding.p5),
+      padding: const EdgeInsetsDirectional.all(5),
       child: Row(
         children: [
-          CachedNetworkImage(
-            fit: BoxFit.cover,
-            width: AppSize.s35,
-            height: AppSize.s35,
-            imageUrl: lineup.team.logo,
-          ),
-          const SizedBox(width: AppSize.s10),
+          CustomImage(width: 35.radius, height: 35.radius, imageUrl: team.logo),
+          SizedBox(width: 10.width),
           Text(
-            lineup.team.name,
+            team.name.teamName,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const Spacer(),
           Text(
-            lineup.formation,
+            team.lineup!.formation,
             style: const TextStyle(
-                color: Colors.white, fontSize: FontSize.subTitle),
+              color: Colors.white,
+              fontSize: FontSize.subTitle,
+            ),
           ),
-          const SizedBox(width: AppSize.s10),
+          SizedBox(width: 10.width),
         ],
       ),
     );

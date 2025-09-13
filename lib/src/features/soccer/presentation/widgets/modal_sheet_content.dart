@@ -1,13 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:live_score/src/config/app_route.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/utils/app_colors.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/media_query.dart';
-import '../../../../core/utils/app_constants.dart';
-import '../../../../core/utils/app_size.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/utils/app_values.dart';
-import '../../domain/use_cases/standings_usecase.dart';
+import '../../../../core/widgets/custom_image.dart';
 import '../cubit/soccer_cubit.dart';
 
 Future<dynamic> buildBottomSheet({
@@ -27,30 +27,37 @@ class ModalSheetContent extends StatelessWidget {
   final League league;
   final SoccerCubit cubit;
 
-  const ModalSheetContent(
-      {super.key, required this.league, required this.cubit});
+  const ModalSheetContent({
+    super.key,
+    required this.league,
+    required this.cubit,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppPadding.p15),
+      padding: const EdgeInsets.symmetric(vertical: 15),
       height: context.height / 5,
+      decoration: const BoxDecoration(gradient: AppColors.blueGradient),
       child: SingleChildScrollView(
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CachedNetworkImage(
-                  width: AppSize.s20,
-                  height: AppSize.s20,
+                CustomImage(
+                  width: 20.radius,
+                  height: 20.radius,
                   imageUrl: league.logo,
                 ),
-                const SizedBox(width: AppSize.s10),
+                SizedBox(width: 5.width),
                 Flexible(
                   child: Text(
                     league.name,
-                    style: const TextStyle(fontSize: 16),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     // softWrap: true,
@@ -61,23 +68,27 @@ class ModalSheetContent extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                cubit.currentFixtures =
-                    AppConstants.leaguesFixtures[league.id]?.fixtures ?? [];
-                Navigator.pop(context);
-                cubit.changeBottomNav(1);
+                context.push(Routes.fixtures, extra: league.id);
+                context.pop();
               },
-              child: const Text(AppStrings.viewFixtures),
+              child: Text(
+                AppStrings.viewFixtures,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: AppColors.darkBlue),
+              ),
             ),
             ElevatedButton(
-              onPressed: () async {
-                StandingsParams params = StandingsParams(
-                    leagueId: league.id.toString(),
-                    season: league.year.toString());
-                cubit.changeBottomNav(2);
-                Navigator.pop(context);
-                await cubit.getStandings(params);
+              onPressed: () {
+                context.push(Routes.standings, extra: league.id);
+                context.pop();
               },
-              child: const Text("View Standings"),
+              child: Text(
+                AppStrings.viewStandings,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: AppColors.darkBlue),
+              ),
             ),
           ],
         ),

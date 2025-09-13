@@ -18,13 +18,15 @@ class StandingsUseCase extends UseCase<Standings, StandingsParams> {
 }
 
 class StandingsParams extends Equatable {
-  final String leagueId;
-  final String season;
+  final int leagueId;
 
-  const StandingsParams({required this.leagueId, required this.season});
+  const StandingsParams({required this.leagueId});
 
   @override
-  List<Object?> get props => [leagueId, season];
+  List<Object?> get props => [leagueId];
 
-  Map<String, dynamic> toJson() => {"league": leagueId, "season": season};
+  Map<String, dynamic> toJson() => {
+    'competitions': leagueId,
+    'withSeasonsFilter': 'false',
+  };
 }

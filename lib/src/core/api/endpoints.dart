@@ -1,9 +1,10 @@
 class Endpoints {
   Endpoints._();
-  static const fixtures = "fixtures";
-  static const leagues = "leagues";
-  static const statistics = "statistics";
-  static const lineups = "lineups";
-  static const events = "events";
-  static const standings = "standings";
+  static const currentRoundFixtures = '/games/current/';
+  static const fixtures = '/games/fixtures/';
+  static const todayFixtures = '/games/allscores/';
+  static const leagues = '/competitions/';
+  static const matchStatistics = '/game/stats/';
+  static const fixtureDetails = '/game/';
+  static const standings = '/standings/';
 }

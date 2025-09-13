@@ -5,25 +5,25 @@ import '../entities/team_rank.dart';
 
 extension TeamRankExtension on TeamRankModel {
   TeamRank toDomain() => TeamRank(
-        rank: rank,
-        team: team,
-        points: points,
-        goalsDiff: goalsDiff,
-        lastMatches: lastMatches,
-        stats: stats,
-        group: group,
-      );
+    rank: rank,
+    team: team,
+    points: points,
+    goalsDiff: goalsDiff,
+    form: form,
+    stats: stats,
+    groupNum: groupNum,
+  );
 }
 
 extension TeamRankStatsExtension on TeamRankStatsModel {
   TeamRankStats toDomain() => TeamRankStats(
-        played: played,
-        win: win,
-        draw: draw,
-        lose: lose,
-        scored: scored,
-        received: received,
-      );
+    played: played,
+    win: win,
+    draw: draw,
+    lose: lose,
+    scored: scored,
+    received: received,
+  );
 }
 
 extension StandingsExtension on StandingsModel {

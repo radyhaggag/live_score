@@ -3,8 +3,7 @@ import '../../core/api/dio_helper.dart';
 import '../../core/network/network_info.dart';
 import 'data/data_sources/fixture_data_source.dart';
 import 'data/repositories/fixture_repository_impl.dart';
-import 'domain/use_cases/events_usecase.dart';
-import 'domain/use_cases/lineups_usecase.dart';
+import 'domain/use_cases/fixture_details_usecase.dart';
 import 'domain/use_cases/statistics_usecase.dart';
 import 'presentation/cubit/fixture_cubit.dart';
 
@@ -22,15 +21,11 @@ void initFixture() {
     () => StatisticsUseCase(fixtureRepository: sl<FixtureRepositoryImpl>()),
   );
   sl.registerLazySingleton(
-    () => LineupsUseCase(fixtureRepository: sl<FixtureRepositoryImpl>()),
-  );
-  sl.registerLazySingleton(
-    () => EventsUseCase(fixtureRepository: sl<FixtureRepositoryImpl>()),
+    () => FixtureDetailsUseCase(fixtureRepository: sl<FixtureRepositoryImpl>()),
   );
   sl.registerFactory(
     () => FixtureCubit(
-      eventsUseCase: sl<EventsUseCase>(),
-      lineupsUseCase: sl<LineupsUseCase>(),
+      fixtureDetailsUseCase: sl<FixtureDetailsUseCase>(),
       statisticsUseCase: sl<StatisticsUseCase>(),
     ),
   );

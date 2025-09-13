@@ -1,9 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/teams.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_size.dart';
+import '../../../../core/widgets/custom_image.dart';
 
 class ViewTeam extends StatelessWidget {
   final Team team;
@@ -15,27 +16,15 @@ class ViewTeam extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: AppSize.s35,
-          child: CachedNetworkImage(
-            fit: BoxFit.cover,
-            width: AppSize.s50,
-            height: AppSize.s50,
-            imageUrl: team.logo,
-          ),
-        ),
-        const SizedBox(height: AppSize.s10),
+        CustomImage(width: 50.radius, height: 50.radius, imageUrl: team.logo),
+        SizedBox(height: 10.height),
         FittedBox(
           child: Text(
-            team.name.split(" ").length >= 3
-                ? team.name.split(" ").sublist(0, 2).join(" ")
-                : team.name,
+            team.name.teamName,
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: AppColors.white),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: AppColors.white),
           ),
         ),
       ],
