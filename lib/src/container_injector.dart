@@ -32,7 +32,13 @@ void initCore() {
   );
   sl.registerLazySingleton<DioHelper>(() => DioHelper(dio: sl<Dio>()));
   sl.registerLazySingleton<InternetConnectionChecker>(
-    () => InternetConnectionChecker.createInstance(),
+    () => InternetConnectionChecker.createInstance(
+      addresses: [
+        AddressCheckOption(uri: Uri.parse('https://www.google.com')),
+        AddressCheckOption(uri: Uri.parse('https://www.bing.com')),
+        AddressCheckOption(uri: Uri.parse('https://www.amazon.com')),
+      ],
+    ),
   );
   sl.registerLazySingleton<NetworkInfoImpl>(
     () => NetworkInfoImpl(connectionChecker: sl<InternetConnectionChecker>()),

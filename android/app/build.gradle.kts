@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.radyhaggag.livescore"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
     ndkVersion = "27.0.12077973"
 
