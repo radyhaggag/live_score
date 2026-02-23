@@ -23,36 +23,11 @@ class SoccerLayout extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(AppAssets.appLogo, height: 40.height),
-            Text(
-              AppStrings.bottomNavTitles[currentIndex],
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-      ),
+      appBar: AppBar(title: _SoccerHead(currentIndex: currentIndex)),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              context.go(Routes.soccer);
-              break;
-            case 1:
-              context.go(Routes.fixtures);
-              break;
-            case 2:
-              context.go(Routes.standings);
-              break;
-          }
-        },
+        onTap: (index) => _onTap(context, index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -68,6 +43,35 @@ class SoccerLayout extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _onTap(BuildContext context, int index) => switch (index) {
+    0 => context.go(Routes.soccer),
+    1 => context.go(Routes.fixtures),
+    2 => context.go(Routes.standings),
+    _ => null,
+  };
+}
+
+class _SoccerHead extends StatelessWidget {
+  const _SoccerHead({required this.currentIndex});
+
+  final int currentIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset(AppAssets.appLogo, height: 40.height),
+        Text(
+          AppStrings.bottomNavTitles[currentIndex],
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+      ],
     );
   }
 }

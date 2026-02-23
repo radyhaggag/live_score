@@ -1,37 +1,37 @@
 class AppStrings {
   AppStrings._();
-  static const String noRouteFound = 'No Route Found';
-  static const String home = 'Home';
-  static const String fixtures = 'Fixtures';
-  static const String standings = 'Standings';
-  static const String liveScore = 'Live Score';
-  static const String vs = 'Vs';
-  static const String round = 'Round';
-  static const String live = 'Live';
-  static const String end = 'End';
-  static const String notStarted = 'Not Started';
-  static const String statistics = 'Statistics';
-  static const String lineups = 'Lineups';
-  static const String events = 'Events';
-  static const String goal = 'Goal';
-  static const String missedPenalty = 'Missed Penalty';
-  static const String assist = 'Assist';
-  static const String noAssist = 'No Assist';
-  static const String card = 'Card';
-  static const String yellowCard = 'Yellow Card';
-  static const String subst = 'subst';
-  static const String viewFixtures = 'View Fixtures';
-  static const String viewStandings = 'View Standings';
-  static const String liveFixtures = 'Live Fixtures';
-  static const String viewAll = 'View All';
-  static const String reachedLimits =
-      'You have reached the request limit for the day';
-  static const String reload = 'Reload';
-  static const String noStats = 'Statistics not available';
-  static const String noLineups = 'Lineups not available';
-  static const String noEvents = 'Events not available';
-  static const String noFixtures = 'No Fixtures scheduled today';
-  static const String appName = 'Live score';
+
+  static const noRouteFound = 'No Route Found';
+  static const home = 'Home';
+  static const fixtures = 'Fixtures';
+  static const standings = 'Standings';
+  static const liveScore = 'Live Score';
+  static const vs = 'Vs';
+  static const round = 'Round';
+  static const live = 'Live';
+  static const end = 'End';
+  static const notStarted = 'Not Started';
+  static const statistics = 'Statistics';
+  static const lineups = 'Lineups';
+  static const events = 'Events';
+  static const goal = 'Goal';
+  static const missedPenalty = 'Missed Penalty';
+  static const assist = 'Assist';
+  static const noAssist = 'No Assist';
+  static const card = 'Card';
+  static const yellowCard = 'Yellow Card';
+  static const subst = 'subst';
+  static const viewFixtures = 'View Fixtures';
+  static const viewStandings = 'View Standings';
+  static const liveFixtures = 'Live Fixtures';
+  static const viewAll = 'View All';
+  static const reachedLimits = 'You have reached the request limit for the day';
+  static const reload = 'Reload';
+  static const noStats = 'Statistics not available';
+  static const noLineups = 'Lineups not available';
+  static const noEvents = 'Events not available';
+  static const noFixtures = 'No Fixtures scheduled today';
+  static const appName = 'Live score';
 
   static const List<String> bottomNavTitles = [
     AppStrings.liveScore,
