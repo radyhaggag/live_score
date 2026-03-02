@@ -35,10 +35,11 @@ Here are some previews of **Live Score App** after the latest update:
   <img src="https://github.com/user-attachments/assets/fde752ac-f3ff-4bda-948a-07c459ab72fb" alt="Fixture events" width="30%"/>
 </p>
 
-## 📥 Download (Play store)
+## 📥 Download (Play store) - ⚠️ NOT AVAILABLE RIGHT NOW ‼️
 
 <p align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.radyhaggag.livescore" target="_blank">
+  <!-- <a href="https://play.google.com/store/apps/details?id=com.radyhaggag.livescore" target="_blank"> -->
+    <a href="#" target="_blank">
     <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" 
          alt="Get it on Play Store" 
          height="80"/>
