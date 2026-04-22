@@ -1,21 +1,39 @@
 # Live Score App
 
-Live Score is a Flutter football app focused on fast match-day browsing. It highlights live fixtures, today's schedule, standings, lineups, statistics, and match events in a mobile-first UI that now also includes web deployment support for GitHub Pages and portfolio sharing.
+Live Score is an open-source Flutter football app with 82 stars, built for fast match-day browsing. It brings together live fixtures, today's schedule, standings, lineups, statistics, and match events in a clean cross-platform experience for football fans.
 
-## Portfolio Blurb
+## 📱 App Mockup
+<img width="1892" height="1493" alt="live-score-app-cover" src="https://github.com/user-attachments/assets/45ba9f94-41d1-466c-a042-8769b36ab744" />
 
-Live Score is a cross-platform Flutter app for tracking football fixtures in real time. It combines live scores, standings, lineups, match statistics, and event timelines in a clean, responsive interface built with BLoC and a layered architecture.
+## Overview
 
-## Project Structure
+The app focuses on the information people usually need most during a match day:
 
-- `lib/`: Flutter app source code
-- `web/`: Flutter web shell, icons, manifest, and portfolio metadata
-- `.github/workflows/deploy_web.yml`: GitHub Pages deployment workflow
-- `live-score-proxy-2/`: Cloudflare Worker proxy used by the web app
+- live scores and match status
+- today's fixtures across supported competitions
+- league tables and standings
+- lineups, events, and match statistics
+- a mobile-first interface built with Flutter and BLoC
+
+## Features
+
+- Live football fixtures and score updates
+- Competition-based browsing for major leagues and tournaments
+- Match details including lineups, events, and statistics
+- League standings for supported competitions
+- Android, iOS, and web support
+
+## Tech Stack
+
+- Flutter
+- BLoC / Cubit
+- Dio
+- GetIt
+- Clean architecture-inspired project structure
 
 ## Web Support
 
-The mobile apps call `365scores` directly, but Flutter Web cannot call that API from the browser because of browser-origin restrictions. To make web work, this repository uses a tiny Cloudflare Worker proxy in [live-score-proxy-2](/Users/radyhaggag/Programming/Flutter/live_score/live-score-proxy-2:1).
+The mobile apps call `365scores` directly. For Flutter Web, this repository uses a small Cloudflare Worker proxy because the API cannot be called directly from the browser.
 
 Current deployed proxy:
 
@@ -35,15 +53,11 @@ To publish the web app:
 
 1. Push the repository to GitHub on `main` or `master`.
 2. In the GitHub repository settings, enable `Pages` and choose `GitHub Actions` as the source.
-3. Optionally add a repository secret named `WEB_API_PROXY_BASE_URL` if you want to override the default deployed proxy.
-4. The workflow builds the Flutter web app, adds a single-page-app fallback, and deploys it automatically.
+3. The workflow builds the Flutter web app, adds a single-page-app fallback, and deploys it automatically.
 
 If you later attach a custom domain or host the app at the site root instead of `/<repo-name>/`, update the `--base-href` value in the workflow.
 
-The Live Score application is a football sports application that presents the results of today's matches, team formations, and match events. It also allows arrangements for leagues and cups such as the English Premier League and the World Cup.
-
-## 📱 App Mockup
-<img width="1892" height="1493" alt="live-score-app-cover" src="https://github.com/user-attachments/assets/45ba9f94-41d1-466c-a042-8769b36ab744" />
+You do not need to add any environment variable for the current setup. The app already points to the deployed Cloudflare proxy by default. The `WEB_API_PROXY_BASE_URL` value is only an optional override for the future if you ever move the proxy to a different URL.
 
 ## 📱 Screenshots
 

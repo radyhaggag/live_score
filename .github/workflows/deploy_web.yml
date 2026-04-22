@@ -34,9 +34,7 @@ jobs:
         run: flutter pub get
 
       - name: Build web app
-        env:
-          WEB_API_PROXY_BASE_URL: ${{ secrets.WEB_API_PROXY_BASE_URL }}
-        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/" --dart-define=WEB_API_PROXY_BASE_URL=$WEB_API_PROXY_BASE_URL
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
 
       - name: Add SPA fallback for GitHub Pages
         run: cp build/web/index.html build/web/404.html

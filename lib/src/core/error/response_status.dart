@@ -56,6 +56,6 @@ class StatusMessage {
   static const String networkConnectError =
       'Internet connection timeout. Try again later.';
   static const String webProxyRequired =
-      'This API cannot be called directly from Flutter Web. Configure a web proxy and run with --dart-define=WEB_API_PROXY_BASE_URL=https://your-proxy-url';
+      'Flutter Web needs a server-side proxy for this API.';
   static const String unexpected = 'Unexpected Error.';
 }
