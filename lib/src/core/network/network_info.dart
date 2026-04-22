@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 abstract class NetworkInfo {
@@ -11,8 +12,14 @@ class NetworkInfoImpl implements NetworkInfo {
 
   @override
   Future<bool> get isConnected async {
-    final res = await connectionChecker.hasConnection;
-    print('Network Connection Status: $res');
-    return res;
+    if (kIsWeb) {
+      return true;
+    }
+
+    try {
+      return await connectionChecker.hasConnection;
+    } catch (_) {
+      return true;
+    }
   }
 }

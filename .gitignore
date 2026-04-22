@@ -33,9 +33,13 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+**/node_modules/
+**/.wrangler/
+**/.dev.vars
+**/.env.local
+coverage/
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols

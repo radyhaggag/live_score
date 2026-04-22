@@ -26,7 +26,17 @@ class CustomImage extends StatelessWidget {
       height: height,
       width: width,
       fit: fit,
-      placeholder: (_, _) => placeholder ?? const CircularProgressIndicator(),
+      fadeInDuration: const Duration(milliseconds: 150),
+      placeholder:
+          (_, _) =>
+              placeholder ??
+              SizedBox(
+                height: height,
+                width: width,
+                child: const DecoratedBox(
+                  decoration: BoxDecoration(color: Colors.transparent),
+                ),
+              ),
       errorWidget: (_, _, _) {
         return errorWidget ?? const SizedBox.shrink();
       },

@@ -40,9 +40,11 @@ class GroupedFixturesList extends StatelessWidget {
           );
         } else if (item is SoccerFixture) {
           // Fixture card
-          final gameTime = item.startTime.toString();
-          final localTime = DateTime.parse(gameTime).toUtc();
-          final formattedTime = DateFormat('h:mm a').format(localTime);
+          final localTime = item.startTime?.toLocal();
+          final formattedTime =
+              localTime == null
+                  ? 'TBD'
+                  : DateFormat('h:mm a').format(localTime);
 
           return InkWell(
             onTap: () {
@@ -66,7 +68,8 @@ class GroupedFixturesList extends StatelessWidget {
 
   /// Groups fixtures by day and returns a mixed list of [String date headers + fixtures]
   List<dynamic> _buildGroupedFixtures(List<SoccerFixture> fixtures) {
-    fixtures.sort((a, b) {
+    final sortedFixtures = List<SoccerFixture>.from(fixtures);
+    sortedFixtures.sort((a, b) {
       if (a.startTime == null || b.startTime == null) return 0;
       return a.startTime!.compareTo(b.startTime!);
     });
@@ -76,10 +79,10 @@ class GroupedFixturesList extends StatelessWidget {
 
     final now = DateTime.now();
 
-    for (var fixture in fixtures) {
+    for (final fixture in sortedFixtures) {
       if (fixture.startTime == null) continue;
 
-      final localDate = fixture.startTime!.toUtc();
+      final localDate = fixture.startTime!.toLocal();
       final isSameYear = localDate.year == now.year;
 
       // Format: add year only if not current year

@@ -26,8 +26,6 @@ class _FixturesScreenState extends State<FixturesScreen> {
   void initState() {
     super.initState();
     initialSelectedLeagueId = widget.competitionId;
-    final availableLeagues = context.read<SoccerCubit>().availableLeagues;
-    if (availableLeagues.isEmpty) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (initialSelectedLeagueId == null) {
         context.read<SoccerCubit>().getTodayFixtures();

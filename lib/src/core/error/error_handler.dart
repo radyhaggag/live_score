@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
+import '../utils/app_constants.dart';
 import 'response_status.dart';
 
 class ErrorHandler implements Exception {
@@ -31,6 +33,9 @@ Failure _handleError(DioException error) {
     case DioExceptionType.sendTimeout:
     case DioExceptionType.receiveTimeout:
     case DioExceptionType.connectionError:
+      if (kIsWeb && !AppConstants.isUsingWebProxy) {
+        return DataSource.webProxyRequired.getFailure();
+      }
       return DataSource.networkConnectError.getFailure();
     case DioExceptionType.badResponse:
       switch (error.response?.statusCode) {

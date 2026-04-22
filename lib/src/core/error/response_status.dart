@@ -4,6 +4,7 @@ enum DataSource {
   clientClosedRequest,
   internalServerError,
   networkConnectError,
+  webProxyRequired,
   unexpected,
 }
 
@@ -12,19 +13,29 @@ extension DataSourceExtension on DataSource {
     switch (this) {
       case DataSource.clientClosedRequest:
         return const Failure(
-            code: StatusCode.clientClosedRequest,
-            message: StatusMessage.clientClosedRequest);
+          code: StatusCode.clientClosedRequest,
+          message: StatusMessage.clientClosedRequest,
+        );
       case DataSource.internalServerError:
         return const Failure(
-            code: StatusCode.internalServerError,
-            message: StatusMessage.internalServerError);
+          code: StatusCode.internalServerError,
+          message: StatusMessage.internalServerError,
+        );
       case DataSource.networkConnectError:
         return const Failure(
-            code: StatusCode.networkConnectError,
-            message: StatusMessage.networkConnectError);
+          code: StatusCode.networkConnectError,
+          message: StatusMessage.networkConnectError,
+        );
+      case DataSource.webProxyRequired:
+        return const Failure(
+          code: StatusCode.webProxyRequired,
+          message: StatusMessage.webProxyRequired,
+        );
       case DataSource.unexpected:
         return const Failure(
-            code: StatusCode.unexpected, message: StatusMessage.unexpected);
+          code: StatusCode.unexpected,
+          message: StatusMessage.unexpected,
+        );
     }
   }
 }
@@ -33,6 +44,7 @@ class StatusCode {
   static const int clientClosedRequest = 499;
   static const int internalServerError = 500;
   static const int networkConnectError = 599;
+  static const int webProxyRequired = 601;
   static const int unexpected = -1;
 }
 
@@ -43,5 +55,7 @@ class StatusMessage {
       'Something went wrong. Try again later.';
   static const String networkConnectError =
       'Internet connection timeout. Try again later.';
+  static const String webProxyRequired =
+      'This API cannot be called directly from Flutter Web. Configure a web proxy and run with --dart-define=WEB_API_PROXY_BASE_URL=https://your-proxy-url';
   static const String unexpected = 'Unexpected Error.';
 }

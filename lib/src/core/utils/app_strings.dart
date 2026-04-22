@@ -31,7 +31,7 @@ class AppStrings {
   static const noLineups = 'Lineups not available';
   static const noEvents = 'Events not available';
   static const noFixtures = 'No Fixtures scheduled today';
-  static const appName = 'Live score';
+  static const appName = 'Live Score';
 
   static const List<String> bottomNavTitles = [
     AppStrings.liveScore,

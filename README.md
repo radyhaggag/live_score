@@ -1,4 +1,44 @@
-# Live score App
+# Live Score App
+
+Live Score is a Flutter football app focused on fast match-day browsing. It highlights live fixtures, today's schedule, standings, lineups, statistics, and match events in a mobile-first UI that now also includes web deployment support for GitHub Pages and portfolio sharing.
+
+## Portfolio Blurb
+
+Live Score is a cross-platform Flutter app for tracking football fixtures in real time. It combines live scores, standings, lineups, match statistics, and event timelines in a clean, responsive interface built with BLoC and a layered architecture.
+
+## Project Structure
+
+- `lib/`: Flutter app source code
+- `web/`: Flutter web shell, icons, manifest, and portfolio metadata
+- `.github/workflows/deploy_web.yml`: GitHub Pages deployment workflow
+- `live-score-proxy-2/`: Cloudflare Worker proxy used by the web app
+
+## Web Support
+
+The mobile apps call `365scores` directly, but Flutter Web cannot call that API from the browser because of browser-origin restrictions. To make web work, this repository uses a tiny Cloudflare Worker proxy in [live-score-proxy-2](/Users/radyhaggag/Programming/Flutter/live_score/live-score-proxy-2:1).
+
+Current deployed proxy:
+
+- [https://live-score-proxy-2.radyhaggag50.workers.dev](https://live-score-proxy-2.radyhaggag50.workers.dev)
+
+The Flutter web app is already configured to use that proxy by default. If you ever replace it, you can override the URL with:
+
+```bash
+flutter run -d chrome --dart-define=WEB_API_PROXY_BASE_URL=https://your-proxy-url
+```
+
+## GitHub Pages Deployment
+
+This repository includes a GitHub Pages workflow at [.github/workflows/deploy_web.yml](/Users/radyhaggag/Programming/Flutter/live_score/.github/workflows/deploy_web.yml:1).
+
+To publish the web app:
+
+1. Push the repository to GitHub on `main` or `master`.
+2. In the GitHub repository settings, enable `Pages` and choose `GitHub Actions` as the source.
+3. Optionally add a repository secret named `WEB_API_PROXY_BASE_URL` if you want to override the default deployed proxy.
+4. The workflow builds the Flutter web app, adds a single-page-app fallback, and deploys it automatically.
+
+If you later attach a custom domain or host the app at the site root instead of `/<repo-name>/`, update the `--base-href` value in the workflow.
 
 The Live Score application is a football sports application that presents the results of today's matches, team formations, and match events. It also allows arrangements for leagues and cups such as the English Premier League and the World Cup.
 

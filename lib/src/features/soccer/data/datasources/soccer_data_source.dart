@@ -72,13 +72,11 @@ class SoccerDataSourceImpl implements SoccerDataSource {
   @override
   Future<List<SoccerFixtureModel>> getTodayFixtures() async {
     try {
+      final now = DateTime.now();
+      final today = now.toIso8601String().split('T').first;
       final response = await dioHelper.get(
         url: Endpoints.todayFixtures,
-        queryParams: {
-          'sports': 1,
-          'startDate': DateTime.now().toIso8601String().split('T').first,
-          'endDate': DateTime.now().toIso8601String().split('T').first,
-        },
+        queryParams: {'sports': 1, 'startDate': today, 'endDate': today},
       );
 
       return _getResult(response, getOnlyCurrentDayFixtures: true);
@@ -112,6 +110,8 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     final List<dynamic> result = response.data['games'];
 
     final List<SoccerFixtureModel> fixtures = [];
+    final today = DateTime.now();
+    final normalizedToday = DateTime(today.year, today.month, today.day);
     for (var fixture in result) {
       final competitionId = fixture['competitionId'] as int?;
       if (competitionId == null ||
@@ -126,18 +126,14 @@ class SoccerDataSourceImpl implements SoccerDataSource {
         ),
       );
       if (getOnlyCurrentDayFixtures && model.startTime != null) {
-        final now = DateTime(
-          DateTime.now().toUtc().year,
-          DateTime.now().toUtc().month,
-          DateTime.now().toUtc().day,
-        );
+        final localStartTime = model.startTime!.toLocal();
         final fixtureDate = DateTime(
-          model.startTime!.toUtc().year,
-          model.startTime!.toUtc().month,
-          model.startTime!.toUtc().day,
+          localStartTime.year,
+          localStartTime.month,
+          localStartTime.day,
         );
 
-        if (fixtureDate.isAfter(now)) continue;
+        if (fixtureDate.isAfter(normalizedToday)) continue;
       }
       fixtures.add(model);
     }

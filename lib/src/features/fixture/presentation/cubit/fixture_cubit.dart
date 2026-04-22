@@ -18,22 +18,31 @@ class FixtureCubit extends Cubit<FixtureState> {
   }) : super(FixtureInitial());
 
   Statistics? statistics;
+  bool _isLoadingStatistics = false;
+  bool _isLoadingFixtureDetails = false;
 
   Future<void> getStatistics(
     int fixtureId, {
     bool isTimerLoading = false,
   }) async {
-    emit(FixtureStatisticsLoading(isTimerLoading: isTimerLoading));
-    final result = await statisticsUseCase(fixtureId);
-    result.fold(
-      (left) {
-        emit(FixtureStatisticsLoadingFailure(message: left.message));
-      },
-      (right) {
-        statistics = right;
-        emit(FixtureStatisticsLoaded(statistics: right));
-      },
-    );
+    if (_isLoadingStatistics) return;
+
+    _isLoadingStatistics = true;
+    try {
+      emit(FixtureStatisticsLoading(isTimerLoading: isTimerLoading));
+      final result = await statisticsUseCase(fixtureId);
+      result.fold(
+        (left) {
+          emit(FixtureStatisticsLoadingFailure(message: left.message));
+        },
+        (right) {
+          statistics = right;
+          emit(FixtureStatisticsLoaded(statistics: right));
+        },
+      );
+    } finally {
+      _isLoadingStatistics = false;
+    }
   }
 
   FixtureDetails? fixtureDetails;
@@ -42,16 +51,23 @@ class FixtureCubit extends Cubit<FixtureState> {
     int fixtureId, {
     bool isTimerLoading = false,
   }) async {
-    emit(FixtureDetailsLoading(isTimerLoading: isTimerLoading));
-    final result = await fixtureDetailsUseCase(fixtureId);
-    result.fold(
-      (left) {
-        emit(FixtureDetailsLoadingFailure(message: left.message));
-      },
-      (right) {
-        fixtureDetails = right;
-        emit(FixtureDetailsLoaded(fixtureDetails: right));
-      },
-    );
+    if (_isLoadingFixtureDetails) return;
+
+    _isLoadingFixtureDetails = true;
+    try {
+      emit(FixtureDetailsLoading(isTimerLoading: isTimerLoading));
+      final result = await fixtureDetailsUseCase(fixtureId);
+      result.fold(
+        (left) {
+          emit(FixtureDetailsLoadingFailure(message: left.message));
+        },
+        (right) {
+          fixtureDetails = right;
+          emit(FixtureDetailsLoaded(fixtureDetails: right));
+        },
+      );
+    } finally {
+      _isLoadingFixtureDetails = false;
+    }
   }
 }

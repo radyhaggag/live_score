@@ -78,6 +78,7 @@ class ModalSheetContent extends StatelessWidget {
                 ).textTheme.titleSmall?.copyWith(color: AppColors.darkBlue),
               ),
             ),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
                 context.push(Routes.standings, extra: league.id);

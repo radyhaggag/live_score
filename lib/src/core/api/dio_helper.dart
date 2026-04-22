@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../container_injector.dart';
 import '../utils/app_constants.dart';
@@ -20,8 +21,10 @@ class DioHelper {
       connectTimeout: const Duration(milliseconds: _timeOut),
       headers: headers,
     );
-    dio.interceptors.add(sl<LogInterceptor>());
-    dio.interceptors.add(sl<AppInterceptors>());
+    if (kDebugMode) {
+      dio.interceptors.add(sl<LogInterceptor>());
+      dio.interceptors.add(sl<AppInterceptors>());
+    }
   }
 
   Future<Response> get({

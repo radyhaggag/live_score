@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class AppConstants {
   AppConstants._();
 
@@ -18,7 +20,26 @@ class AppConstants {
     649, // Saudi Pro League
   ];
 
-  static const apiBaseUrl = 'https://webws.365scores.com/web';
+  static const directApiBaseUrl = 'https://webws.365scores.com/web';
+  static const defaultWebProxyBaseUrl =
+      'https://live-score-proxy-2.radyhaggag50.workers.dev';
+  static const webApiProxyBaseUrl = String.fromEnvironment(
+    'WEB_API_PROXY_BASE_URL',
+  );
+
+  static String get apiBaseUrl {
+    if (kIsWeb) {
+      if (webApiProxyBaseUrl.isNotEmpty) {
+        return webApiProxyBaseUrl;
+      }
+      return defaultWebProxyBaseUrl;
+    }
+    return directApiBaseUrl;
+  }
+
+  static bool get isUsingWebProxy =>
+      kIsWeb &&
+      (webApiProxyBaseUrl.isNotEmpty || defaultWebProxyBaseUrl.isNotEmpty);
   static const baseImageUrl = 'https://imagecache.365scores.com/image/upload/';
 
   static String clubImage(String clubId, {String size = '24'}) {

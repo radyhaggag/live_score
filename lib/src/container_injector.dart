@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -20,16 +21,16 @@ void initCore() {
   sl.registerLazySingleton<Dio>(() => Dio());
   sl.registerLazySingleton<AppInterceptors>(() => AppInterceptors());
 
-  sl.registerLazySingleton<LogInterceptor>(
-    () => LogInterceptor(
-      error: true,
-      request: true,
-      requestBody: true,
-      requestHeader: true,
-      responseBody: true,
-      responseHeader: true,
-    ),
-  );
+  sl.registerLazySingleton<LogInterceptor>(() {
+    return LogInterceptor(
+      error: kDebugMode,
+      request: kDebugMode,
+      requestBody: kDebugMode,
+      requestHeader: kDebugMode,
+      responseBody: kDebugMode,
+      responseHeader: kDebugMode,
+    );
+  });
   sl.registerLazySingleton<DioHelper>(() => DioHelper(dio: sl<Dio>()));
   sl.registerLazySingleton<InternetConnectionChecker>(
     () => InternetConnectionChecker.createInstance(
