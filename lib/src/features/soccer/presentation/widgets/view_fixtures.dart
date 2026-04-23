@@ -211,7 +211,7 @@ class _RailArrow extends StatelessWidget {
         onPressed: enabled ? onTap : null,
         visualDensity: VisualDensity.compact,
         iconSize: 18,
-        icon: Icon(icon),
+        icon: Icon(icon, color: AppColors.white),
       ),
     );
   }
