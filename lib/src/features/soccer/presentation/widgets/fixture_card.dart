@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/domain/entities/league.dart';
-import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
@@ -56,26 +55,39 @@ class FixtureCard extends StatelessWidget {
           vertical: 15,
           horizontal: 10,
         ),
-        child: Row(
-          children: [
-            _TeamInfo(
-              name: soccerFixture.teams.home.name.teamName,
-              logo: soccerFixture.teams.home.logo,
-            ),
-            SizedBox(width: 5.width),
-            Expanded(
-              child: _FixtureCenter(
-                soccerFixture: soccerFixture,
-                fixtureTime: fixtureTime,
-                showLeagueLogo: showLeagueLogo,
-              ),
-            ),
-            SizedBox(width: 5.width),
-            _TeamInfo(
-              name: soccerFixture.teams.away.name.teamName,
-              logo: soccerFixture.teams.away.logo,
-            ),
-          ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final sideWidth = constraints.maxWidth >= 700 ? 150.0 : 110.0;
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: sideWidth,
+                  child: _TeamInfo(
+                    name: soccerFixture.teams.home.name.teamName,
+                    logo: soccerFixture.teams.home.logo,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _FixtureCenter(
+                    soccerFixture: soccerFixture,
+                    fixtureTime: fixtureTime,
+                    showLeagueLogo: showLeagueLogo,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: sideWidth,
+                  child: _TeamInfo(
+                    name: soccerFixture.teams.away.name.teamName,
+                    logo: soccerFixture.teams.away.logo,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -90,23 +102,21 @@ class _TeamInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          CustomImage(height: 25.radius, width: 25.radius, imageUrl: logo),
-          SizedBox(height: 10.height),
-          FittedBox(
-            child: Text(
-              name.split(' ').length > 2
-                  ? name.split(' ').sublist(0, 2).join(' ')
-                  : name,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.fade,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomImage(height: 25, width: 25, imageUrl: logo),
+        const SizedBox(height: 10),
+        Text(
+          name.split(' ').length > 2
+              ? name.split(' ').sublist(0, 2).join(' ')
+              : name,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
     );
   }
 }
@@ -132,6 +142,7 @@ class _FixtureCenter extends StatelessWidget {
         (soccerFixture.status.isEnded && !goalsAvailable)) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             fixtureTime ?? context.l10n.tbd,
@@ -141,13 +152,13 @@ class _FixtureCenter extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 5.height),
+          const SizedBox(height: 5),
           _LeagueSection(
             league: soccerFixture.fixtureLeague,
             roundNum: soccerFixture.roundNum,
             showLogo: showLeagueLogo,
           ),
-          SizedBox(height: 5.height),
+          const SizedBox(height: 5),
           _StatusBadge(
             status: soccerFixture.status,
             statusText: soccerFixture.statusText,
@@ -159,9 +170,10 @@ class _FixtureCenter extends StatelessWidget {
     if (soccerFixture.status.isLive && goalsAvailable) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           MatchTimeWithProgress(time: soccerFixture.gameTimeDisplay),
-          SizedBox(height: 5.height),
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -172,7 +184,7 @@ class _FixtureCenter extends StatelessWidget {
           ),
           if (homeTeam.aggregatedScore != null &&
               awayTeam.aggregatedScore != null) ...[
-            SizedBox(height: 5.height),
+            const SizedBox(height: 5),
             Text(
               context.l10n.aggregateScore(
                 homeTeam.aggregatedScore.toString(),
@@ -184,9 +196,9 @@ class _FixtureCenter extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ],
-          SizedBox(height: 5.height),
+          const SizedBox(height: 5),
           _LeagueSection(league: soccerFixture.fixtureLeague),
-          SizedBox(height: 5.height),
+          const SizedBox(height: 5),
           _StatusBadge(
             status: soccerFixture.status,
             statusText: soccerFixture.statusText,
@@ -196,9 +208,9 @@ class _FixtureCenter extends StatelessWidget {
     }
 
     if (goalsAvailable) {
-      // Ended match
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -210,7 +222,7 @@ class _FixtureCenter extends StatelessWidget {
           ),
           if (homeTeam.aggregatedScore != null &&
               awayTeam.aggregatedScore != null) ...[
-            SizedBox(height: 5.height),
+            const SizedBox(height: 5),
             Text(
               context.l10n.aggregateScore(
                 homeTeam.aggregatedScore.toString(),
@@ -222,9 +234,9 @@ class _FixtureCenter extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ],
-          SizedBox(height: 5.height),
+          const SizedBox(height: 5),
           _LeagueSection(league: soccerFixture.fixtureLeague),
-          SizedBox(height: 5.height),
+          const SizedBox(height: 5),
           _StatusBadge(
             status: soccerFixture.status,
             statusText: soccerFixture.statusText,
@@ -268,33 +280,30 @@ class _LeagueSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (showLogo) ...[
-              CustomImage(
-                height: 13.radius,
-                width: 13.radius,
-                imageUrl: league.logo,
-              ),
-              SizedBox(width: 5.width),
+              CustomImage(height: 13, width: 13, imageUrl: league.logo),
+              const SizedBox(width: 5),
             ],
             Flexible(
-              child: FittedBox(
-                child: Text(
-                  league.name,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleSmall?.copyWith(color: AppColors.blueGrey),
-                  textAlign: TextAlign.center,
-                ),
+              child: Text(
+                league.name,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: AppColors.blueGrey),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
         if (roundNum != null) ...[
-          SizedBox(height: 3.height),
+          const SizedBox(height: 3),
           Text(
             context.l10n.roundNumber(roundNum.toString()),
             style: Theme.of(
@@ -324,18 +333,17 @@ class _StatusBadge extends StatelessWidget {
           SoccerFixtureStatus.ended => AppColors.blue,
           SoccerFixtureStatus.scheduled => AppColors.blue,
         },
-        borderRadius: BorderRadius.circular(20.radius),
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: FittedBox(
-        child: Text(
-          statusText,
-          maxLines: 1,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: AppColors.white,
-            fontSize: FontSize.paragraph,
-          ),
-          textAlign: TextAlign.center,
+      child: Text(
+        statusText,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: AppColors.white,
+          fontSize: FontSize.paragraph,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }
