@@ -6,9 +6,9 @@ abstract class NetworkInfo {
 }
 
 class NetworkInfoImpl implements NetworkInfo {
-  final InternetConnectionChecker connectionChecker;
+  final InternetConnectionChecker? connectionChecker;
 
-  NetworkInfoImpl({required this.connectionChecker});
+  NetworkInfoImpl({this.connectionChecker});
 
   @override
   Future<bool> get isConnected async {
@@ -17,7 +17,9 @@ class NetworkInfoImpl implements NetworkInfo {
     }
 
     try {
-      return await connectionChecker.hasConnection;
+      final checker = connectionChecker;
+      if (checker == null) return true;
+      return await checker.hasConnection;
     } catch (_) {
       return true;
     }
