@@ -7,6 +7,7 @@ import '../container_injector.dart';
 import '../core/domain/entities/soccer_fixture.dart';
 import '../core/utils/app_strings.dart';
 import '../features/fixture/presentation/screens/fixture_screen.dart';
+import '../features/settings/presentation/screens/settings_screen.dart';
 import '../features/soccer/presentation/cubit/soccer_cubit.dart';
 import '../features/soccer/presentation/screens/fixtures_screen.dart';
 import '../features/soccer/presentation/screens/soccer_layout.dart';
@@ -18,6 +19,7 @@ class Routes {
   static const String fixtures = '/fixtures';
   static const String standings = '/standings';
   static const String fixtureDetails = '/fixture_details';
+  static const String settings = '/settings';
 }
 
 class AppRouter {
@@ -65,6 +67,12 @@ class AppRouter {
               child: FixtureScreen(soccerFixture: state.extra as SoccerFixture),
             ),
           );
+        },
+      ),
+      GoRoute(
+        path: Routes.settings,
+        pageBuilder: (context, state) {
+          return const NoTransitionPage(child: SettingsScreen());
         },
       ),
     ],

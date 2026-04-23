@@ -7,12 +7,14 @@ import 'core/api/dio_helper.dart';
 import 'core/api/interceptors.dart';
 import 'core/network/network_info.dart';
 import 'features/fixture/fixture_injector.dart';
+import 'features/settings/settings_injector.dart';
 import 'features/soccer/soccer_injector.dart';
 
 final sl = GetIt.instance;
 
 void initApp() {
   initCore();
+  initSettings();
   initSoccer();
   initFixture();
 }

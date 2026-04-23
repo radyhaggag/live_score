@@ -24,17 +24,29 @@ class FixtureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4).copyWith(top: 10),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(10),
+        border:
+            isDarkMode
+                ? Border.all(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                )
+                : null,
         boxShadow: [
-          const BoxShadow(
-            color: AppColors.lightGrey,
+          BoxShadow(
+            color:
+                isDarkMode
+                    ? Colors.black.withValues(alpha: 0.18)
+                    : AppColors.lightGrey,
             spreadRadius: 2,
             blurRadius: 3,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -89,9 +101,7 @@ class _TeamInfo extends StatelessWidget {
                   : name,
               textAlign: TextAlign.center,
               overflow: TextOverflow.fade,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: AppColors.black),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
         ],

@@ -32,6 +32,19 @@ class AppStrings {
   static const noEvents = 'Events not available';
   static const noFixtures = 'No Fixtures scheduled today';
   static const appName = 'Live Score';
+  static const settings = 'Settings';
+  static const appearanceDescription =
+      'Choose how Live Score looks across the app';
+  static const appVersion = 'App Version';
+  static const appearance = 'Appearance';
+  static const about = 'About';
+  static const theme = 'Theme';
+  static const systemDefault = 'System Default';
+  static const light = 'Light';
+  static const dark = 'Dark';
+  static const personalizeYourExperience = 'Personalize your experience';
+  static const settingsSubtitle =
+      'Control app appearance and keep future preferences in one place.';
 
   static const List<String> bottomNavTitles = [
     AppStrings.liveScore,

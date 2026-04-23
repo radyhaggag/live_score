@@ -23,7 +23,16 @@ class SoccerLayout extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: AppBar(title: _SoccerHead(currentIndex: currentIndex)),
+      appBar: AppBar(
+        title: _SoccerHead(currentIndex: currentIndex),
+        actions: [
+          IconButton(
+            onPressed: () => context.push(Routes.settings),
+            icon: const Icon(Icons.settings_outlined),
+            tooltip: AppStrings.settings,
+          ),
+        ],
+      ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
