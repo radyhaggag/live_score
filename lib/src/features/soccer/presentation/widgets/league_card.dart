@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
+
 import 'package:live_score/src/core/extensions/color.dart';
-import 'package:live_score/src/core/utils/app_colors.dart';
+import 'package:live_score/src/core/extensions/context_ext.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/widgets/custom_image.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class LeagueCard extends StatelessWidget {
   const LeagueCard({
@@ -34,20 +35,22 @@ class LeagueCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          gradient: isSelected ? AppColors.redGradient : null,
+          gradient: isSelected ? context.colorsExt.redGradient : null,
           color:
               isSelected
                   ? null
                   : league.color != null
-                  ? HexColor(league.color!)
-                  : AppColors.blueGrey,
+                  ? league.color!.toColor
+                  : context.colorsExt.blueGrey,
           border:
-              isSelected ? Border.all(color: AppColors.white, width: 2) : null,
+              isSelected
+                  ? Border.all(color: context.colorsExt.white, width: 2)
+                  : null,
           boxShadow:
               isSelected
                   ? [
                     BoxShadow(
-                      color: AppColors.black.withOpacitySafe(0.25),
+                      color: Colors.black.withOpacitySafe(0.25),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),
@@ -59,12 +62,12 @@ class LeagueCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomImage(width: 18, height: 18, imageUrl: league.logo),
-              const SizedBox(width: 6),
+              const SizedBox(width: AppSpacing.xs),
               Text(
                 leagueTitle,
                 softWrap: false,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: AppColors.white,
+                  color: context.colorsExt.white,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 ),
               ),

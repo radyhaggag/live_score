@@ -9,37 +9,31 @@ enum DataSource {
 }
 
 extension DataSourceExtension on DataSource {
-  Failure getFailure() {
-    switch (this) {
-      case DataSource.clientClosedRequest:
-        return const Failure(
-          code: StatusCode.clientClosedRequest,
-          message: StatusMessage.clientClosedRequestKey,
-        );
-      case DataSource.internalServerError:
-        return const Failure(
-          code: StatusCode.internalServerError,
-          message: StatusMessage.internalServerErrorKey,
-        );
-      case DataSource.networkConnectError:
-        return const Failure(
-          code: StatusCode.networkConnectError,
-          message: StatusMessage.networkConnectErrorKey,
-        );
-      case DataSource.webProxyRequired:
-        return const Failure(
-          code: StatusCode.webProxyRequired,
-          message: StatusMessage.webProxyRequiredKey,
-        );
-      case DataSource.unexpected:
-        return const Failure(
-          code: StatusCode.unexpected,
-          message: StatusMessage.unexpectedKey,
-        );
-    }
-  }
+  Failure getFailure() => switch (this) {
+    DataSource.clientClosedRequest => const Failure(
+      code: StatusCode.clientClosedRequest,
+      message: StatusMessage.clientClosedRequestKey,
+    ),
+    DataSource.internalServerError => const Failure(
+      code: StatusCode.internalServerError,
+      message: StatusMessage.internalServerErrorKey,
+    ),
+    DataSource.networkConnectError => const Failure(
+      code: StatusCode.networkConnectError,
+      message: StatusMessage.networkConnectErrorKey,
+    ),
+    DataSource.webProxyRequired => const Failure(
+      code: StatusCode.webProxyRequired,
+      message: StatusMessage.webProxyRequiredKey,
+    ),
+    DataSource.unexpected => const Failure(
+      code: StatusCode.unexpected,
+      message: StatusMessage.unexpectedKey,
+    ),
+  };
 }
 
+/// Represents the status code entity/model.
 class StatusCode {
   static const int clientClosedRequest = 499;
   static const int internalServerError = 500;
@@ -48,6 +42,7 @@ class StatusCode {
   static const int unexpected = -1;
 }
 
+/// Represents the status message entity/model.
 class StatusMessage {
   static const String clientClosedRequestKey = 'error.clientClosedRequest';
   static const String internalServerErrorKey = 'error.internalServerError';

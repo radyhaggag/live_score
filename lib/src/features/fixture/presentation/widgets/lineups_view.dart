@@ -4,12 +4,13 @@ import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/features/fixture/domain/entities/fixture_details.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
-import '../../../../core/utils/app_assets.dart';
-import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_fonts.dart';
+import '../../../../core/constants/app_assets.dart';
+import '../../../../core/extensions/context_ext.dart';
+import '../../../../core/theme/app_fonts.dart';
 import '../../../../core/widgets/custom_image.dart';
-import 'items_not_available.dart';
+import '../../../../core/widgets/app_empty.dart';
 import 'teams_lineups.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class LineupsView extends StatelessWidget {
   final FixtureDetails? fixtureDetails;
@@ -26,7 +27,7 @@ class LineupsView extends StatelessWidget {
         (awayTeam?.lineup?.formation ?? '').isNotEmpty;
 
     if (!hasLineups) {
-      return ItemsNotAvailable(
+      return AppEmptyWidget(
         icon: Icons.people,
         message: context.l10n.noLineups,
         color: color,
@@ -49,9 +50,7 @@ class LineupsView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
               horizontal: 10,
             ).copyWith(top: 20),
-            child: TeamsLineups(
-              fixtureDetails: fixtureDetails!,
-            ),
+            child: TeamsLineups(fixtureDetails: fixtureDetails!),
           ),
         ),
         _buildTeamHeader(context: context, team: awayTeam!),
@@ -61,18 +60,18 @@ class LineupsView extends StatelessWidget {
 
   Widget _buildTeamHeader({required BuildContext context, required Team team}) {
     return Container(
-      color: AppColors.darkGreen,
+      color: context.colorsExt.darkGreen,
       padding: const EdgeInsetsDirectional.all(8),
       child: Row(
         children: [
           CustomImage(width: 35, height: 35, imageUrl: team.logo),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s),
           Expanded(
             child: Text(
               team.name.teamName,
               style: Theme.of(
                 context,
-              ).textTheme.bodySmall?.copyWith(color: AppColors.white),
+              ).textTheme.bodySmall?.copyWith(color: context.colorsExt.white),
             ),
           ),
           Text(

@@ -67,5 +67,10 @@
   "errorInternalServerError": "حدث خطأ ما. حاول مرة أخرى لاحقاً.",
   "errorNetworkConnectError": "انتهت مهلة الاتصال. تأكد من الإنترنت ثم حاول مرة أخرى.",
   "errorWebProxyRequired": "نسخة الويب من Flutter تحتاج إلى Proxy للخادم لهذا الـ API.",
-  "errorUnexpected": "حدث خطأ غير متوقع."
+  "errorUnexpected": "حدث خطأ غير متوقع.",
+  "errorLoadFixtures": "تعذر تحميل المباريات حالياً.",
+  "noStandingsYet": "لا يوجد ترتيب متاح حالياً.",
+  "errorLoadStandings": "تعذر تحميل الترتيب حالياً.",
+  "all": "الكل",
+  "allLeaguesTooltip": "كل الدوريات"
 }

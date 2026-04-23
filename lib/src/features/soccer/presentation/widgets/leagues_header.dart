@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 import '../../../../core/domain/entities/league.dart';
-import '../../../../core/utils/app_colors.dart';
+import '../../../../core/extensions/color.dart';
+import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../../domain/use_cases/standings_usecase.dart';
 import '../cubit/soccer_cubit.dart';
 import 'league_card.dart';
 import 'modal_sheet_content.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class CircleLeaguesHeader extends StatelessWidget {
   final List<League> leagues;
@@ -21,9 +22,9 @@ class CircleLeaguesHeader extends StatelessWidget {
       width: double.infinity,
       height: 68,
       padding: const EdgeInsetsDirectional.only(start: 15),
-      decoration: const BoxDecoration(
-        gradient: AppColors.blueGradient,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        gradient: context.colorsExt.blueGradient,
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(40),
           topLeft: Radius.circular(40),
         ),
@@ -34,7 +35,7 @@ class CircleLeaguesHeader extends StatelessWidget {
         itemBuilder:
             (context, index) =>
                 buildLeagueAvatar(league: leagues[index], context: context),
-        separatorBuilder: (_, _) => const SizedBox(width: 10),
+        separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s),
         itemCount: leagues.length,
       ),
     );
@@ -55,7 +56,9 @@ class CircleLeaguesHeader extends StatelessWidget {
       },
       child: CircleAvatar(
         backgroundColor:
-            league.color != null ? HexColor(league.color!) : AppColors.blueGrey,
+            league.color != null
+                ? league.color!.toColor
+                : context.colorsExt.blueGrey,
         radius: 25,
         child: CustomImage(
           fit: BoxFit.contain,
@@ -133,7 +136,8 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.leagues.length,
-                separatorBuilder: (_, _) => const SizedBox(width: 6),
+                separatorBuilder:
+                    (_, _) => const SizedBox(width: AppSpacing.xs),
                 itemBuilder: (context, index) {
                   final viewCountryName = widget.leagues.any((l) {
                     return l.name == widget.leagues[index].name &&

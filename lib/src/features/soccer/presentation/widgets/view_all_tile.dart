@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:live_score/src/core/utils/app_colors.dart';
+import 'package:live_score/src/core/extensions/context_ext.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
 
@@ -17,8 +17,8 @@ class ViewAllTile extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           side: BorderSide.none,
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          surfaceTintColor: AppColors.grey,
-          foregroundColor: AppColors.grey,
+          surfaceTintColor: context.colorsExt.grey,
+          foregroundColor: context.colorsExt.grey,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -28,10 +28,10 @@ class ViewAllTile extends StatelessWidget {
               context.l10n.viewAll,
               style: Theme.of(context).textTheme.labelLarge,
             ),
-            const Icon(
+            Icon(
               Icons.arrow_forward_ios_sharp,
               size: 12,
-              color: AppColors.black,
+              color: context.colors.onSurface,
             ),
           ],
         ),

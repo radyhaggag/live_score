@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:live_score/src/core/utils/app_colors.dart';
+import 'package:live_score/src/core/extensions/context_ext.dart';
 
 import '../l10n/app_l10n.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
+/// Represents the match time with progress entity/model.
 class MatchTimeWithProgress extends StatefulWidget {
   final String time;
-  final Color mainColor;
+  final Color? mainColor;
   final int widthFactor;
 
   const MatchTimeWithProgress({
     super.key,
     required this.time,
-    this.mainColor = AppColors.red,
+    this.mainColor,
     this.widthFactor = 2,
   });
 
@@ -46,12 +48,12 @@ class _MatchTimeWithProgressState extends State<MatchTimeWithProgress>
         Text(
           widget.time.isNotEmpty ? widget.time : context.l10n.liveFallback,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: widget.mainColor,
+            color: widget.mainColor ?? context.colorsExt.red,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.xs),
         AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
@@ -61,7 +63,7 @@ class _MatchTimeWithProgressState extends State<MatchTimeWithProgress>
               child: Container(
                 height: 3,
                 decoration: BoxDecoration(
-                  color: widget.mainColor,
+                  color: widget.mainColor ?? context.colorsExt.red,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),

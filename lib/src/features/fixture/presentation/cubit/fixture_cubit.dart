@@ -8,6 +8,7 @@ import '../../domain/use_cases/statistics_usecase.dart';
 
 part 'fixture_state.dart';
 
+/// Represents the fixture cubit entity/model.
 class FixtureCubit extends Cubit<FixtureState> {
   final StatisticsUseCase statisticsUseCase;
   final FixtureDetailsUseCase fixtureDetailsUseCase;
@@ -17,10 +18,10 @@ class FixtureCubit extends Cubit<FixtureState> {
     required this.fixtureDetailsUseCase,
   }) : super(FixtureInitial());
 
-  Statistics? statistics;
   bool _isLoadingStatistics = false;
   bool _isLoadingFixtureDetails = false;
 
+  /// Get statistics.
   Future<void> getStatistics(
     int fixtureId, {
     bool isTimerLoading = false,
@@ -36,7 +37,6 @@ class FixtureCubit extends Cubit<FixtureState> {
           emit(FixtureStatisticsLoadingFailure(message: left.message));
         },
         (right) {
-          statistics = right;
           emit(FixtureStatisticsLoaded(statistics: right));
         },
       );
@@ -45,8 +45,7 @@ class FixtureCubit extends Cubit<FixtureState> {
     }
   }
 
-  FixtureDetails? fixtureDetails;
-
+  /// Get fixture details.
   Future<void> getFixtureDetails(
     int fixtureId, {
     bool isTimerLoading = false,
@@ -62,7 +61,6 @@ class FixtureCubit extends Cubit<FixtureState> {
           emit(FixtureDetailsLoadingFailure(message: left.message));
         },
         (right) {
-          fixtureDetails = right;
           emit(FixtureDetailsLoaded(fixtureDetails: right));
         },
       );

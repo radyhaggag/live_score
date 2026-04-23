@@ -1,8 +1,9 @@
 import 'package:live_score/src/core/models/country_model.dart';
-import 'package:live_score/src/core/utils/app_constants.dart';
+import 'package:live_score/src/core/constants/app_constants.dart';
 
 import '../domain/entities/league.dart';
 
+/// Represents the league model entity/model.
 class LeagueModel extends League {
   const LeagueModel({
     required super.id,

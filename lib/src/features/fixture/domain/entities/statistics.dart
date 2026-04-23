@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/domain/entities/teams.dart';
 
+/// Represents the statistics entity/model.
 class Statistics extends Equatable {
   final Teams? teams;
   final List<Statistic>? statistics;
@@ -30,6 +31,7 @@ class Statistics extends Equatable {
   List<Object?> get props => [teams, statistics];
 }
 
+/// Represents the statistic entity/model.
 class Statistic extends Equatable {
   final int id;
   final int competitorId;

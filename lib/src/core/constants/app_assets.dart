@@ -1,5 +1,6 @@
 const String imagePath = 'assets/images';
 
+/// Represents the app assets entity/model.
 class AppAssets {
   AppAssets._();
   static const String playground = '$imagePath/Football_playground.png';

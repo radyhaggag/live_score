@@ -45,7 +45,7 @@ void initCore() {
       ),
     );
   }
-  sl.registerLazySingleton<NetworkInfoImpl>(
+  sl.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(
       connectionChecker: kIsWeb ? null : sl<InternetConnectionChecker>(),
     ),

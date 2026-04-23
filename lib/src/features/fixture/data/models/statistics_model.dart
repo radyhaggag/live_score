@@ -1,5 +1,5 @@
 import 'package:live_score/src/core/domain/mappers/mappers.dart';
-import 'package:live_score/src/core/utils/parsers.dart';
+import 'package:live_score/src/core/constants/parsers.dart';
 
 import '../../../../core/models/teams_model.dart';
 import '../../domain/entities/statistics.dart';

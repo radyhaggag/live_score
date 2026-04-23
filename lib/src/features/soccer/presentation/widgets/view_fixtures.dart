@@ -5,11 +5,12 @@ import 'package:intl/intl.dart';
 import '../../../../config/app_route.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/l10n/app_l10n.dart';
-import '../../../../core/utils/app_colors.dart';
+import '../../../../core/extensions/context_ext.dart';
 import 'fixture_card.dart';
 import 'live_fixtures_card.dart';
-import 'no_fixtures_today.dart';
+import '../../../../core/widgets/app_empty.dart';
 import 'view_all_tile.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class ViewDayFixtures extends StatelessWidget {
   final List<SoccerFixture> fixtures;
@@ -27,7 +28,7 @@ class ViewDayFixtures extends StatelessWidget {
             Row(
               spacing: 8,
               children: [
-                const Icon(Icons.calendar_month, color: AppColors.blue),
+                Icon(Icons.calendar_month, color: context.colorsExt.blue),
                 Expanded(
                   child: Text(
                     l10n.fixtures,
@@ -60,7 +61,7 @@ class ViewDayFixtures extends StatelessWidget {
         )
         : const Padding(
           padding: EdgeInsets.symmetric(vertical: 48),
-          child: NoFixturesView(),
+          child: AppEmptyWidget(),
         );
   }
 }
@@ -142,7 +143,7 @@ class _ViewLiveFixturesState extends State<ViewLiveFixtures> {
             Row(
               spacing: 8,
               children: [
-                const Icon(Icons.stream, color: AppColors.red),
+                Icon(Icons.stream, color: context.colorsExt.red),
                 Expanded(
                   child: Text(
                     l10n.liveFixtures,
@@ -181,7 +182,7 @@ class _ViewLiveFixturesState extends State<ViewLiveFixtures> {
                     ),
                   );
                 },
-                separatorBuilder: (_, _) => const SizedBox(width: 12),
+                separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.m),
                 itemCount: widget.fixtures.length,
               ),
             ),
@@ -211,7 +212,7 @@ class _RailArrow extends StatelessWidget {
         onPressed: enabled ? onTap : null,
         visualDensity: VisualDensity.compact,
         iconSize: 18,
-        icon: Icon(icon, color: AppColors.white),
+        icon: Icon(icon, color: context.colorsExt.white),
       ),
     );
   }

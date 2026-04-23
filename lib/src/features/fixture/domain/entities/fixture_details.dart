@@ -5,6 +5,7 @@ import 'package:live_score/src/features/fixture/domain/entities/lineups.dart';
 
 import 'player.dart';
 
+/// Represents the fixture details entity/model.
 class FixtureDetails extends Equatable {
   final SoccerFixture fixture;
   final List<Event> events;
@@ -22,27 +23,29 @@ class FixtureDetails extends Equatable {
   List<FixturePlayerInfo> get homePlayersInfo {
     final homeLineup = fixture.teams.home.lineup;
     if (homeLineup == null) return [];
-    return members.where((player) => player.competitorId == fixture.teams.home.id).map((
-      player,
-    ) {
-      final lineupMember = homeLineup.members.firstWhere(
-        (member) => member.id == player.id,
-      );
-      return FixturePlayerInfo(player: player, lineupMember: lineupMember);
-    }).toList();
+    return members
+        .where((player) => player.competitorId == fixture.teams.home.id)
+        .map((player) {
+          final lineupMember = homeLineup.members.firstWhere(
+            (member) => member.id == player.id,
+          );
+          return FixturePlayerInfo(player: player, lineupMember: lineupMember);
+        })
+        .toList();
   }
 
   List<FixturePlayerInfo> get awayPlayersInfo {
     final awayLineup = fixture.teams.away.lineup;
     if (awayLineup == null) return [];
-    return members.where((player) => player.competitorId == fixture.teams.away.id).map((
-      player,
-    ) {
-      final lineupMember = awayLineup.members.firstWhere(
-        (member) => member.id == player.id,
-      );
-      return FixturePlayerInfo(player: player, lineupMember: lineupMember);
-    }).toList();
+    return members
+        .where((player) => player.competitorId == fixture.teams.away.id)
+        .map((player) {
+          final lineupMember = awayLineup.members.firstWhere(
+            (member) => member.id == player.id,
+          );
+          return FixturePlayerInfo(player: player, lineupMember: lineupMember);
+        })
+        .toList();
   }
 
   List<Event> get sortedEvents {
@@ -55,6 +58,7 @@ class FixtureDetails extends Equatable {
   List<Object?> get props => [fixture, events, members, venue];
 }
 
+/// Represents the fixture player info entity/model.
 class FixturePlayerInfo extends Equatable {
   final Player player;
   final LineupMember lineupMember;
@@ -65,6 +69,7 @@ class FixturePlayerInfo extends Equatable {
   List<Object?> get props => [player, lineupMember];
 }
 
+/// Represents the venue entity/model.
 class Venue extends Equatable {
   final int id;
   final String name;

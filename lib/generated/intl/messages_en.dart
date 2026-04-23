@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "aggregateScore": m0,
+    "all": MessageLookupByLibrary.simpleMessage("All"),
+    "allLeaguesTooltip": MessageLookupByLibrary.simpleMessage("All leagues"),
     "appName": MessageLookupByLibrary.simpleMessage("Live Score"),
     "appVersion": MessageLookupByLibrary.simpleMessage("App Version"),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
@@ -46,6 +48,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "errorInternalServerError": MessageLookupByLibrary.simpleMessage(
       "Something went wrong. Please try again later.",
+    ),
+    "errorLoadFixtures": MessageLookupByLibrary.simpleMessage(
+      "Unable to load fixtures right now.",
+    ),
+    "errorLoadStandings": MessageLookupByLibrary.simpleMessage(
+      "Unable to load standings right now.",
     ),
     "errorNetworkConnectError": MessageLookupByLibrary.simpleMessage(
       "Connection timed out. Please check your internet and try again.",
@@ -83,6 +91,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Lineups are not available yet",
     ),
     "noRouteFound": MessageLookupByLibrary.simpleMessage("No route found"),
+    "noStandingsYet": MessageLookupByLibrary.simpleMessage(
+      "No standings available yet.",
+    ),
     "noStats": MessageLookupByLibrary.simpleMessage(
       "Statistics are not available yet",
     ),

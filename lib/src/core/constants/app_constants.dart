@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+/// Represents the app constants entity/model.
 class AppConstants {
   AppConstants._();
 

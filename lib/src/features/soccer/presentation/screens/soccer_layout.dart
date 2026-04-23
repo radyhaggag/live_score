@@ -4,7 +4,7 @@ import 'package:live_score/src/config/app_route.dart';
 import 'package:live_score/src/core/layout/adaptive_layout.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
-import '../../../../core/utils/app_assets.dart';
+import '../../../../core/constants/app_assets.dart';
 
 class SoccerLayout extends StatelessWidget {
   const SoccerLayout({super.key, required this.child});

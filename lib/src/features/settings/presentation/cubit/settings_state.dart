@@ -1,7 +1,8 @@
 part of 'settings_cubit.dart';
 
 @immutable
-class SettingsState {
+/// Represents the settings state entity/model.
+class SettingsState extends Equatable {
   const SettingsState({
     this.themeMode = ThemeMode.system,
     this.appVersion = '',
@@ -12,6 +13,7 @@ class SettingsState {
   final String appVersion;
   final AppLanguage language;
 
+  /// Copy with.
   SettingsState copyWith({
     ThemeMode? themeMode,
     String? appVersion,
@@ -23,4 +25,7 @@ class SettingsState {
       language: language ?? this.language,
     );
   }
+
+  @override
+  List<Object?> get props => [themeMode, appVersion, language];
 }

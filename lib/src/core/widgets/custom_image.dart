@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+/// Represents the custom image entity/model.
 class CustomImage extends StatelessWidget {
   const CustomImage({
     super.key,
@@ -21,6 +23,25 @@ class CustomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (imageUrl.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.network(
+        imageUrl,
+        height: height,
+        width: width,
+        fit: fit ?? BoxFit.contain,
+        placeholderBuilder:
+            (_) =>
+                placeholder ??
+                SizedBox(
+                  height: height,
+                  width: width,
+                  child: const DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.transparent),
+                  ),
+                ),
+      );
+    }
+
     return CachedNetworkImage(
       imageUrl: imageUrl,
       height: height,

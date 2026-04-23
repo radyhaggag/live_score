@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/domain/entities/soccer_fixture.dart';
-import 'package:live_score/src/core/utils/app_colors.dart';
+import 'package:live_score/src/core/extensions/context_ext.dart';
 
 extension FixtureExtension on SoccerFixture {
-  Gradient get gradientColor {
-    return isThereWinner ? AppColors.redGradient : AppColors.blueGradient;
+  Gradient gradientColor(BuildContext context) {
+    return isThereWinner
+        ? context.colorsExt.redGradient
+        : context.colorsExt.blueGradient;
   }
 
   bool get isThereWinner {

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:live_score/src/core/models/country_model.dart';
-import 'package:live_score/src/core/utils/app_constants.dart';
+import 'package:live_score/src/core/constants/app_constants.dart';
 
 import '../../../../core/api/dio_helper.dart';
 import '../../../../core/api/endpoints.dart';

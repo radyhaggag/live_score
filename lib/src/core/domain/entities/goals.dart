@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+/// Represents the goals entity/model.
 class Goals extends Equatable {
   final int? home;
   final int? away;

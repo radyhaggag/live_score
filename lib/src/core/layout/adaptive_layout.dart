@@ -36,6 +36,7 @@ extension AdaptiveLayoutX on BuildContext {
   };
 }
 
+/// Represents the adaptive content area entity/model.
 class AdaptiveContentArea extends StatelessWidget {
   const AdaptiveContentArea({
     super.key,
