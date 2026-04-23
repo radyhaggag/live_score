@@ -9,8 +9,8 @@ import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_strings.dart';
 import '../cubit/fixture_cubit.dart';
 import '../widgets/events_view.dart';
 import '../widgets/fixture_details.dart';
@@ -70,7 +70,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
       appBar: AppBar(
         title: FittedBox(
           child: Text(
-            '${homeTeam.name.teamName} ${AppStrings.vs} ${awayTeam.name.teamName}',
+            '${homeTeam.name.teamName} ${context.l10n.versus} ${awayTeam.name.teamName}',
             style: Theme.of(
               context,
             ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -135,21 +135,21 @@ class _FixtureScreenState extends State<FixtureScreen> {
     children: [
       Expanded(
         child: tabBarButton(
-          label: AppStrings.statistics,
+          label: context.l10n.statistics,
           onPressed: () => setState(() => selectedTabIndex = 0),
           isSelected: selectedTabIndex == 0,
         ),
       ),
       Expanded(
         child: tabBarButton(
-          label: AppStrings.lineups,
+          label: context.l10n.lineups,
           onPressed: () => setState(() => selectedTabIndex = 1),
           isSelected: selectedTabIndex == 1,
         ),
       ),
       Expanded(
         child: tabBarButton(
-          label: AppStrings.events,
+          label: context.l10n.events,
           onPressed: () => setState(() => selectedTabIndex = 2),
           isSelected: selectedTabIndex == 2,
         ),

@@ -47,7 +47,10 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     try {
       final response = await dioHelper.get(
         url: Endpoints.leagues,
-        queryParams: {'competitions': AppConstants.availableLeagues.join(',')},
+        queryParams: {
+          'competitions': AppConstants.availableLeagues.join(','),
+          'withBestOdds': true,
+        },
       );
       final List<dynamic> result = response.data['competitions'];
       final countries = List<CountryModel>.from(

@@ -6,6 +6,7 @@ import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/widgets/match_time_with_progress.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/custom_image.dart';
 import 'view_team.dart';
@@ -117,7 +118,9 @@ class FixtureDetails extends StatelessWidget {
   Widget buildFixtureTime(BuildContext context) {
     final String fixtureTime = soccerFixture.startTime.toString();
     final localTime = DateTime.parse(fixtureTime).toLocal();
-    final formattedTime = DateFormat('h:mm a').format(localTime);
+    final formattedTime = DateFormat('h:mm a', context.localeName).format(
+      localTime,
+    );
     return Column(
       children: [
         Text(
@@ -134,8 +137,8 @@ class FixtureDetails extends StatelessWidget {
 
   Widget buildFixtureRound(BuildContext context) => Text(
     soccerFixture.roundNum != null
-        ? 'Round ${soccerFixture.roundNum}'
-        : 'Season ${soccerFixture.seasonNum}',
+        ? context.l10n.roundNumber(soccerFixture.roundNum.toString())
+        : context.l10n.seasonNumber(soccerFixture.seasonNum.toString()),
     maxLines: 1,
     overflow: TextOverflow.ellipsis,
     style: Theme.of(context).textTheme.bodySmall?.copyWith(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/utils/app_colors.dart';
 
+import '../l10n/app_l10n.dart';
+
 class MatchTimeWithProgress extends StatefulWidget {
   final String time;
   final Color mainColor;
@@ -42,7 +44,7 @@ class _MatchTimeWithProgressState extends State<MatchTimeWithProgress>
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          widget.time.isNotEmpty ? widget.time : 'LIVE',
+          widget.time.isNotEmpty ? widget.time : context.l10n.liveFallback,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
             color: widget.mainColor,
             fontWeight: FontWeight.bold,

@@ -5,10 +5,10 @@ import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/core/media_query.dart';
 import 'package:live_score/src/features/fixture/domain/entities/fixture_details.dart';
 
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_fonts.dart';
-import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/custom_image.dart';
 import 'items_not_available.dart';
 import 'teams_lineups.dart';
@@ -49,7 +49,7 @@ class LineupsView extends StatelessWidget {
         )
         : ItemsNotAvailable(
           icon: Icons.people,
-          message: AppStrings.noLineups,
+          message: context.l10n.noLineups,
           color: color,
         );
   }

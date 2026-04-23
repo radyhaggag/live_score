@@ -1,7 +1,10 @@
+import 'dart:ui' as ui;
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../container_injector.dart';
+import '../../features/settings/presentation/cubit/settings_cubit.dart';
 import '../utils/app_constants.dart';
 import 'interceptors.dart';
 
@@ -31,6 +34,16 @@ class DioHelper {
     required String url,
     Map<String, dynamic>? queryParams,
   }) async {
-    return await dio.get(url, queryParameters: queryParams);
+    final locale = sl<SettingsCubit>().state.language.resolveLocale(
+      ui.PlatformDispatcher.instance.locale,
+    );
+    final mergedQueryParameters = <String, dynamic>{
+      'langId':
+          locale.languageCode == 'ar'
+              ? AppConstants.apiArabicLangId
+              : AppConstants.apiEnglishLangId,
+      ...?queryParams,
+    };
+    return await dio.get(url, queryParameters: mergedQueryParameters);
   }
 }

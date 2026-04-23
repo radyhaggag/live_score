@@ -5,8 +5,8 @@ import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/utils/app_colors.dart';
 
 import '../../../../core/domain/entities/league.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/media_query.dart';
-import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../cubit/soccer_cubit.dart';
 
@@ -35,6 +35,7 @@ class ModalSheetContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15),
       height: context.height / 5,
@@ -72,7 +73,7 @@ class ModalSheetContent extends StatelessWidget {
                 context.pop();
               },
               child: Text(
-                AppStrings.viewFixtures,
+                l10n.viewFixtures,
                 style: Theme.of(
                   context,
                 ).textTheme.titleSmall?.copyWith(color: AppColors.darkBlue),
@@ -85,7 +86,7 @@ class ModalSheetContent extends StatelessWidget {
                 context.pop();
               },
               child: Text(
-                AppStrings.viewStandings,
+                l10n.viewStandings,
                 style: Theme.of(
                   context,
                 ).textTheme.titleSmall?.copyWith(color: AppColors.darkBlue),

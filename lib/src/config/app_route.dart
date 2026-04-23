@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:live_score/src/features/fixture/presentation/cubit/fixture_cubit.dart';
 
 import '../container_injector.dart';
+import '../core/l10n/app_l10n.dart';
 import '../core/domain/entities/soccer_fixture.dart';
-import '../core/utils/app_strings.dart';
 import '../features/fixture/presentation/screens/fixture_screen.dart';
 import '../features/settings/presentation/screens/settings_screen.dart';
 import '../features/soccer/presentation/cubit/soccer_cubit.dart';
@@ -84,6 +84,6 @@ class NoRouteFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text(AppStrings.noRouteFound)));
+    return Scaffold(body: Center(child: Text(context.l10n.noRouteFound)));
   }
 }

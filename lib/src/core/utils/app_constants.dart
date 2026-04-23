@@ -4,6 +4,8 @@ class AppConstants {
   AppConstants._();
 
   static const defaultLeagueId = 7; // English Premier League
+  static const apiEnglishLangId = 1;
+  static const apiArabicLangId = 27;
 
   static const List<int> availableLeagues = [
     7, // English Premier League

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
+import '../../domain/app_language.dart';
 import '../cubit/settings_cubit.dart';
 
-class ThemeModeBottomSheet extends StatelessWidget {
-  const ThemeModeBottomSheet({super.key, required this.currentThemeMode});
+class LanguageModeBottomSheet extends StatelessWidget {
+  const LanguageModeBottomSheet({super.key, required this.currentLanguage});
 
-  final ThemeMode currentThemeMode;
+  final AppLanguage currentLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class ThemeModeBottomSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: Text(
-                l10n.appearance,
+                l10n.language,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -34,30 +35,30 @@ class ThemeModeBottomSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
               child: Text(
-                l10n.appearanceDescription,
+                l10n.languageDescription,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ),
             const SizedBox(height: 16),
-            ThemeModeOptionTile(
-              title: l10n.themeModeLabel(ThemeMode.system),
-              icon: Icons.brightness_auto_rounded,
-              mode: ThemeMode.system,
-              currentThemeMode: currentThemeMode,
+            LanguageOptionTile(
+              title: l10n.languageLabel(AppLanguage.system),
+              icon: Icons.settings_suggest_rounded,
+              language: AppLanguage.system,
+              currentLanguage: currentLanguage,
             ),
-            ThemeModeOptionTile(
-              title: l10n.themeModeLabel(ThemeMode.light),
-              icon: Icons.light_mode_rounded,
-              mode: ThemeMode.light,
-              currentThemeMode: currentThemeMode,
+            LanguageOptionTile(
+              title: l10n.languageLabel(AppLanguage.english),
+              icon: Icons.language_rounded,
+              language: AppLanguage.english,
+              currentLanguage: currentLanguage,
             ),
-            ThemeModeOptionTile(
-              title: l10n.themeModeLabel(ThemeMode.dark),
-              icon: Icons.dark_mode_rounded,
-              mode: ThemeMode.dark,
-              currentThemeMode: currentThemeMode,
+            LanguageOptionTile(
+              title: l10n.languageLabel(AppLanguage.arabic),
+              icon: Icons.translate_rounded,
+              language: AppLanguage.arabic,
+              currentLanguage: currentLanguage,
             ),
           ],
         ),
@@ -66,25 +67,25 @@ class ThemeModeBottomSheet extends StatelessWidget {
   }
 }
 
-class ThemeModeOptionTile extends StatelessWidget {
-  const ThemeModeOptionTile({
+class LanguageOptionTile extends StatelessWidget {
+  const LanguageOptionTile({
     super.key,
     required this.title,
     required this.icon,
-    required this.mode,
-    required this.currentThemeMode,
+    required this.language,
+    required this.currentLanguage,
   });
 
   final String title;
   final IconData icon;
-  final ThemeMode mode;
-  final ThemeMode currentThemeMode;
+  final AppLanguage language;
+  final AppLanguage currentLanguage;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isSelected = currentThemeMode == mode;
+    final isSelected = currentLanguage == language;
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
@@ -107,7 +108,7 @@ class ThemeModeOptionTile extends StatelessWidget {
               ? Icon(Icons.check_circle_rounded, color: colorScheme.primary)
               : null,
       onTap: () {
-        context.read<SettingsCubit>().setThemeMode(mode);
+        context.read<SettingsCubit>().setLanguage(language);
         Navigator.pop(context);
       },
     );

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
+import '../../domain/app_language.dart';
 import '../cubit/settings_cubit.dart';
-import 'theme_mode_bottom_sheet.dart';
+import 'language_mode_bottom_sheet.dart';
 
-class SettingsThemeTile extends StatelessWidget {
-  const SettingsThemeTile({super.key});
+class SettingsLanguageTile extends StatelessWidget {
+  const SettingsLanguageTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,9 @@ class SettingsThemeTile extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
 
-    return BlocSelector<SettingsCubit, SettingsState, ThemeMode>(
-      selector: (state) => state.themeMode,
-      builder: (context, themeMode) {
+    return BlocSelector<SettingsCubit, SettingsState, AppLanguage>(
+      selector: (state) => state.language,
+      builder: (context, language) {
         return ListTile(
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -28,7 +29,7 @@ class SettingsThemeTile extends StatelessWidget {
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
               ),
-              builder: (_) => ThemeModeBottomSheet(currentThemeMode: themeMode),
+              builder: (_) => LanguageModeBottomSheet(currentLanguage: language),
             );
           },
           leading: Container(
@@ -38,13 +39,13 @@ class SettingsThemeTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              Icons.palette_outlined,
+              Icons.translate_rounded,
               size: 24,
               color: colorScheme.primary,
             ),
           ),
           title: Text(
-            l10n.appearance,
+            l10n.language,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -52,7 +53,7 @@ class SettingsThemeTile extends StatelessWidget {
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              l10n.themeModeLabel(themeMode),
+              l10n.languageLabel(language),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),

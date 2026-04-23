@@ -1,0 +1,71 @@
+{
+  "@@locale": "ar",
+  "appName": "لايف سكور",
+  "noRouteFound": "الصفحة غير موجودة",
+  "home": "الرئيسية",
+  "fixtures": "المباريات",
+  "standings": "الترتيب",
+  "liveScore": "لايف سكور",
+  "versus": "ضد",
+  "statistics": "الإحصائيات",
+  "lineups": "التشكيل",
+  "events": "الأحداث",
+  "assist": "صناعة هدف",
+  "viewFixtures": "عرض المباريات",
+  "viewStandings": "عرض الترتيب",
+  "liveFixtures": "المباريات المباشرة",
+  "viewAll": "عرض الكل",
+  "reload": "إعادة المحاولة",
+  "noStats": "لا توجد إحصائيات متاحة حالياً",
+  "noLineups": "لا يوجد تشكيل متاح حالياً",
+  "noEvents": "لا توجد أحداث متاحة حالياً",
+  "noFixtures": "لا توجد مباريات اليوم",
+  "settings": "الإعدادات",
+  "appearance": "المظهر",
+  "appearanceDescription": "اختَر شكل التطبيق في كل الشاشات.",
+  "appVersion": "إصدار التطبيق",
+  "systemDefault": "حسب الجهاز",
+  "light": "فاتح",
+  "dark": "داكن",
+  "language": "اللغة",
+  "languageDescription": "اختَر لغة التطبيق أو اجعله يتبع لغة الجهاز.",
+  "english": "الإنجليزية",
+  "arabic": "العربية",
+  "topStats": "أبرز الإحصائيات",
+  "teamName": "الفريق",
+  "form": "النتائج",
+  "playedShort": "لعب",
+  "wonShort": "ف",
+  "drawnShort": "ت",
+  "lostShort": "خ",
+  "goalsForShort": "له",
+  "goalsAgainstShort": "عليه",
+  "goalDifferenceShort": "فارق",
+  "pointsShort": "نقاط",
+  "tbd": "لاحقاً",
+  "liveFallback": "مباشر",
+  "aggregateScore": "النتيجة الإجمالية ({homeScore} - {awayScore})",
+  "@aggregateScore": {
+    "placeholders": {
+      "homeScore": {},
+      "awayScore": {}
+    }
+  },
+  "roundNumber": "الجولة {number}",
+  "@roundNumber": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "seasonNumber": "الموسم {number}",
+  "@seasonNumber": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "errorClientClosedRequest": "حدثت مشكلة أثناء تحميل التفاصيل. حاول مرة أخرى.",
+  "errorInternalServerError": "حدث خطأ ما. حاول مرة أخرى لاحقاً.",
+  "errorNetworkConnectError": "انتهت مهلة الاتصال. تأكد من الإنترنت ثم حاول مرة أخرى.",
+  "errorWebProxyRequired": "نسخة الويب من Flutter تحتاج إلى Proxy للخادم لهذا الـ API.",
+  "errorUnexpected": "حدث خطأ غير متوقع."
+}

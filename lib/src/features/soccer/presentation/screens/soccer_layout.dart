@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/utils/app_assets.dart';
-import '../../../../core/utils/app_strings.dart';
 
 class SoccerLayout extends StatelessWidget {
   const SoccerLayout({super.key, required this.child});
@@ -14,6 +14,7 @@ class SoccerLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String location = GoRouterState.of(context).uri.toString();
+    final l10n = context.l10n;
 
     final int currentIndex = switch (location) {
       Routes.soccer => 0,
@@ -29,7 +30,7 @@ class SoccerLayout extends StatelessWidget {
           IconButton(
             onPressed: () => context.push(Routes.settings),
             icon: const Icon(Icons.settings_outlined),
-            tooltip: AppStrings.settings,
+            tooltip: l10n.settings,
           ),
         ],
       ),
@@ -37,18 +38,18 @@ class SoccerLayout extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (index) => _onTap(context, index),
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: AppStrings.home,
+            icon: const Icon(Icons.home),
+            label: l10n.home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.sports_soccer_rounded),
-            label: AppStrings.fixtures,
+            icon: const Icon(Icons.sports_soccer_rounded),
+            label: l10n.fixtures,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: AppStrings.standings,
+            icon: const Icon(Icons.bar_chart),
+            label: l10n.standings,
           ),
         ],
       ),
@@ -77,7 +78,7 @@ class _SoccerHead extends StatelessWidget {
       children: [
         Image.asset(AppAssets.appLogo, height: 40.height),
         Text(
-          AppStrings.bottomNavTitles[currentIndex],
+          context.l10n.bottomNavigationTitle(currentIndex),
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ],

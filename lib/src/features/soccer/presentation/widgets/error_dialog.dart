@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_strings.dart';
 
 class ErrorDialog extends StatelessWidget {
   final String message;
@@ -36,7 +36,7 @@ class ErrorDialog extends StatelessWidget {
         Icon(Icons.error_outline, color: AppColors.red, size: 90.radius),
         SizedBox(height: 10.height),
         Text(
-          message,
+          context.l10n.errorMessage(message),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
@@ -50,7 +50,7 @@ class ErrorDialog extends StatelessWidget {
               context.pop();
             },
             child: Text(
-              AppStrings.reload,
+              context.l10n.reload,
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(color: AppColors.white),

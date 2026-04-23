@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../domain/app_language.dart';
+
 class SettingsRepositoryImpl {
   static const _themeModeKey = 'theme_mode';
+  static const _appLanguageKey = 'app_language';
 
   Future<ThemeMode> getThemeMode() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -24,6 +27,16 @@ class SettingsRepositoryImpl {
       ThemeMode.system => 'system',
     };
     await preferences.setString(_themeModeKey, value);
+  }
+
+  Future<AppLanguage> getAppLanguage() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return AppLanguage.fromStorage(preferences.getString(_appLanguageKey));
+  }
+
+  Future<void> setAppLanguage(AppLanguage language) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setString(_appLanguageKey, language.storageValue);
   }
 
   Future<String> getAppVersion() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'settings_language_tile.dart';
 import 'settings_theme_tile.dart';
 import 'settings_version_footer.dart';
 
@@ -15,6 +16,7 @@ class SettingsContent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       children: [
         const SettingsThemeTile(),
+        const SettingsLanguageTile(),
         const SizedBox(height: 16),
         Divider(
           height: 1,

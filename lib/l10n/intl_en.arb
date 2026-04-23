@@ -1,0 +1,71 @@
+{
+  "@@locale": "en",
+  "appName": "Live Score",
+  "noRouteFound": "No route found",
+  "home": "Home",
+  "fixtures": "Fixtures",
+  "standings": "Standings",
+  "liveScore": "Live Score",
+  "versus": "vs",
+  "statistics": "Statistics",
+  "lineups": "Lineups",
+  "events": "Events",
+  "assist": "Assist",
+  "viewFixtures": "View Fixtures",
+  "viewStandings": "View Standings",
+  "liveFixtures": "Live Fixtures",
+  "viewAll": "View All",
+  "reload": "Reload",
+  "noStats": "Statistics are not available yet",
+  "noLineups": "Lineups are not available yet",
+  "noEvents": "Events are not available yet",
+  "noFixtures": "No matches scheduled today",
+  "settings": "Settings",
+  "appearance": "Appearance",
+  "appearanceDescription": "Choose how the app looks across every screen.",
+  "appVersion": "App Version",
+  "systemDefault": "System default",
+  "light": "Light",
+  "dark": "Dark",
+  "language": "Language",
+  "languageDescription": "Choose the app language or follow your device language.",
+  "english": "English",
+  "arabic": "Arabic",
+  "topStats": "Top Stats",
+  "teamName": "Team",
+  "form": "Form",
+  "playedShort": "PL",
+  "wonShort": "W",
+  "drawnShort": "D",
+  "lostShort": "L",
+  "goalsForShort": "GF",
+  "goalsAgainstShort": "GA",
+  "goalDifferenceShort": "GD",
+  "pointsShort": "Pts",
+  "tbd": "TBD",
+  "liveFallback": "LIVE",
+  "aggregateScore": "Aggregate ({homeScore} - {awayScore})",
+  "@aggregateScore": {
+    "placeholders": {
+      "homeScore": {},
+      "awayScore": {}
+    }
+  },
+  "roundNumber": "Round {number}",
+  "@roundNumber": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "seasonNumber": "Season {number}",
+  "@seasonNumber": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "errorClientClosedRequest": "Something went wrong while loading details. Please try again.",
+  "errorInternalServerError": "Something went wrong. Please try again later.",
+  "errorNetworkConnectError": "Connection timed out. Please check your internet and try again.",
+  "errorWebProxyRequired": "Flutter Web needs a server-side proxy for this API.",
+  "errorUnexpected": "Unexpected error."
+}

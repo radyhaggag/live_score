@@ -14,27 +14,27 @@ extension DataSourceExtension on DataSource {
       case DataSource.clientClosedRequest:
         return const Failure(
           code: StatusCode.clientClosedRequest,
-          message: StatusMessage.clientClosedRequest,
+          message: StatusMessage.clientClosedRequestKey,
         );
       case DataSource.internalServerError:
         return const Failure(
           code: StatusCode.internalServerError,
-          message: StatusMessage.internalServerError,
+          message: StatusMessage.internalServerErrorKey,
         );
       case DataSource.networkConnectError:
         return const Failure(
           code: StatusCode.networkConnectError,
-          message: StatusMessage.networkConnectError,
+          message: StatusMessage.networkConnectErrorKey,
         );
       case DataSource.webProxyRequired:
         return const Failure(
           code: StatusCode.webProxyRequired,
-          message: StatusMessage.webProxyRequired,
+          message: StatusMessage.webProxyRequiredKey,
         );
       case DataSource.unexpected:
         return const Failure(
           code: StatusCode.unexpected,
-          message: StatusMessage.unexpected,
+          message: StatusMessage.unexpectedKey,
         );
     }
   }
@@ -49,13 +49,9 @@ class StatusCode {
 }
 
 class StatusMessage {
-  static const String clientClosedRequest =
-      'Something went wrong while fetching details. Try again later.';
-  static const String internalServerError =
-      'Something went wrong. Try again later.';
-  static const String networkConnectError =
-      'Internet connection timeout. Try again later.';
-  static const String webProxyRequired =
-      'Flutter Web needs a server-side proxy for this API.';
-  static const String unexpected = 'Unexpected Error.';
+  static const String clientClosedRequestKey = 'error.clientClosedRequest';
+  static const String internalServerErrorKey = 'error.internalServerError';
+  static const String networkConnectErrorKey = 'error.networkConnectError';
+  static const String webProxyRequiredKey = 'error.webProxyRequired';
+  static const String unexpectedKey = 'error.unexpected';
 }

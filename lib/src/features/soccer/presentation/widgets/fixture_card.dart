@@ -4,6 +4,7 @@ import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_fonts.dart';
 import '../../../../core/widgets/custom_image.dart';
@@ -133,7 +134,7 @@ class _FixtureCenter extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            fixtureTime ?? 'TBD',
+            fixtureTime ?? context.l10n.tbd,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: AppColors.deepOrange,
               fontWeight: FontWeight.bold,
@@ -173,7 +174,10 @@ class _FixtureCenter extends StatelessWidget {
               awayTeam.aggregatedScore != null) ...[
             SizedBox(height: 5.height),
             Text(
-              'Aggregate (${homeTeam.aggregatedScore} - ${awayTeam.aggregatedScore})',
+              context.l10n.aggregateScore(
+                homeTeam.aggregatedScore.toString(),
+                awayTeam.aggregatedScore.toString(),
+              ),
               style: Theme.of(
                 context,
               ).textTheme.labelSmall?.copyWith(color: AppColors.blueGrey),
@@ -208,7 +212,10 @@ class _FixtureCenter extends StatelessWidget {
               awayTeam.aggregatedScore != null) ...[
             SizedBox(height: 5.height),
             Text(
-              'Aggregate (${homeTeam.aggregatedScore} - ${awayTeam.aggregatedScore})',
+              context.l10n.aggregateScore(
+                homeTeam.aggregatedScore.toString(),
+                awayTeam.aggregatedScore.toString(),
+              ),
               style: Theme.of(
                 context,
               ).textTheme.labelSmall?.copyWith(color: AppColors.blueGrey),
@@ -289,7 +296,7 @@ class _LeagueSection extends StatelessWidget {
         if (roundNum != null) ...[
           SizedBox(height: 3.height),
           Text(
-            'Round ${roundNum.toString()}',
+            context.l10n.roundNumber(roundNum.toString()),
             style: Theme.of(
               context,
             ).textTheme.labelSmall?.copyWith(color: AppColors.blueGrey),

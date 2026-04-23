@@ -4,7 +4,7 @@ import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_strings.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/fixture_details.dart';
@@ -80,7 +80,7 @@ class _EventsViewState extends State<EventsView> {
           ),
         )
         : ItemsNotAvailable(
-          message: AppStrings.noEvents,
+          message: context.l10n.noEvents,
           icon: Icons.event_busy,
           color: widget.color,
         );
@@ -227,7 +227,7 @@ class _EventsViewState extends State<EventsView> {
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              "${AppStrings.assist}: ${event.extraPlayerDetails!.map((e) => e.name.playerName).join(', ')}",
+              "${context.l10n.assist}: ${event.extraPlayerDetails!.map((e) => e.name.playerName).join(', ')}",
               textAlign: TextAlign.end,
               style: Theme.of(
                 context,

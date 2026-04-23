@@ -3,10 +3,10 @@ import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/teams.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../../domain/entities/statistics.dart';
 
@@ -134,7 +134,7 @@ class NoStatistics extends StatelessWidget {
           ),
           SizedBox(height: 10.height),
           Text(
-            AppStrings.noStats,
+            context.l10n.noStats,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: AppColors.blueGrey,
               letterSpacing: 1.1,
@@ -227,7 +227,7 @@ class StatsCategorySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = isTop ? 'Top Stats' : categoryName;
+    final title = isTop ? context.l10n.topStats : categoryName;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,7 +307,7 @@ class _GroupedStats {
     return _GroupedStats(
       isTop: true,
       categoryId: null,
-      categoryName: 'Top Stats',
+      categoryName: '',
       homeStats: homeStats,
       awayStats: awayStats,
     );

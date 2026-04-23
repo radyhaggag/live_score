@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:live_score/src/config/app_route.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_fonts.dart';
 import 'fixture_card.dart';
@@ -20,7 +21,10 @@ class GroupedFixturesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupedItems = _buildGroupedFixtures(fixtures);
+    final groupedItems = _buildGroupedFixtures(
+      fixtures,
+      localeName: context.localeName,
+    );
 
     return ListView.builder(
       itemCount: groupedItems.length,
@@ -43,8 +47,8 @@ class GroupedFixturesList extends StatelessWidget {
           final localTime = item.startTime?.toLocal();
           final formattedTime =
               localTime == null
-                  ? 'TBD'
-                  : DateFormat('h:mm a').format(localTime);
+                  ? context.l10n.tbd
+                  : DateFormat('h:mm a', context.localeName).format(localTime);
 
           return InkWell(
             onTap: () {
@@ -67,7 +71,10 @@ class GroupedFixturesList extends StatelessWidget {
   }
 
   /// Groups fixtures by day and returns a mixed list of [String date headers + fixtures]
-  List<dynamic> _buildGroupedFixtures(List<SoccerFixture> fixtures) {
+  List<dynamic> _buildGroupedFixtures(
+    List<SoccerFixture> fixtures, {
+    required String localeName,
+  }) {
     final sortedFixtures = List<SoccerFixture>.from(fixtures);
     sortedFixtures.sort((a, b) {
       if (a.startTime == null || b.startTime == null) return 0;
@@ -88,6 +95,7 @@ class GroupedFixturesList extends StatelessWidget {
       // Format: add year only if not current year
       final fixtureDate = DateFormat(
         isSameYear ? 'EEEE, MMM d' : 'EEEE, MMM d, yyyy',
+        localeName,
       ).format(localDate);
 
       if (lastDate != fixtureDate) {

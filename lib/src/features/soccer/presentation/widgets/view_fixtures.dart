@@ -5,9 +5,9 @@ import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../config/app_route.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/media_query.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_strings.dart';
 import 'fixture_card.dart';
 import 'live_fixtures_card.dart';
 import 'no_fixtures_today.dart';
@@ -20,6 +20,7 @@ class ViewDayFixtures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return fixtures.isNotEmpty
         ? Padding(
           padding: const EdgeInsets.only(right: 20),
@@ -31,7 +32,7 @@ class ViewDayFixtures extends StatelessWidget {
                   SizedBox(width: 5.width),
                   Expanded(
                     child: Text(
-                      AppStrings.fixtures,
+                      l10n.fixtures,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
@@ -41,7 +42,10 @@ class ViewDayFixtures extends StatelessWidget {
               ...List.generate(fixtures.length, (index) {
                 final String fixtureTime = fixtures[index].startTime.toString();
                 final localTime = DateTime.parse(fixtureTime).toLocal();
-                final formattedTime = DateFormat('h:mm a').format(localTime);
+                final formattedTime = DateFormat(
+                  'h:mm a',
+                  context.localeName,
+                ).format(localTime);
                 return InkWell(
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
@@ -68,6 +72,7 @@ class ViewLiveFixtures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SizedBox(
       width: context.width,
       height: 280.height,
@@ -80,7 +85,7 @@ class ViewLiveFixtures extends StatelessWidget {
               SizedBox(width: 5.width),
               Expanded(
                 child: Text(
-                  AppStrings.liveFixtures,
+                  l10n.liveFixtures,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),

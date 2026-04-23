@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/utils/app_colors.dart';
 
-import '../../../../core/utils/app_strings.dart';
+import '../../../../core/l10n/app_l10n.dart';
 
 class ViewAllTile extends StatelessWidget {
   final VoidCallback onTap;
@@ -24,7 +24,7 @@ class ViewAllTile extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              AppStrings.viewAll,
+              context.l10n.viewAll,
               style: Theme.of(context).textTheme.labelLarge,
             ),
             SizedBox(width: 2.width),

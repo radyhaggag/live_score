@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
+import 'package:live_score/src/core/l10n/app_l10n.dart';
 import 'package:live_score/src/core/utils/app_colors.dart';
 
 import '../../../../core/widgets/custom_image.dart';
@@ -120,19 +121,20 @@ class StandingsItem extends StatelessWidget {
 
 class StandingsHeaders extends StatelessWidget {
   const StandingsHeaders({super.key});
-  static const List<String> _headers = [
-    'PL',
-    'W',
-    'D',
-    'L',
-    'GF',
-    'GA',
-    'GD',
-    'Pts',
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final headers = [
+      context.l10n.playedShort,
+      context.l10n.wonShort,
+      context.l10n.drawnShort,
+      context.l10n.lostShort,
+      context.l10n.goalsForShort,
+      context.l10n.goalsAgainstShort,
+      context.l10n.goalDifferenceShort,
+      context.l10n.pointsShort,
+    ];
+
     return Container(
       color: AppColors.grey.withOpacitySafe(.05),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -148,18 +150,18 @@ class StandingsHeaders extends StatelessWidget {
                   style: _getHeaderTextStyle(context),
                 ),
                 SizedBox(width: 18.width),
-                Text('Team name', style: _getHeaderTextStyle(context)),
+                Text(context.l10n.teamName, style: _getHeaderTextStyle(context)),
               ],
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: List.generate(
-              _headers.length,
+              headers.length,
               (index) => SizedBox(
                 width: 25.width,
                 child: Text(
-                  _headers[index],
+                  headers[index],
                   textAlign: TextAlign.center,
                   style: _getHeaderTextStyle(context),
                 ),
@@ -169,7 +171,7 @@ class StandingsHeaders extends StatelessWidget {
           SizedBox(
             width: 100.width,
             child: Text(
-              'Form',
+              context.l10n.form,
               textAlign: TextAlign.center,
               style: _getHeaderTextStyle(context),
             ),
