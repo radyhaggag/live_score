@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 
-import '../../../../core/utils/app_colors.dart';
+import 'package:live_score/src/core/extensions/context_ext.dart';
 
 class StandingsForm extends StatelessWidget {
   final List<int> form;
@@ -15,18 +15,18 @@ class StandingsForm extends StatelessWidget {
     this.spacing = 5,
   });
 
-  Color getBackground(int number) {
-    Color color = AppColors.grey.withOpacitySafe(0.2);
-    if (number == 1) color = AppColors.green;
-    if (number == 0) color = AppColors.red;
-    if (number == 2) color = AppColors.grey;
+  Color getBackground(BuildContext context, int number) {
+    Color color = context.colorsExt.grey.withOpacitySafe(0.2);
+    if (number == 1) color = context.colorsExt.green;
+    if (number == 0) color = context.colorsExt.red;
+    if (number == 2) color = context.colorsExt.grey;
     return color;
   }
 
-  Icon? getIcon(int number) => switch (number) {
-    0 => smallIcon(Icons.close),
-    1 => smallIcon(Icons.check),
-    2 => smallIcon(Icons.remove),
+  Icon? getIcon(BuildContext context, int number) => switch (number) {
+    0 => smallIcon(context, Icons.close),
+    1 => smallIcon(context, Icons.check),
+    2 => smallIcon(context, Icons.remove),
     _ => null,
   };
 
@@ -44,15 +44,15 @@ class StandingsForm extends StatelessWidget {
       children: List.generate(
         5,
         (index) => getCircle(
-          child: getIcon(formNumbers[index]),
-          color: getBackground(formNumbers[index]),
+          child: getIcon(context, formNumbers[index]),
+          color: getBackground(context, formNumbers[index]),
         ),
       ),
     );
   }
 
-  Icon smallIcon(IconData icon) {
-    return Icon(icon, color: AppColors.white, size: itemSize * 0.8);
+  Icon smallIcon(BuildContext context, IconData icon) {
+    return Icon(icon, color: context.colorsExt.white, size: itemSize * 0.8);
   }
 
   Widget getCircle({Widget? child, required Color color}) => Container(

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+/// Represents the player entity/model.
 class Player extends Equatable {
   final int id;
   final int competitorId;

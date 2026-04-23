@@ -29,7 +29,8 @@ class SettingsLanguageTile extends StatelessWidget {
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
               ),
-              builder: (_) => LanguageModeBottomSheet(currentLanguage: language),
+              builder:
+                  (_) => LanguageModeBottomSheet(currentLanguage: language),
             );
           },
           leading: Container(

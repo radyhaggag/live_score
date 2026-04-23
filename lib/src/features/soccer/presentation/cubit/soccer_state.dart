@@ -1,47 +1,38 @@
-import '../../../../core/domain/entities/league.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../domain/entities/standings.dart';
 
-abstract class SoccerStates {}
+sealed class SoccerState {}
 
-class ScoreInitial extends SoccerStates {}
+/// Represents the soccer initial entity/model.
+class SoccerInitial extends SoccerState {}
 
-class SoccerLeaguesLoading extends SoccerStates {}
+/// Represents the soccer current round fixtures loading entity/model.
+class SoccerCurrentRoundFixturesLoading extends SoccerState {}
 
-class SoccerLeaguesLoaded extends SoccerStates {
-  final List<League> leagues;
-
-  SoccerLeaguesLoaded(this.leagues);
-}
-
-class SoccerLeaguesLoadFailure extends SoccerStates {
-  final String message;
-
-  SoccerLeaguesLoadFailure(this.message);
-}
-
-class SoccerCurrentRoundFixturesLoading extends SoccerStates {}
-
-class SoccerCurrentRoundFixturesLoaded extends SoccerStates {
+/// Represents the soccer current round fixtures loaded entity/model.
+class SoccerCurrentRoundFixturesLoaded extends SoccerState {
   final List<SoccerFixture> fixtures;
 
   SoccerCurrentRoundFixturesLoaded(this.fixtures);
 }
 
-class SoccerCurrentRoundFixturesLoadFailure extends SoccerStates {
+/// Represents the soccer current round fixtures load failure entity/model.
+class SoccerCurrentRoundFixturesLoadFailure extends SoccerState {
   final String message;
   final int? competitionId;
 
   SoccerCurrentRoundFixturesLoadFailure(this.message, {this.competitionId});
 }
 
-class SoccerTodayFixturesLoading extends SoccerStates {
+/// Represents the soccer today fixtures loading entity/model.
+class SoccerTodayFixturesLoading extends SoccerState {
   final bool isTimerLoading;
 
   SoccerTodayFixturesLoading({this.isTimerLoading = false});
 }
 
-class SoccerTodayFixturesLoaded extends SoccerStates {
+/// Represents the soccer today fixtures loaded entity/model.
+class SoccerTodayFixturesLoaded extends SoccerState {
   final List<SoccerFixture> todayFixtures;
   final List<SoccerFixture> liveFixtures;
 
@@ -51,21 +42,25 @@ class SoccerTodayFixturesLoaded extends SoccerStates {
   });
 }
 
-class SoccerTodayFixturesLoadFailure extends SoccerStates {
+/// Represents the soccer today fixtures load failure entity/model.
+class SoccerTodayFixturesLoadFailure extends SoccerState {
   final String message;
 
   SoccerTodayFixturesLoadFailure(this.message);
 }
 
-class SoccerStandingsLoading extends SoccerStates {}
+/// Represents the soccer standings loading entity/model.
+class SoccerStandingsLoading extends SoccerState {}
 
-class SoccerStandingsLoaded extends SoccerStates {
+/// Represents the soccer standings loaded entity/model.
+class SoccerStandingsLoaded extends SoccerState {
   final Standings standings;
 
   SoccerStandingsLoaded(this.standings);
 }
 
-class SoccerStandingsLoadFailure extends SoccerStates {
+/// Represents the soccer standings load failure entity/model.
+class SoccerStandingsLoadFailure extends SoccerState {
   final String message;
 
   SoccerStandingsLoadFailure(this.message);

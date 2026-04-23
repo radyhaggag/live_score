@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+/// Represents the country entity/model.
 class Country extends Equatable {
   final int id;
   final String name;

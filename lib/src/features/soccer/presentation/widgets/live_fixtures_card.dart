@@ -3,9 +3,10 @@ import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
-import '../../../../core/utils/app_colors.dart';
+import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../../../../core/widgets/match_time_with_progress.dart';
+import 'sheet_action.dart';
 
 class LiveFixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
@@ -19,7 +20,7 @@ class LiveFixtureCard extends StatelessWidget {
       width: width ?? 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: soccerFixture.gradientColor,
+        gradient: soccerFixture.gradientColor(context),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -68,19 +69,28 @@ class LiveFixtureCard extends StatelessWidget {
           final leagueTextStyle = (isVeryTightCard
                   ? Theme.of(context).textTheme.labelSmall
                   : Theme.of(context).textTheme.bodySmall)
-              ?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold);
+              ?.copyWith(
+                color: context.colorsExt.white,
+                fontWeight: FontWeight.bold,
+              );
           final teamTextStyle = (isVeryTightCard
                   ? Theme.of(context).textTheme.bodySmall
                   : Theme.of(context).textTheme.bodyMedium)
-              ?.copyWith(color: AppColors.white);
+              ?.copyWith(color: context.colorsExt.white);
           final goalsTextStyle = (isVeryTightCard
                   ? Theme.of(context).textTheme.titleSmall
                   : Theme.of(context).textTheme.bodyLarge)
-              ?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold);
+              ?.copyWith(
+                color: context.colorsExt.white,
+                fontWeight: FontWeight.bold,
+              );
           final statusTextStyle = (isVeryTightCard
                   ? Theme.of(context).textTheme.labelSmall
                   : Theme.of(context).textTheme.bodySmall)
-              ?.copyWith(color: AppColors.red, fontWeight: FontWeight.bold);
+              ?.copyWith(
+                color: context.colorsExt.red,
+                fontWeight: FontWeight.bold,
+              );
 
           return Padding(
             padding: EdgeInsetsDirectional.symmetric(
@@ -121,27 +131,25 @@ class LiveFixtureCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildTeamLogo(
-                      soccerFixture.teams.home.logo,
+                    LiveTeamLogo(
+                      logo: soccerFixture.teams.home.logo,
                       radius: teamLogoRadius,
                       imageSize: teamLogoSize,
                     ),
-                    _buildTeamLogo(
-                      soccerFixture.teams.away.logo,
+                    LiveTeamLogo(
+                      logo: soccerFixture.teams.away.logo,
                       radius: teamLogoRadius,
                       imageSize: teamLogoSize,
                     ),
                   ],
                 ),
-                _buildTeamTile(
-                  context: context,
+                LiveTeamTile(
                   name: soccerFixture.teams.home.name.teamName,
                   goals: soccerFixture.teams.home.score.toString(),
                   teamTextStyle: teamTextStyle,
                   goalsTextStyle: goalsTextStyle,
                 ),
-                _buildTeamTile(
-                  context: context,
+                LiveTeamTile(
                   name: soccerFixture.teams.away.name.teamName,
                   goals: soccerFixture.teams.away.score.toString(),
                   teamTextStyle: teamTextStyle,
@@ -149,7 +157,7 @@ class LiveFixtureCard extends StatelessWidget {
                 ),
                 MatchTimeWithProgress(
                   time: soccerFixture.gameTimeDisplay,
-                  mainColor: AppColors.white,
+                  mainColor: context.colorsExt.white,
                   widthFactor: isVeryTightCard ? 2 : 3,
                 ),
                 Container(
@@ -163,7 +171,7 @@ class LiveFixtureCard extends StatelessWidget {
                             : 5,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: context.colorsExt.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -181,37 +189,4 @@ class LiveFixtureCard extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildTeamLogo(
-    String logo, {
-    required double radius,
-    required double imageSize,
-  }) => CircleAvatar(
-    backgroundColor: AppColors.white,
-    radius: radius,
-    child: CustomImage(width: imageSize, height: imageSize, imageUrl: logo),
-  );
-
-  Widget _buildTeamTile({
-    required String name,
-    required String goals,
-    required BuildContext context,
-    required TextStyle? teamTextStyle,
-    required TextStyle? goalsTextStyle,
-  }) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Expanded(
-        child: Text(
-          name,
-          maxLines: 1,
-          softWrap: false,
-          overflow: TextOverflow.ellipsis,
-          style: teamTextStyle,
-        ),
-      ),
-      const SizedBox(width: 10),
-      Text(goals, style: goalsTextStyle),
-    ],
-  );
 }

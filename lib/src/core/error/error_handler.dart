@@ -2,9 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-import '../utils/app_constants.dart';
+import '../constants/app_constants.dart';
 import 'response_status.dart';
 
+/// Represents the error handler entity/model.
 class ErrorHandler implements Exception {
   late Failure failure;
 
@@ -17,6 +18,7 @@ class ErrorHandler implements Exception {
   }
 }
 
+/// Represents the failure entity/model.
 class Failure extends Equatable {
   final int code;
   final String message;

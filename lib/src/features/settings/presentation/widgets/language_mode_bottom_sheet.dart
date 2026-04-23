@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../domain/app_language.dart';
 import '../cubit/settings_cubit.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class LanguageModeBottomSheet extends StatelessWidget {
   const LanguageModeBottomSheet({super.key, required this.currentLanguage});
@@ -41,7 +42,7 @@ class LanguageModeBottomSheet extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.l),
             LanguageOptionTile(
               title: l10n.languageLabel(AppLanguage.system),
               icon: Icons.settings_suggest_rounded,

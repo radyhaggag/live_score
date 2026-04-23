@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:live_score/src/core/domain/entities/country.dart';
 
-import '../../utils/app_constants.dart';
+import '../../constants/app_constants.dart';
 
+/// Represents the league entity/model.
 class League extends Equatable {
   final int id;
   final String name;

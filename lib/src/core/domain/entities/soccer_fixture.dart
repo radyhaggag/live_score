@@ -4,6 +4,7 @@ import 'package:live_score/src/core/domain/entities/league.dart';
 import '../../../features/fixture/domain/enums.dart';
 import 'teams.dart';
 
+/// Represents the soccer fixture entity/model.
 class SoccerFixture extends Equatable {
   final int id;
   final Teams teams;
@@ -46,16 +47,11 @@ class SoccerFixture extends Equatable {
     seasonNum,
   ];
 
-  SoccerFixtureStatus get status {
-    if (gameTimeAndStatusDisplayType == 1 &&
-        (gameTime != null && gameTime! < 90)) {
-      return SoccerFixtureStatus.live;
-    }
-    return switch (gameTimeAndStatusDisplayType) {
-      1 => SoccerFixtureStatus.ended,
-      0 => SoccerFixtureStatus.scheduled,
-      2 => SoccerFixtureStatus.live,
-      _ => SoccerFixtureStatus.scheduled,
-    };
-  }
+  SoccerFixtureStatus get status => switch (gameTimeAndStatusDisplayType) {
+    0 => SoccerFixtureStatus.scheduled,
+    1 when gameTime != null && gameTime! < 90 => SoccerFixtureStatus.live,
+    1 => SoccerFixtureStatus.ended,
+    2 => SoccerFixtureStatus.live,
+    _ => SoccerFixtureStatus.scheduled,
+  };
 }

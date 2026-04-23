@@ -28,9 +28,10 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name =
+        (locale.countryCode?.isEmpty ?? false)
+            ? locale.languageCode
+            : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -404,6 +405,51 @@ class S {
     return Intl.message(
       'Unexpected error.',
       name: 'errorUnexpected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to load fixtures right now.`
+  String get errorLoadFixtures {
+    return Intl.message(
+      'Unable to load fixtures right now.',
+      name: 'errorLoadFixtures',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No standings available yet.`
+  String get noStandingsYet {
+    return Intl.message(
+      'No standings available yet.',
+      name: 'noStandingsYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to load standings right now.`
+  String get errorLoadStandings {
+    return Intl.message(
+      'Unable to load standings right now.',
+      name: 'errorLoadStandings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get all {
+    return Intl.message('All', name: 'all', desc: '', args: []);
+  }
+
+  /// `All leagues`
+  String get allLeaguesTooltip {
+    return Intl.message(
+      'All leagues',
+      name: 'allLeaguesTooltip',
       desc: '',
       args: [],
     );

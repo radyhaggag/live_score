@@ -1,8 +1,9 @@
-import 'package:live_score/src/core/utils/app_constants.dart';
+import 'package:live_score/src/core/constants/app_constants.dart';
 
 import '../../features/fixture/data/models/lineups_model.dart';
 import '../domain/entities/teams.dart';
 
+/// Represents the teams model entity/model.
 class TeamsModel extends Teams {
   const TeamsModel({required super.home, required super.away});
 
@@ -12,6 +13,7 @@ class TeamsModel extends Teams {
   );
 }
 
+/// Represents the team model entity/model.
 class TeamModel extends Team {
   const TeamModel({
     required super.id,

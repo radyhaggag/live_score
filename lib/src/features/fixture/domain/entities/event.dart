@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:live_score/src/core/domain/entities/teams.dart';
 import 'package:live_score/src/features/fixture/domain/entities/player.dart';
 
+/// Represents the event entity/model.
 class Event extends Equatable {
   final int teamId;
   final int playerId;
@@ -76,6 +77,7 @@ class Event extends Equatable {
   }
 }
 
+/// Represents the event type entity/model.
 class EventType {
   final EventId id;
   final String name;

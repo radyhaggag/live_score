@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+/// Represents the lineup entity/model.
 class Lineup extends Equatable {
   final String status;
   final String formation;
@@ -15,6 +16,7 @@ class Lineup extends Equatable {
   List<Object?> get props => [status, formation, members];
 }
 
+/// Represents the lineup member entity/model.
 class LineupMember extends Equatable {
   final int id;
   final int status;
@@ -36,6 +38,7 @@ class LineupMember extends Equatable {
   List<Object?> get props => [id, status, statusText, yardInfo];
 }
 
+/// Represents the yard info entity/model.
 class YardInfo extends Equatable {
   final int line;
   final int fieldPosition;

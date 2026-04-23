@@ -5,11 +5,13 @@ import '../../../../core/error/error_handler.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../repositories/soccer_repository.dart';
 
+/// Represents the current round fixtures use case entity/model.
 class CurrentRoundFixturesUseCase implements UseCase<List<SoccerFixture>, int> {
   final SoccerRepository soccerRepository;
 
   CurrentRoundFixturesUseCase({required this.soccerRepository});
 
+  /// Call.
   @override
   Future<Either<Failure, List<SoccerFixture>>> call(int competitionId) async {
     return await soccerRepository.getCurrentRoundFixtures(

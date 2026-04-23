@@ -8,6 +8,7 @@ import '../core/l10n/app_l10n.dart';
 import '../core/domain/entities/soccer_fixture.dart';
 import '../features/fixture/presentation/screens/fixture_screen.dart';
 import '../features/settings/presentation/screens/settings_screen.dart';
+import '../features/soccer/presentation/cubit/leagues_cubit.dart';
 import '../features/soccer/presentation/cubit/soccer_cubit.dart';
 import '../features/soccer/presentation/screens/fixtures_screen.dart';
 import '../features/soccer/presentation/screens/soccer_layout.dart';
@@ -28,8 +29,13 @@ class AppRouter {
     routes: [
       ShellRoute(
         builder: (_, _, child) {
-          return BlocProvider(
-            create: (context) => sl<SoccerCubit>()..getLeagues(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => sl<LeaguesCubit>()..getLeagues(),
+              ),
+              BlocProvider(create: (context) => sl<SoccerCubit>()),
+            ],
             child: SoccerLayout(child: child),
           );
         },

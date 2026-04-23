@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/domain/entities/teams.dart';
 
+/// Represents the team rank entity/model.
 class TeamRank extends Equatable {
   final int rank;
   final Team team;
@@ -22,9 +23,18 @@ class TeamRank extends Equatable {
   });
 
   @override
-  List<Object?> get props => [rank, team, points, goalsDiff, form, stats, groupNum];
+  List<Object?> get props => [
+    rank,
+    team,
+    points,
+    goalsDiff,
+    form,
+    stats,
+    groupNum,
+  ];
 }
 
+/// Represents the team rank stats entity/model.
 class TeamRankStats extends Equatable {
   final int played;
   final int win;

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
 import '../cubit/settings_cubit.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class SettingsVersionFooter extends StatelessWidget {
   const SettingsVersionFooter({super.key});
@@ -26,7 +27,7 @@ class SettingsVersionFooter extends StatelessWidget {
                   letterSpacing: 1.2,
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 appVersion.isEmpty ? '--' : appVersion,
                 style: theme.textTheme.titleSmall?.copyWith(

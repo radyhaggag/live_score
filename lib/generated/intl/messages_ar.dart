@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "aggregateScore": m0,
+    "all": MessageLookupByLibrary.simpleMessage("الكل"),
+    "allLeaguesTooltip": MessageLookupByLibrary.simpleMessage("كل الدوريات"),
     "appName": MessageLookupByLibrary.simpleMessage("لايف سكور"),
     "appVersion": MessageLookupByLibrary.simpleMessage("إصدار التطبيق"),
     "appearance": MessageLookupByLibrary.simpleMessage("المظهر"),
@@ -46,6 +48,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "errorInternalServerError": MessageLookupByLibrary.simpleMessage(
       "حدث خطأ ما. حاول مرة أخرى لاحقاً.",
+    ),
+    "errorLoadFixtures": MessageLookupByLibrary.simpleMessage(
+      "تعذر تحميل المباريات حالياً.",
+    ),
+    "errorLoadStandings": MessageLookupByLibrary.simpleMessage(
+      "تعذر تحميل الترتيب حالياً.",
     ),
     "errorNetworkConnectError": MessageLookupByLibrary.simpleMessage(
       "انتهت مهلة الاتصال. تأكد من الإنترنت ثم حاول مرة أخرى.",
@@ -81,6 +89,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا يوجد تشكيل متاح حالياً",
     ),
     "noRouteFound": MessageLookupByLibrary.simpleMessage("الصفحة غير موجودة"),
+    "noStandingsYet": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد ترتيب متاح حالياً.",
+    ),
     "noStats": MessageLookupByLibrary.simpleMessage(
       "لا توجد إحصائيات متاحة حالياً",
     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Represents the font size entity/model.
 class FontSize {
   static const double paragraph = 12.0;
   static const double details = 14.0;
@@ -9,6 +10,7 @@ class FontSize {
   static const double mainTitle = 32.0;
 }
 
+/// Represents the font weights entity/model.
 class FontWeights {
   static const FontWeight light = FontWeight.w300;
   static const FontWeight regular = FontWeight.w400;

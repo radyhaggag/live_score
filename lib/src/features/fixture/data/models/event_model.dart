@@ -1,4 +1,4 @@
-import '../../../../core/utils/parsers.dart';
+import '../../../../core/constants/parsers.dart';
 import '../../domain/entities/event.dart';
 
 class EventModel extends Event {

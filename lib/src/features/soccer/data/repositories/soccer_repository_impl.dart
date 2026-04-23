@@ -1,12 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/domain/mappers/mappers.dart';
 import '../../../../core/error/error_handler.dart';
-import '../../../../core/error/response_status.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../../core/utils/safe_api_call.dart';
 import '../../domain/entities/standings.dart';
 import '../../domain/repositories/soccer_repository.dart';
 import '../../domain/use_cases/standings_usecase.dart';
@@ -24,69 +23,37 @@ class SoccerRepositoryImpl implements SoccerRepository {
   @override
   Future<Either<Failure, List<SoccerFixture>>> getCurrentRoundFixtures({
     required int competitionId,
-  }) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final result = await soccerDataSource.getCurrentRoundFixtures(
-          competitionId: competitionId,
-        );
-        final List<SoccerFixture> fixtures =
-            result.map((fixture) => fixture.toDomain()).toList();
-        return Right(fixtures);
-      } on DioException catch (error) {
-        return Left(ErrorHandler.handle(error).failure);
-      }
-    } else {
-      return Left(DataSource.networkConnectError.getFailure());
-    }
+  }) {
+    return safeApiCall(networkInfo, () async {
+      final result = await soccerDataSource.getCurrentRoundFixtures(
+        competitionId: competitionId,
+      );
+      return result.map((fixture) => fixture.toDomain()).toList();
+    });
   }
 
   @override
-  Future<Either<Failure, List<League>>> getLeagues() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final result = await soccerDataSource.getLeagues();
-        final List<League> leagues =
-            result.map((league) => league.toDomain()).toList();
-        return Right(leagues);
-      } on DioException catch (error) {
-        return Left(ErrorHandler.handle(error).failure);
-      }
-    } else {
-      return Left(DataSource.networkConnectError.getFailure());
-    }
+  Future<Either<Failure, List<League>>> getLeagues() {
+    return safeApiCall(networkInfo, () async {
+      final result = await soccerDataSource.getLeagues();
+      return result.map((league) => league.toDomain()).toList();
+    });
   }
 
   @override
-  Future<Either<Failure, List<SoccerFixture>>> getTodayFixtures() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final result = await soccerDataSource.getTodayFixtures();
-        final List<SoccerFixture> fixtures =
-            result.map((fixture) => fixture.toDomain()).toList();
-        return Right(fixtures);
-      } on DioException catch (error) {
-        return Left(ErrorHandler.handle(error).failure);
-      }
-    } else {
-      return Left(DataSource.networkConnectError.getFailure());
-    }
+  Future<Either<Failure, List<SoccerFixture>>> getTodayFixtures() {
+    return safeApiCall(networkInfo, () async {
+      final result = await soccerDataSource.getTodayFixtures();
+      return result.map((fixture) => fixture.toDomain()).toList();
+    });
   }
 
   @override
   Future<Either<Failure, Standings>> getStandings({
     required StandingsParams params,
-  }) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final result = await soccerDataSource.getStandings(params: params);
-        final Standings standings = result;
-        return Right(standings);
-      } on DioException catch (error) {
-        return Left(ErrorHandler.handle(error).failure);
-      }
-    } else {
-      return Left(DataSource.networkConnectError.getFailure());
-    }
+  }) {
+    return safeApiCall(networkInfo, () async {
+      return await soccerDataSource.getStandings(params: params);
+    });
   }
 }

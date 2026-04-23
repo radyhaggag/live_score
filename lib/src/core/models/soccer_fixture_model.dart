@@ -4,6 +4,7 @@ import 'package:live_score/src/core/domain/mappers/mappers.dart';
 import '../domain/entities/soccer_fixture.dart';
 import 'teams_model.dart';
 
+/// Represents the soccer fixture model entity/model.
 class SoccerFixtureModel extends SoccerFixture {
   const SoccerFixtureModel({
     required super.id,

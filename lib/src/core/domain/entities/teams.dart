@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../features/fixture/domain/entities/lineups.dart';
 
+/// Represents the teams entity/model.
 class Teams extends Equatable {
   final Team home;
   final Team away;
@@ -12,6 +13,7 @@ class Teams extends Equatable {
   List<Object?> get props => [home, away];
 }
 
+/// Represents the team entity/model.
 class Team extends Equatable {
   final int id;
   final String name;

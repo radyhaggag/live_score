@@ -67,5 +67,10 @@
   "errorInternalServerError": "Something went wrong. Please try again later.",
   "errorNetworkConnectError": "Connection timed out. Please check your internet and try again.",
   "errorWebProxyRequired": "Flutter Web needs a server-side proxy for this API.",
-  "errorUnexpected": "Unexpected error."
+  "errorUnexpected": "Unexpected error.",
+  "errorLoadFixtures": "Unable to load fixtures right now.",
+  "noStandingsYet": "No standings available yet.",
+  "errorLoadStandings": "Unable to load standings right now.",
+  "all": "All",
+  "allLeaguesTooltip": "All leagues"
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
 import '../cubit/settings_cubit.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class ThemeModeBottomSheet extends StatelessWidget {
   const ThemeModeBottomSheet({super.key, required this.currentThemeMode});
@@ -40,7 +41,7 @@ class ThemeModeBottomSheet extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.l),
             ThemeModeOptionTile(
               title: l10n.themeModeLabel(ThemeMode.system),
               icon: Icons.brightness_auto_rounded,

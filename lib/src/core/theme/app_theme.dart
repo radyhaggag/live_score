@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../core/utils/app_colors.dart';
-import '../core/utils/app_fonts.dart';
+import '../theme/app_fonts.dart';
+import 'app_colors.dart';
+import 'app_colors_extension.dart';
 
 ThemeData getLightAppTheme() => _buildTheme(
   colorScheme: const ColorScheme.light(
@@ -23,13 +24,13 @@ ThemeData getDarkAppTheme() => _buildTheme(
   colorScheme: const ColorScheme.dark(
     primary: AppColors.blue,
     secondary: AppColors.lightRed,
-    surface: Color(0xFF181C24),
-    onSurface: Color(0xFFF3F5F8),
+    surface: AppColors.darkSurface,
+    onSurface: AppColors.darkOnSurface,
   ),
-  scaffoldBackgroundColor: const Color(0xFF10141B),
-  surfaceColor: const Color(0xFF181C24),
-  onSurfaceColor: const Color(0xFFF3F5F8),
-  statusBarColor: const Color(0xFF10141B),
+  scaffoldBackgroundColor: AppColors.darkScaffold,
+  surfaceColor: AppColors.darkSurface,
+  onSurfaceColor: AppColors.darkOnSurface,
+  statusBarColor: AppColors.darkScaffold,
   statusBarIconBrightness: Brightness.light,
   statusBarBrightness: Brightness.dark,
 );
@@ -144,5 +145,25 @@ ThemeData _buildTheme({
       textColor: onSurfaceColor,
     ),
     textTheme: baseTextTheme,
+    extensions: const <ThemeExtension<dynamic>>[
+      AppColorsExtension(
+        green: AppColors.green,
+        red: AppColors.red,
+        purple: AppColors.purple,
+        yellow: AppColors.yellow,
+        darkGrey: AppColors.darkGrey,
+        lightGrey: AppColors.lightGrey,
+        grey: AppColors.grey,
+        deepOrange: AppColors.deepOrange,
+        blueGrey: AppColors.blueGrey,
+        blue: AppColors.blue,
+        white: AppColors.white,
+        lightRed: AppColors.lightRed,
+        darkBlue: AppColors.darkBlue,
+        darkGreen: AppColors.darkGreen,
+        blueGradient: AppColors.blueGradient,
+        redGradient: AppColors.redGradient,
+      ),
+    ],
   );
 }

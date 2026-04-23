@@ -1,4 +1,4 @@
-import 'package:live_score/src/core/utils/parsers.dart';
+import 'package:live_score/src/core/constants/parsers.dart';
 
 import '../../domain/entities/lineups.dart';
 

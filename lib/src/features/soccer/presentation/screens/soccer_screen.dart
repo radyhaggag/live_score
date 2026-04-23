@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_score/src/features/soccer/presentation/widgets/error_dialog.dart';
-import 'package:live_score/src/features/soccer/presentation/widgets/no_fixtures_today.dart';
+import 'package:live_score/src/core/widgets/app_error_dialog.dart';
+import '../../../../core/widgets/app_empty.dart';
+import '../../../../core/widgets/settings_language_listener.dart';
 
-import '../../../../core/widgets/center_indicator.dart';
-import '../../../settings/presentation/cubit/settings_cubit.dart';
+import '../../../../core/widgets/app_loading.dart';
+import '../cubit/leagues_cubit.dart';
+import '../cubit/leagues_state.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
 import '../widgets/leagues_header.dart';
 import '../widgets/view_fixtures.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class SoccerScreen extends StatefulWidget {
   const SoccerScreen({super.key});
@@ -44,19 +47,17 @@ class _SoccerScreenState extends State<SoccerScreen> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<SettingsCubit, SettingsState>(
-          listenWhen:
-              (previous, current) => previous.language != current.language,
-          listener: (context, state) {
+        SettingsLanguageListener(
+          onLanguageChanged: (context, state) {
             final cubit = context.read<SoccerCubit>();
-            cubit.getLeagues(forceRefresh: true);
+            context.read<LeaguesCubit>().getLeagues(forceRefresh: true);
             cubit.getTodayFixtures();
           },
         ),
-        BlocListener<SoccerCubit, SoccerStates>(
+        BlocListener<SoccerCubit, SoccerState>(
           listener: (context, state) {
             if (state is SoccerCurrentRoundFixturesLoadFailure) {
-              ErrorDialog.show(
+              AppErrorDialog.show(
                 context: context,
                 message: state.message,
                 onRetry: () {
@@ -69,20 +70,10 @@ class _SoccerScreenState extends State<SoccerScreen> {
               );
             }
             if (state is SoccerTodayFixturesLoadFailure) {
-              ErrorDialog.show(
+              AppErrorDialog.show(
                 context: context,
                 message: state.message,
                 onRetry: context.read<SoccerCubit>().getTodayFixtures,
-              );
-            }
-            if (state is SoccerLeaguesLoadFailure) {
-              ErrorDialog.show(
-                context: context,
-                message: state.message,
-                onRetry:
-                    () => context.read<SoccerCubit>().getLeagues(
-                      forceRefresh: true,
-                    ),
               );
             }
             if (state is SoccerTodayFixturesLoaded) {
@@ -91,6 +82,20 @@ class _SoccerScreenState extends State<SoccerScreen> {
               } else {
                 _timer?.cancel();
               }
+            }
+          },
+        ),
+        BlocListener<LeaguesCubit, LeaguesState>(
+          listener: (context, state) {
+            if (state is LeaguesLoadFailure) {
+              AppErrorDialog.show(
+                context: context,
+                message: state.message,
+                onRetry:
+                    () => context.read<LeaguesCubit>().getLeagues(
+                      forceRefresh: true,
+                    ),
+              );
             }
           },
         ),
@@ -104,10 +109,10 @@ class _SoccerScreenState extends State<SoccerScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 20,
             children: [
-              SizedBox(height: 4),
+              SizedBox(height: AppSpacing.xs),
               _LeaguesHeader(),
               _ViewFixtures(),
-              SizedBox(height: 4),
+              SizedBox(height: AppSpacing.xs),
             ],
           ),
         ),
@@ -122,16 +127,16 @@ class _LeaguesHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final leagues = context.select(
-      (SoccerCubit cubit) => cubit.availableLeagues,
+      (LeaguesCubit cubit) => cubit.availableLeagues,
     );
     final isLoading = context.select(
-      (SoccerCubit cubit) => cubit.state is SoccerLeaguesLoading,
+      (LeaguesCubit cubit) => cubit.state is LeaguesLoading,
     );
 
     if (isLoading && leagues.isEmpty) {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 32),
-        child: CenterIndicator(),
+        child: AppLoadingIndicator(),
       );
     }
 
@@ -148,21 +153,19 @@ class _ViewFixtures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SoccerCubit, SoccerStates>(
+    return BlocBuilder<SoccerCubit, SoccerState>(
       buildWhen: (context, state) {
         if (state is SoccerTodayFixturesLoading && !state.isTimerLoading) {
           return true;
         }
-        return [
-          SoccerTodayFixturesLoaded,
-          SoccerTodayFixturesLoadFailure,
-        ].contains(state.runtimeType);
+        return state is SoccerTodayFixturesLoaded ||
+            state is SoccerTodayFixturesLoadFailure;
       },
       builder: (context, state) {
         if (state is SoccerTodayFixturesLoading) {
           return const Padding(
             padding: EdgeInsets.symmetric(vertical: 32),
-            child: CenterIndicator(),
+            child: AppLoadingIndicator(),
           );
         } else if (state is SoccerTodayFixturesLoaded) {
           if (state.todayFixtures.isNotEmpty) {
@@ -171,13 +174,15 @@ class _ViewFixtures extends StatelessWidget {
               spacing: 12,
               children: [
                 if (state.liveFixtures.isNotEmpty)
-                  ViewLiveFixtures(fixtures: state.liveFixtures),
+                  RepaintBoundary(
+                    child: ViewLiveFixtures(fixtures: state.liveFixtures),
+                  ),
                 if (state.todayFixtures.isNotEmpty)
                   ViewDayFixtures(fixtures: state.todayFixtures),
               ],
             );
           } else {
-            return const NoFixturesView();
+            return const AppEmptyWidget();
           }
         } else {
           return const SizedBox.shrink();

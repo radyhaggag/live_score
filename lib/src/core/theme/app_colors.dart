@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
+/// Represents the app colors entity/model.
 class AppColors {
   AppColors._();
 
   static const Color white = Color(0xFFFAFAFA);
   static const Color black = Color(0xFF131313);
+
+  // Dark Mode Variants
+  static const Color darkSurface = Color(0xFF181C24);
+  static const Color darkOnSurface = Color(0xFFF3F5F8);
+  static const Color darkScaffold = Color(0xFF10141B);
 
   static const Color red = Color(0xFFCA0825);
   static const Color lightRed = Color(0xFFF44336);
@@ -25,7 +30,7 @@ class AppColors {
   static const Color grey = Color(0xFF9E9E9E);
   static const Color darkGrey = Color(0xFF424242);
 
-  // ➕ Added for standings clarity
+  // Added for standings clarity
   static const Color purple = Color(0xFF7E57C2); // 3rd place highlight
   static const Color lightGrey = Color(0xFFE0E0E0); // mid-table background
 

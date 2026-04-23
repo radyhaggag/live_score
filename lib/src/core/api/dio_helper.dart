@@ -5,12 +5,13 @@ import 'package:flutter/foundation.dart';
 
 import '../../container_injector.dart';
 import '../../features/settings/presentation/cubit/settings_cubit.dart';
-import '../utils/app_constants.dart';
+import '../constants/app_constants.dart';
 
 const String _contentType = 'Content-Type';
 const String _applicationJson = 'application/json';
 const int _timeOut = 20000;
 
+/// Represents the dio helper entity/model.
 class DioHelper {
   final Dio dio;
 

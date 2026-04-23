@@ -1,5 +1,6 @@
 import 'package:live_score/src/core/domain/entities/country.dart';
 
+/// Represents the country model entity/model.
 class CountryModel extends Country {
   const CountryModel({required super.id, required super.name});
 

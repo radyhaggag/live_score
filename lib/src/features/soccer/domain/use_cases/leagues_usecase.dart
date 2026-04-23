@@ -5,11 +5,13 @@ import '../../../../core/error/error_handler.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../repositories/soccer_repository.dart';
 
+/// Represents the leagues use case entity/model.
 class LeaguesUseCase implements UseCase<List<League>, NoParams> {
   final SoccerRepository soccerRepository;
 
   LeaguesUseCase({required this.soccerRepository});
 
+  /// Call.
   @override
   Future<Either<Failure, List<League>>> call(NoParams params) async {
     return await soccerRepository.getLeagues();
