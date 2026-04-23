@@ -5,6 +5,7 @@ import 'package:live_score/src/core/utils/app_colors.dart';
 import 'package:live_score/src/core/utils/app_constants.dart';
 import 'package:live_score/src/features/soccer/domain/use_cases/standings_usecase.dart';
 
+import '../../../settings/presentation/cubit/settings_cubit.dart';
 import '../../domain/entities/team_rank.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
@@ -36,114 +37,118 @@ class _StandingsScreenState extends State<StandingsScreen> {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<SoccerCubit>();
+    final leagueId = widget.competitionId ?? AppConstants.defaultLeagueId;
 
-    return ListView(
-      physics: const BouncingScrollPhysics(),
-      children: [
-        RectLeaguesHeader(
-          leagues: cubit.availableLeagues,
-          getFixtures: false,
-          initialSelectedLeagueId:
-              widget.competitionId ?? AppConstants.defaultLeagueId,
-        ),
-        SizedBox(height: 5.height),
-        BlocBuilder<SoccerCubit, SoccerStates>(
-          buildWhen: (previous, current) {
-            return [
-              SoccerStandingsLoaded,
-              SoccerStandingsLoading,
-              SoccerStandingsLoadFailure,
-            ].contains(current.runtimeType);
-          },
-          builder: (context, state) {
-            if (state is SoccerStandingsLoading) {
-              return const Center(
-                child: LinearProgressIndicator(color: AppColors.deepOrange),
-              );
-            } else if (state is SoccerStandingsLoaded) {
-              // Check if groups exist
-              final groups = state.standings.groups ?? [];
-              if (groups.isEmpty) {
-                // Fallback to single table for standard leagues
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const StandingsHeaders(),
-                      SizedBox(height: 10.height),
-                      ...List.generate(state.standings.standings.length, (
-                        teamIndex,
-                      ) {
-                        final TeamRank team = state.standings.standings[teamIndex];
-                        return StandingsItem(
-                          teamRank: team,
-                          totalTeams: state.standings.standings.length,
-                        );
-                      }),
-                      SizedBox(height: 10.height),
-                    ],
-                  ),
+    return BlocListener<SettingsCubit, SettingsState>(
+      listenWhen: (previous, current) =>
+          previous.language != current.language,
+      listener: (context, state) {
+        final soccerCubit = context.read<SoccerCubit>();
+        soccerCubit.getLeagues(forceRefresh: true);
+        soccerCubit.getStandings(StandingsParams(leagueId: leagueId));
+      },
+      child: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          RectLeaguesHeader(
+            leagues: cubit.availableLeagues,
+            getFixtures: false,
+            initialSelectedLeagueId: leagueId,
+          ),
+          SizedBox(height: 5.height),
+          BlocBuilder<SoccerCubit, SoccerStates>(
+            buildWhen: (previous, current) {
+              return [
+                SoccerStandingsLoaded,
+                SoccerStandingsLoading,
+                SoccerStandingsLoadFailure,
+              ].contains(current.runtimeType);
+            },
+            builder: (context, state) {
+              if (state is SoccerStandingsLoading) {
+                return const Center(
+                  child: LinearProgressIndicator(color: AppColors.deepOrange),
                 );
-              }
-
-              // Group-based standings
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(groups.length, (groupIndex) {
-                  final group = groups[groupIndex];
-                  // Filter teams by group number
-                  final groupTeams =
-                      state.standings.standings
-                          .where((team) => team.groupNum == group.number)
-                          .toList();
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 15.width,
-                          vertical: 10.height,
-                        ),
-                        child: Text(
-                          group.name,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(color: AppColors.lightRed),
-                        ),
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const StandingsHeaders(),
-                            SizedBox(height: 10.height),
-                            ...List.generate(groupTeams.length, (teamIndex) {
-                              final TeamRank team = groupTeams[teamIndex];
-                              return StandingsItem(
-                                teamRank: team,
-                                totalTeams: groupTeams.length,
-                                isGrouped: true,
-                              );
-                            }),
-                            SizedBox(
-                              height: 20.height,
-                            ), // Extra spacing between groups
-                          ],
-                        ),
-                      ),
-                    ],
+              } else if (state is SoccerStandingsLoaded) {
+                final groups = state.standings.groups ?? [];
+                if (groups.isEmpty) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const StandingsHeaders(),
+                        SizedBox(height: 10.height),
+                        ...List.generate(state.standings.standings.length, (
+                          teamIndex,
+                        ) {
+                          final TeamRank team =
+                              state.standings.standings[teamIndex];
+                          return StandingsItem(
+                            teamRank: team,
+                            totalTeams: state.standings.standings.length,
+                          );
+                        }),
+                        SizedBox(height: 10.height),
+                      ],
+                    ),
                   );
-                }),
-              );
-            } else {
-              return const SizedBox();
-            }
-          },
-        ),
-      ],
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(groups.length, (groupIndex) {
+                    final group = groups[groupIndex];
+                    final groupTeams =
+                        state.standings.standings
+                            .where((team) => team.groupNum == group.number)
+                            .toList();
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15.width,
+                            vertical: 10.height,
+                          ),
+                          child: Text(
+                            group.name,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(color: AppColors.lightRed),
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const StandingsHeaders(),
+                              SizedBox(height: 10.height),
+                              ...List.generate(groupTeams.length, (teamIndex) {
+                                final TeamRank team = groupTeams[teamIndex];
+                                return StandingsItem(
+                                  teamRank: team,
+                                  totalTeams: groupTeams.length,
+                                  isGrouped: true,
+                                );
+                              }),
+                              SizedBox(height: 20.height),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }

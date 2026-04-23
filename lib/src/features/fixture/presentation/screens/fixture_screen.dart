@@ -11,6 +11,7 @@ import 'package:live_score/src/core/extensions/strings.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../settings/presentation/cubit/settings_cubit.dart';
 import '../cubit/fixture_cubit.dart';
 import '../widgets/events_view.dart';
 import '../widgets/fixture_details.dart';
@@ -66,67 +67,75 @@ class _FixtureScreenState extends State<FixtureScreen> {
     final homeTeam = widget.soccerFixture.teams.home;
     final awayTeam = widget.soccerFixture.teams.away;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: FittedBox(
-          child: Text(
-            '${homeTeam.name.teamName} ${context.l10n.versus} ${awayTeam.name.teamName}',
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+    return BlocListener<SettingsCubit, SettingsState>(
+      listenWhen: (previous, current) =>
+          previous.language != current.language,
+      listener: (context, state) {
+        context.read<FixtureCubit>().getFixtureDetails(widget.soccerFixture.id);
+        context.read<FixtureCubit>().getStatistics(widget.soccerFixture.id);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new, size: 15.radius),
+            onPressed: () => context.pop(),
+          ),
+          title: FittedBox(
+            child: Text(
+              '${homeTeam.name.teamName} ${context.l10n.versus} ${awayTeam.name.teamName}',
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
           ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, size: 15.radius),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: BlocBuilder<FixtureCubit, FixtureState>(
-        builder: (context, state) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              await cubit.getFixtureDetails(widget.soccerFixture.id);
-              await cubit.getStatistics(widget.soccerFixture.id);
-            },
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              children: [
-                FixtureDetails(
-                  soccerFixture:
-                      cubit.fixtureDetails?.fixture ?? widget.soccerFixture,
-                ),
-                buildTabBar(cubit),
-                if ((state is FixtureStatisticsLoading &&
-                        !state.isTimerLoading) ||
-                    (state is FixtureDetailsLoading && !state.isTimerLoading))
-                  LinearProgressIndicator(color: _fixtureColor)
-                else if (selectedTabIndex == 0)
-                  StatisticsView(
-                    key: ValueKey(
-                      cubit.statistics?.hashCode ?? 'no_statistics',
-                    ),
-                    statistics: cubit.statistics,
-                  )
-                else if (selectedTabIndex == 1)
-                  LineupsView(
-                    key: ValueKey(
-                      cubit.fixtureDetails?.hashCode ?? 'no_details',
-                    ),
-                    fixtureDetails: cubit.fixtureDetails,
-                    color: _fixtureColor,
-                  )
-                else if (selectedTabIndex == 2)
-                  EventsView(
-                    key: ValueKey(
-                      cubit.fixtureDetails?.hashCode ?? 'no_details',
-                    ),
-                    fixtureDetails: cubit.fixtureDetails,
-                    color: _fixtureColor,
+        body: BlocBuilder<FixtureCubit, FixtureState>(
+          builder: (context, state) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await cubit.getFixtureDetails(widget.soccerFixture.id);
+                await cubit.getStatistics(widget.soccerFixture.id);
+              },
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  FixtureDetails(
+                    soccerFixture:
+                        cubit.fixtureDetails?.fixture ?? widget.soccerFixture,
                   ),
-              ],
-            ),
-          );
-        },
+                  buildTabBar(cubit),
+                  if ((state is FixtureStatisticsLoading &&
+                          !state.isTimerLoading) ||
+                      (state is FixtureDetailsLoading && !state.isTimerLoading))
+                    LinearProgressIndicator(color: _fixtureColor)
+                  else if (selectedTabIndex == 0)
+                    StatisticsView(
+                      key: ValueKey(
+                        cubit.statistics?.hashCode ?? 'no_statistics',
+                      ),
+                      statistics: cubit.statistics,
+                    )
+                  else if (selectedTabIndex == 1)
+                    LineupsView(
+                      key: ValueKey(
+                        cubit.fixtureDetails?.hashCode ?? 'no_details',
+                      ),
+                      fixtureDetails: cubit.fixtureDetails,
+                      color: _fixtureColor,
+                    )
+                  else if (selectedTabIndex == 2)
+                    EventsView(
+                      key: ValueKey(
+                        cubit.fixtureDetails?.hashCode ?? 'no_details',
+                      ),
+                      fixtureDetails: cubit.fixtureDetails,
+                      color: _fixtureColor,
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

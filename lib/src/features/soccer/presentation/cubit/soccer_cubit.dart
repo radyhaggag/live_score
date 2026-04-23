@@ -27,13 +27,20 @@ class SoccerCubit extends Cubit<SoccerStates> {
   bool _isLoadingCurrentRoundFixtures = false;
   bool _isLoadingStandings = false;
 
-  Future<List<League>> getLeagues() async {
-    if (availableLeagues.isNotEmpty || _isLoadingLeagues) {
+  Future<List<League>> getLeagues({bool forceRefresh = false}) async {
+    if (_isLoadingLeagues) {
+      return availableLeagues;
+    }
+
+    if (!forceRefresh && availableLeagues.isNotEmpty) {
       return availableLeagues;
     }
 
     _isLoadingLeagues = true;
     try {
+      if (forceRefresh) {
+        availableLeagues = [];
+      }
       emit(SoccerLeaguesLoading());
       final leagues = await leaguesUseCase(NoParams());
       leagues.fold((left) => emit(SoccerLeaguesLoadFailure(left.message)), (

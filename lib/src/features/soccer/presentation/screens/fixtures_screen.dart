@@ -4,6 +4,7 @@ import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/utils/app_colors.dart';
 
+import '../../../settings/presentation/cubit/settings_cubit.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
 import '../widgets/grouped_fixtures_list.dart';
@@ -40,59 +41,74 @@ class _FixturesScreenState extends State<FixturesScreen> {
   @override
   Widget build(BuildContext context) {
     final SoccerCubit cubit = context.read<SoccerCubit>();
-    return BlocBuilder<SoccerCubit, SoccerStates>(
-      buildWhen: (previous, current) {
-        return [
-          SoccerTodayFixturesLoading,
-          SoccerTodayFixturesLoadFailure,
-          SoccerTodayFixturesLoaded,
-          SoccerCurrentRoundFixturesLoading,
-          SoccerCurrentRoundFixturesLoadFailure,
-          SoccerCurrentRoundFixturesLoaded,
-        ].contains(current.runtimeType);
+    return BlocListener<SettingsCubit, SettingsState>(
+      listenWhen: (previous, current) =>
+          previous.language != current.language,
+      listener: (context, state) {
+        final soccerCubit = context.read<SoccerCubit>();
+        soccerCubit.getLeagues(forceRefresh: true);
+        if (initialSelectedLeagueId == null) {
+          soccerCubit.getTodayFixtures();
+        } else {
+          soccerCubit.getCurrentRoundFixtures(
+            competitionId: initialSelectedLeagueId!,
+          );
+        }
       },
-      builder: (context, state) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            RectLeaguesHeader(
-              leagues: cubit.availableLeagues,
-              getFixtures: true,
-              initialSelectedLeagueId: initialSelectedLeagueId,
-              prefixIcon: _getPrefixIcon(),
-              onPrefixIconTap: context.read<SoccerCubit>().getTodayFixtures,
-            ),
-            SizedBox(height: 10.height),
-            if (state is SoccerCurrentRoundFixturesLoading ||
-                state is SoccerTodayFixturesLoading)
-              const LinearProgressIndicator()
-            else if (state is SoccerCurrentRoundFixturesLoaded &&
-                state.fixtures.isNotEmpty)
-              Expanded(
-                child: GroupedFixturesList(
-                  fixtures: state.fixtures,
-                  showLeagueLogo: true,
-                ),
-              )
-            else if (state is SoccerTodayFixturesLoaded &&
-                state.todayFixtures.isNotEmpty)
-              Expanded(
-                child: GroupedFixturesList(
-                  fixtures: state.todayFixtures,
-                  showLeagueLogo: true,
-                ),
-              )
-            else if (state is SoccerCurrentRoundFixturesLoaded &&
-                state.fixtures.isEmpty)
-              const NoFixturesView()
-            else if (state is SoccerTodayFixturesLoaded &&
-                state.todayFixtures.isEmpty)
-              const NoFixturesView()
-            else
-              const SizedBox.shrink(),
-          ],
-        );
-      },
+      child: BlocBuilder<SoccerCubit, SoccerStates>(
+        buildWhen: (previous, current) {
+          return [
+            SoccerTodayFixturesLoading,
+            SoccerTodayFixturesLoadFailure,
+            SoccerTodayFixturesLoaded,
+            SoccerCurrentRoundFixturesLoading,
+            SoccerCurrentRoundFixturesLoadFailure,
+            SoccerCurrentRoundFixturesLoaded,
+          ].contains(current.runtimeType);
+        },
+        builder: (context, state) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              RectLeaguesHeader(
+                leagues: cubit.availableLeagues,
+                getFixtures: true,
+                initialSelectedLeagueId: initialSelectedLeagueId,
+                prefixIcon: _getPrefixIcon(),
+                onPrefixIconTap: context.read<SoccerCubit>().getTodayFixtures,
+              ),
+              SizedBox(height: 10.height),
+              if (state is SoccerCurrentRoundFixturesLoading ||
+                  state is SoccerTodayFixturesLoading)
+                const LinearProgressIndicator()
+              else if (state is SoccerCurrentRoundFixturesLoaded &&
+                  state.fixtures.isNotEmpty)
+                Expanded(
+                  child: GroupedFixturesList(
+                    fixtures: state.fixtures,
+                    showLeagueLogo: true,
+                  ),
+                )
+              else if (state is SoccerTodayFixturesLoaded &&
+                  state.todayFixtures.isNotEmpty)
+                Expanded(
+                  child: GroupedFixturesList(
+                    fixtures: state.todayFixtures,
+                    showLeagueLogo: true,
+                  ),
+                )
+              else if (state is SoccerCurrentRoundFixturesLoaded &&
+                  state.fixtures.isEmpty)
+                const NoFixturesView()
+              else if (state is SoccerTodayFixturesLoaded &&
+                  state.todayFixtures.isEmpty)
+                const NoFixturesView()
+              else
+                const SizedBox.shrink(),
+            ],
+          );
+        },
+      ),
     );
   }
 

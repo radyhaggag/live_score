@@ -7,6 +7,7 @@ import 'package:live_score/src/features/soccer/presentation/widgets/error_dialog
 import 'package:live_score/src/features/soccer/presentation/widgets/no_fixtures_today.dart';
 
 import '../../../../core/widgets/center_indicator.dart';
+import '../../../settings/presentation/cubit/settings_cubit.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
 import '../widgets/leagues_header.dart';
@@ -43,44 +44,57 @@ class _SoccerScreenState extends State<SoccerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SoccerCubit, SoccerStates>(
-      listener: (context, state) {
-        if (state is SoccerCurrentRoundFixturesLoadFailure) {
-          ErrorDialog.show(
-            context: context,
-            message: state.message,
-            onRetry: () {
-              if (state.competitionId != null) {
-                context.read<SoccerCubit>().getCurrentRoundFixtures(
-                  competitionId: state.competitionId!,
-                );
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SettingsCubit, SettingsState>(
+          listenWhen: (previous, current) =>
+              previous.language != current.language,
+          listener: (context, state) {
+            final cubit = context.read<SoccerCubit>();
+            cubit.getLeagues(forceRefresh: true);
+            cubit.getTodayFixtures();
+          },
+        ),
+        BlocListener<SoccerCubit, SoccerStates>(
+          listener: (context, state) {
+            if (state is SoccerCurrentRoundFixturesLoadFailure) {
+              ErrorDialog.show(
+                context: context,
+                message: state.message,
+                onRetry: () {
+                  if (state.competitionId != null) {
+                    context.read<SoccerCubit>().getCurrentRoundFixtures(
+                      competitionId: state.competitionId!,
+                    );
+                  }
+                },
+              );
+            }
+            if (state is SoccerTodayFixturesLoadFailure) {
+              ErrorDialog.show(
+                context: context,
+                message: state.message,
+                onRetry: context.read<SoccerCubit>().getTodayFixtures,
+              );
+            }
+            if (state is SoccerLeaguesLoadFailure) {
+              ErrorDialog.show(
+                context: context,
+                message: state.message,
+                onRetry: () =>
+                    context.read<SoccerCubit>().getLeagues(forceRefresh: true),
+              );
+            }
+            if (state is SoccerTodayFixturesLoaded) {
+              if (state.liveFixtures.isNotEmpty) {
+                _activateTimerFetching();
+              } else {
+                _timer?.cancel();
               }
-            },
-          );
-        }
-        if (state is SoccerTodayFixturesLoadFailure) {
-          ErrorDialog.show(
-            context: context,
-            message: state.message,
-            onRetry: context.read<SoccerCubit>().getTodayFixtures,
-          );
-        }
-        if (state is SoccerLeaguesLoadFailure) {
-          ErrorDialog.show(
-            context: context,
-            message: state.message,
-            onRetry: context.read<SoccerCubit>().getLeagues,
-          );
-        }
-        if (state is SoccerTodayFixturesLoaded) {
-          // Activate timer only when there are live fixtures
-          if (state.liveFixtures.isNotEmpty) {
-            _activateTimerFetching();
-          } else {
-            _timer?.cancel();
-          }
-        }
-      },
+            }
+          },
+        ),
+      ],
       child: RefreshIndicator(
         onRefresh: context.read<SoccerCubit>().getTodayFixtures,
         child: SingleChildScrollView(
