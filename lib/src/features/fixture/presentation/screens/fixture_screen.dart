@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
-import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
+import 'package:live_score/src/core/layout/adaptive_layout.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/l10n/app_l10n.dart';
@@ -29,7 +29,6 @@ class FixtureScreen extends StatefulWidget {
 
 class _FixtureScreenState extends State<FixtureScreen> {
   int selectedTabIndex = 1;
-
   Timer? _timer;
 
   @override
@@ -68,8 +67,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
     final awayTeam = widget.soccerFixture.teams.away;
 
     return BlocListener<SettingsCubit, SettingsState>(
-      listenWhen: (previous, current) =>
-          previous.language != current.language,
+      listenWhen: (previous, current) => previous.language != current.language,
       listener: (context, state) {
         context.read<FixtureCubit>().getFixtureDetails(widget.soccerFixture.id);
         context.read<FixtureCubit>().getStatistics(widget.soccerFixture.id);
@@ -77,7 +75,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new, size: 15.radius),
+            icon: const Icon(Icons.arrow_back_ios_new, size: 16),
             onPressed: () => context.pop(),
           ),
           title: FittedBox(
@@ -91,6 +89,12 @@ class _FixtureScreenState extends State<FixtureScreen> {
         ),
         body: BlocBuilder<FixtureCubit, FixtureState>(
           builder: (context, state) {
+            final fixture =
+                cubit.fixtureDetails?.fixture ?? widget.soccerFixture;
+            final isLoading =
+                (state is FixtureStatisticsLoading && !state.isTimerLoading) ||
+                (state is FixtureDetailsLoading && !state.isTimerLoading);
+
             return RefreshIndicator(
               onRefresh: () async {
                 await cubit.getFixtureDetails(widget.soccerFixture.id);
@@ -98,39 +102,35 @@ class _FixtureScreenState extends State<FixtureScreen> {
               },
               child: ListView(
                 physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.zero,
                 children: [
-                  FixtureDetails(
-                    soccerFixture:
-                        cubit.fixtureDetails?.fixture ?? widget.soccerFixture,
-                  ),
-                  buildTabBar(cubit),
-                  if ((state is FixtureStatisticsLoading &&
-                          !state.isTimerLoading) ||
-                      (state is FixtureDetailsLoading && !state.isTimerLoading))
-                    LinearProgressIndicator(color: _fixtureColor)
-                  else if (selectedTabIndex == 0)
-                    StatisticsView(
-                      key: ValueKey(
-                        cubit.statistics?.hashCode ?? 'no_statistics',
-                      ),
-                      statistics: cubit.statistics,
-                    )
-                  else if (selectedTabIndex == 1)
-                    LineupsView(
-                      key: ValueKey(
-                        cubit.fixtureDetails?.hashCode ?? 'no_details',
-                      ),
-                      fixtureDetails: cubit.fixtureDetails,
-                      color: _fixtureColor,
-                    )
-                  else if (selectedTabIndex == 2)
-                    EventsView(
-                      key: ValueKey(
-                        cubit.fixtureDetails?.hashCode ?? 'no_details',
-                      ),
-                      fixtureDetails: cubit.fixtureDetails,
-                      color: _fixtureColor,
+                  FixtureDetails(soccerFixture: fixture),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      context.pageHorizontalPadding,
+                      12,
+                      context.pageHorizontalPadding,
+                      20,
                     ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildTabBar(context),
+                        if (isLoading)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: LinearProgressIndicator(
+                              color: _fixtureColor,
+                            ),
+                          )
+                        else
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: _buildSelectedContent(cubit),
+                          ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             );
@@ -140,47 +140,84 @@ class _FixtureScreenState extends State<FixtureScreen> {
     );
   }
 
-  Widget buildTabBar(FixtureCubit cubit) => Row(
-    children: [
-      Expanded(
-        child: tabBarButton(
-          label: context.l10n.statistics,
-          onPressed: () => setState(() => selectedTabIndex = 0),
-          isSelected: selectedTabIndex == 0,
-        ),
-      ),
-      Expanded(
-        child: tabBarButton(
-          label: context.l10n.lineups,
-          onPressed: () => setState(() => selectedTabIndex = 1),
-          isSelected: selectedTabIndex == 1,
-        ),
-      ),
-      Expanded(
-        child: tabBarButton(
-          label: context.l10n.events,
-          onPressed: () => setState(() => selectedTabIndex = 2),
-          isSelected: selectedTabIndex == 2,
-        ),
-      ),
-    ],
-  );
+  Widget _buildSelectedContent(FixtureCubit cubit) {
+    if (selectedTabIndex == 0) {
+      return StatisticsView(
+        key: ValueKey(cubit.statistics?.hashCode ?? 'no_statistics'),
+        statistics: cubit.statistics,
+      );
+    }
 
-  Widget tabBarButton({
+    if (selectedTabIndex == 1) {
+      return LineupsView(
+        key: ValueKey(cubit.fixtureDetails?.hashCode ?? 'no_details'),
+        fixtureDetails: cubit.fixtureDetails,
+        color: _fixtureColor,
+      );
+    }
+
+    return EventsView(
+      key: ValueKey(cubit.fixtureDetails?.hashCode ?? 'no_details'),
+      fixtureDetails: cubit.fixtureDetails,
+      color: _fixtureColor,
+    );
+  }
+
+  Widget buildTabBar(BuildContext context) {
+    final buttons = [
+      _tabBarButton(
+        context: context,
+        label: context.l10n.statistics,
+        onPressed: () => setState(() => selectedTabIndex = 0),
+        isSelected: selectedTabIndex == 0,
+      ),
+      _tabBarButton(
+        context: context,
+        label: context.l10n.lineups,
+        onPressed: () => setState(() => selectedTabIndex = 1),
+        isSelected: selectedTabIndex == 1,
+      ),
+      _tabBarButton(
+        context: context,
+        label: context.l10n.events,
+        onPressed: () => setState(() => selectedTabIndex = 2),
+        isSelected: selectedTabIndex == 2,
+      ),
+    ];
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: _fixtureColor.withOpacitySafe(0.12),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Row(children: buttons),
+      ),
+    );
+  }
+
+  Widget _tabBarButton({
+    required BuildContext context,
     required String label,
     required void Function()? onPressed,
     bool isSelected = false,
-  }) => MaterialButton(
-    onPressed: onPressed,
-    color: isSelected ? _fixtureColor : _fixtureColor.withOpacitySafe(0.85),
-    elevation: 0.0,
-    padding: const EdgeInsets.all(16),
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-    child: Text(
-      label,
-      style: Theme.of(
-        context,
-      ).textTheme.titleSmall?.copyWith(color: AppColors.white),
+  }) => Expanded(
+    child: Padding(
+      padding: const EdgeInsets.all(4),
+      child: FilledButton(
+        onPressed: onPressed,
+        style: FilledButton.styleFrom(
+          backgroundColor:
+              isSelected ? _fixtureColor : _fixtureColor.withOpacitySafe(0.72),
+          foregroundColor: AppColors.white,
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        child: Text(label, textAlign: TextAlign.center),
+      ),
     ),
   );
 

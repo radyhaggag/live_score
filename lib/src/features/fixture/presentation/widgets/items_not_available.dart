@@ -20,6 +20,7 @@ class ItemsNotAvailable extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: context.height / 2,
+      width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

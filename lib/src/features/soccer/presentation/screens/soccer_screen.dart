@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/features/soccer/presentation/widgets/error_dialog.dart';
 import 'package:live_score/src/features/soccer/presentation/widgets/no_fixtures_today.dart';
 
@@ -26,7 +25,6 @@ class _SoccerScreenState extends State<SoccerScreen> {
   @override
   void initState() {
     super.initState();
-    // Initial fetch of leagues and today's fixtures
     context.read<SoccerCubit>().getTodayFixtures();
   }
 
@@ -47,8 +45,8 @@ class _SoccerScreenState extends State<SoccerScreen> {
     return MultiBlocListener(
       listeners: [
         BlocListener<SettingsCubit, SettingsState>(
-          listenWhen: (previous, current) =>
-              previous.language != current.language,
+          listenWhen:
+              (previous, current) => previous.language != current.language,
           listener: (context, state) {
             final cubit = context.read<SoccerCubit>();
             cubit.getLeagues(forceRefresh: true);
@@ -81,8 +79,10 @@ class _SoccerScreenState extends State<SoccerScreen> {
               ErrorDialog.show(
                 context: context,
                 message: state.message,
-                onRetry: () =>
-                    context.read<SoccerCubit>().getLeagues(forceRefresh: true),
+                onRetry:
+                    () => context.read<SoccerCubit>().getLeagues(
+                      forceRefresh: true,
+                    ),
               );
             }
             if (state is SoccerTodayFixturesLoaded) {
@@ -97,21 +97,18 @@ class _SoccerScreenState extends State<SoccerScreen> {
       ],
       child: RefreshIndicator(
         onRefresh: context.read<SoccerCubit>().getTodayFixtures,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+        child: const SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           padding: EdgeInsets.zero,
-          child: Padding(
-            padding: const EdgeInsetsDirectional.only(start: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                const _LeaguesHeader(),
-                const SizedBox(height: 20),
-                const _ViewFixtures(),
-                SizedBox(height: 20.height),
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 20,
+            children: [
+              SizedBox(height: 4),
+              _LeaguesHeader(),
+              _ViewFixtures(),
+              SizedBox(height: 4),
+            ],
           ),
         ),
       ),
@@ -124,28 +121,25 @@ class _LeaguesHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SoccerCubit, SoccerStates>(
-      buildWhen: (context, state) {
-        return [
-          SoccerLeaguesLoading,
-          SoccerLeaguesLoaded,
-          SoccerLeaguesLoadFailure,
-        ].contains(state.runtimeType);
-      },
-      builder: (context, state) {
-        final SoccerCubit cubit = context.read<SoccerCubit>();
-        if (state is SoccerLeaguesLoading) {
-          return const Padding(
-            padding: EdgeInsets.all(50.0),
-            child: CenterIndicator(),
-          );
-        } else if (cubit.availableLeagues.isNotEmpty) {
-          return CircleLeaguesHeader(leagues: cubit.availableLeagues);
-        } else {
-          return const SizedBox.shrink();
-        }
-      },
+    final leagues = context.select(
+      (SoccerCubit cubit) => cubit.availableLeagues,
     );
+    final isLoading = context.select(
+      (SoccerCubit cubit) => cubit.state is SoccerLeaguesLoading,
+    );
+
+    if (isLoading && leagues.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 32),
+        child: CenterIndicator(),
+      );
+    }
+
+    if (leagues.isNotEmpty) {
+      return CircleLeaguesHeader(leagues: leagues);
+    }
+
+    return const SizedBox.shrink();
   }
 }
 
@@ -166,15 +160,18 @@ class _ViewFixtures extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is SoccerTodayFixturesLoading) {
-          return const CenterIndicator();
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 32),
+            child: CenterIndicator(),
+          );
         } else if (state is SoccerTodayFixturesLoaded) {
           if (state.todayFixtures.isNotEmpty) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 12,
               children: [
-                if (state.liveFixtures.isNotEmpty) ...[
+                if (state.liveFixtures.isNotEmpty)
                   ViewLiveFixtures(fixtures: state.liveFixtures),
-                  SizedBox(height: 10.height),
-                ],
                 if (state.todayFixtures.isNotEmpty)
                   ViewDayFixtures(fixtures: state.todayFixtures),
               ],

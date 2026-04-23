@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:live_score/src/core/extensions/nums.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/utils/app_colors.dart';
@@ -9,7 +8,10 @@ import '../../domain/entities/fixture_details.dart';
 class TeamsLineups extends StatelessWidget {
   final FixtureDetails fixtureDetails;
 
-  const TeamsLineups({super.key, required this.fixtureDetails});
+  const TeamsLineups({
+    super.key,
+    required this.fixtureDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,6 @@ class TeamsLineups extends StatelessWidget {
             .where((player) => player.lineupMember.isStarting)
             .toList();
 
-    // Sort players by field position
     if (homePlayers.any((player) => player.lineupMember.yardInfo != null)) {
       homePlayers.sort((a, b) {
         return a.lineupMember.yardInfo!.fieldPosition.compareTo(
@@ -43,6 +44,26 @@ class TeamsLineups extends StatelessWidget {
       });
     }
 
+    return _buildVertical(
+      context,
+      homePlan: homePlan ?? const [],
+      awayPlan: awayPlan ?? const [],
+      homePlayers: homePlayers,
+      awayPlayers: awayPlayers,
+      homeTeam: homeTeam,
+      awayTeam: awayTeam,
+    );
+  }
+
+  Widget _buildVertical(
+    BuildContext context, {
+    required List<String> homePlan,
+    required List<String> awayPlan,
+    required List<FixturePlayerInfo> homePlayers,
+    required List<FixturePlayerInfo> awayPlayers,
+    required dynamic homeTeam,
+    required dynamic awayTeam,
+  }) {
     int lineOneIndex = 0;
     int lineTwoIndex = -1;
 
@@ -51,10 +72,9 @@ class TeamsLineups extends StatelessWidget {
         Expanded(
           child: _buildTeamColumn(
             context,
-            plan: homePlan!,
+            plan: homePlan,
             players: homePlayers,
             primaryColor: HexColor('#${homeTeam.awayColor ?? homeTeam.color}'),
-            // Dynamically compute number color based on primaryColor
             numberColor: getContrastingNumberColor(
               HexColor('#${homeTeam.awayColor ?? homeTeam.color}'),
             ),
@@ -65,10 +85,9 @@ class TeamsLineups extends StatelessWidget {
         Expanded(
           child: _buildTeamColumn(
             context,
-            plan: awayPlan!,
+            plan: awayPlan,
             players: awayPlayers,
             primaryColor: HexColor('#${awayTeam.color ?? awayTeam.awayColor}'),
-            // Dynamically compute number color based on primaryColor
             numberColor: getContrastingNumberColor(
               HexColor('#${awayTeam.color ?? awayTeam.awayColor}'),
             ),
@@ -80,21 +99,16 @@ class TeamsLineups extends StatelessWidget {
     );
   }
 
-  // Helper function to calculate luminance and pick a contrasting color
   Color getContrastingNumberColor(Color backgroundColor) {
-    // Calculate luminance using the relative luminance formula
-    // Luminance = 0.299R + 0.587G + 0.114B
     final double luminance =
         (0.299 * backgroundColor.r * 255.0 +
             0.587 * backgroundColor.g * 255.0 +
             0.114 * backgroundColor.b * 255.0) /
         255;
 
-    // If luminance is high (light color), use black; otherwise, use white
     return luminance > 0.5 ? Colors.black : Colors.white;
   }
 
-  /// Build column for a team (top or bottom)
   Widget _buildTeamColumn(
     BuildContext context, {
     required List<String> plan,
@@ -103,90 +117,103 @@ class TeamsLineups extends StatelessWidget {
     required Color numberColor,
     required bool isReversed,
     required int Function() lineIndex,
+    bool compactSpacing = false,
   }) {
+    final columnChildren = <Widget>[];
+
+    if (players.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    if (!isReversed) {
+      columnChildren.add(
+        _buildPlayer(context, players.first, primaryColor, numberColor),
+      );
+    }
+
+    for (final line in plan) {
+      final numPlayers = int.tryParse(line) ?? 0;
+      if (numPlayers <= 0) continue;
+      List<FixturePlayerInfo> linePlayers = List.generate(numPlayers, (_) {
+        final idx = lineIndex();
+        return players[idx.clamp(0, players.length - 1)];
+      });
+      linePlayers = linePlayers.reversed.toList();
+
+      columnChildren.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children:
+              linePlayers.map((player) {
+                return Expanded(
+                  child: _buildPlayer(
+                    context,
+                    player,
+                    primaryColor,
+                    numberColor,
+                    compact: compactSpacing,
+                  ),
+                );
+              }).toList(),
+        ),
+      );
+    }
+
+    if (isReversed) {
+      columnChildren.add(
+        _buildPlayer(context, players.last, primaryColor, numberColor),
+      );
+    }
+
     return Column(
       mainAxisAlignment:
-          isReversed
-              ? MainAxisAlignment.spaceAround
-              : MainAxisAlignment.spaceEvenly,
-      children: [
-        if (!isReversed)
-          _buildPlayer(context, players.first, primaryColor, numberColor),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const BouncingScrollPhysics(),
-          itemCount: plan.length,
-          separatorBuilder: (_, _) => SizedBox(height: 10.height),
-          itemBuilder: (_, index) {
-            /// Generates a list of [FixturePlayerInfo] objects representing the players in a specific line,
-            /// based on the number of players specified by `plan.elementAt(index)`.
-            ///
-            /// - Parses the number of players for the current line from the `plan`.
-            /// - Uses [List.generate] to create a list of players by repeatedly calling `lineIndex()`
-            ///   to get the appropriate index from the `players` list.
-            /// - Reverses the order of the players in the line.
-            final numPlayers = int.parse(plan.elementAt(index));
-            List<FixturePlayerInfo> linePlayers = List.generate(numPlayers, (
-              _,
-            ) {
-              final idx = lineIndex();
-              return players[idx];
-            });
-            linePlayers = linePlayers.reversed.toList();
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children:
-                  linePlayers.map((player) {
-                    return Expanded(
-                      child: _buildPlayer(
-                        context,
-                        player,
-                        primaryColor,
-                        numberColor,
-                      ),
-                    );
-                  }).toList(),
-            );
-          },
-        ),
-        if (isReversed)
-          _buildPlayer(context, players.last, primaryColor, numberColor),
-      ],
+          compactSpacing
+              ? MainAxisAlignment.spaceEvenly
+              : (isReversed
+                  ? MainAxisAlignment.spaceAround
+                  : MainAxisAlignment.spaceEvenly),
+      children: columnChildren,
     );
   }
 
-  /// Common player widget
   Widget _buildPlayer(
     BuildContext context,
     FixturePlayerInfo player,
     Color primaryColor,
-    Color numberColor,
-  ) {
+    Color numberColor, {
+    bool compact = false,
+  }) {
+    final outerRadius = compact ? 12.0 : 13.0;
+    final innerRadius = compact ? 10.0 : 11.0;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           CircleAvatar(
-            radius: 13.radius,
+            radius: outerRadius,
             backgroundColor: AppColors.white,
             child: CircleAvatar(
-              radius: 11.radius,
+              radius: innerRadius,
               backgroundColor: primaryColor,
               child: Text(
                 player.player.number.toString(),
                 style: Theme.of(
                   context,
-                ).textTheme.labelMedium?.copyWith(color: numberColor),
+                ).textTheme.labelSmall?.copyWith(color: numberColor),
               ),
             ),
           ),
-          SizedBox(height: 2.height),
+          const SizedBox(height: 4),
           Text(
             player.player.name.playerName,
             textAlign: TextAlign.center,
+            maxLines: compact ? 1 : 2,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(
               context,
-            ).textTheme.labelMedium?.copyWith(color: AppColors.white),
+            ).textTheme.labelSmall?.copyWith(color: AppColors.white),
           ),
         ],
       ),

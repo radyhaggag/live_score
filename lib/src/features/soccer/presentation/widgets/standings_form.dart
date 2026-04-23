@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
-import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/utils/app_colors.dart';
 
 class StandingsForm extends StatelessWidget {
   final List<int> form;
+  final double itemSize;
+  final double spacing;
 
-  const StandingsForm({super.key, required this.form});
+  const StandingsForm({
+    super.key,
+    required this.form,
+    this.itemSize = 15,
+    this.spacing = 5,
+  });
 
   Color getBackground(int number) {
     Color color = AppColors.grey.withOpacitySafe(0.2);
@@ -32,28 +38,26 @@ class StandingsForm extends StatelessWidget {
       formNumbers.add(-1);
     }
 
-    return SizedBox(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(
-          5,
-          (index) => getCircle(
-            child: getIcon(formNumbers[index]),
-            color: getBackground(formNumbers[index]),
-          ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      spacing: spacing,
+      children: List.generate(
+        5,
+        (index) => getCircle(
+          child: getIcon(formNumbers[index]),
+          color: getBackground(formNumbers[index]),
         ),
       ),
     );
   }
 
   Icon smallIcon(IconData icon) {
-    return Icon(icon, color: AppColors.white, size: 12.5.radius);
+    return Icon(icon, color: AppColors.white, size: itemSize * 0.8);
   }
 
   Widget getCircle({Widget? child, required Color color}) => Container(
-    width: 15.radius,
-    height: 15.radius,
-    margin: const EdgeInsets.only(right: 5),
+    width: itemSize,
+    height: itemSize,
     decoration: BoxDecoration(
       color: color,
       borderRadius: BorderRadius.circular(50),

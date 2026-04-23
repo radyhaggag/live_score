@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import '../../container_injector.dart';
 import '../../features/settings/presentation/cubit/settings_cubit.dart';
 import '../utils/app_constants.dart';
-import 'interceptors.dart';
 
 const String _contentType = 'Content-Type';
 const String _applicationJson = 'application/json';
@@ -25,8 +24,8 @@ class DioHelper {
       headers: headers,
     );
     if (kDebugMode) {
-      dio.interceptors.add(sl<LogInterceptor>());
-      dio.interceptors.add(sl<AppInterceptors>());
+      // dio.interceptors.add(sl<LogInterceptor>());
+      // dio.interceptors.add(sl<AppInterceptors>());
     }
   }
 

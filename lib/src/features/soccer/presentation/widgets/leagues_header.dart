@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:live_score/src/core/extensions/nums.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -20,30 +19,22 @@ class CircleLeaguesHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 65.height,
+      height: 68,
       padding: const EdgeInsetsDirectional.only(start: 15),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: AppColors.blueGradient,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50.radius),
-          topLeft: Radius.circular(50.radius),
+          bottomLeft: Radius.circular(40),
+          topLeft: Radius.circular(40),
         ),
       ),
       child: ListView.separated(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          if (index == leagues.length - 1) {
-            return Row(
-              children: [
+        itemBuilder:
+            (context, index) =>
                 buildLeagueAvatar(league: leagues[index], context: context),
-                SizedBox(width: 10.width),
-              ],
-            );
-          }
-          return buildLeagueAvatar(league: leagues[index], context: context);
-        },
-        separatorBuilder: (_, _) => SizedBox(width: 10.width),
+        separatorBuilder: (_, _) => const SizedBox(width: 10),
         itemCount: leagues.length,
       ),
     );
@@ -52,23 +43,26 @@ class CircleLeaguesHeader extends StatelessWidget {
   Widget buildLeagueAvatar({
     required League league,
     required BuildContext context,
-  }) => InkWell(
-    onTap: () {
-      buildBottomSheet(
-        context: context,
-        league: league,
-        cubit: context.read<SoccerCubit>(),
-      );
-    },
-    child: CircleAvatar(
-      backgroundColor:
-          league.color != null ? HexColor(league.color!) : AppColors.blueGrey,
-      radius: 25.radius,
-      child: CustomImage(
-        fit: BoxFit.contain,
-        width: 25.radius,
-        height: 25.radius,
-        imageUrl: league.logo,
+  }) => MouseRegion(
+    cursor: SystemMouseCursors.click,
+    child: InkWell(
+      onTap: () {
+        buildBottomSheet(
+          context: context,
+          league: league,
+          cubit: context.read<SoccerCubit>(),
+        );
+      },
+      child: CircleAvatar(
+        backgroundColor:
+            league.color != null ? HexColor(league.color!) : AppColors.blueGrey,
+        radius: 25,
+        child: CustomImage(
+          fit: BoxFit.contain,
+          width: 25,
+          height: 25,
+          imageUrl: league.logo,
+        ),
       ),
     ),
   );
@@ -98,9 +92,17 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
   int? selectedLeagueId;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     selectedLeagueId = widget.initialSelectedLeagueId;
+  }
+
+  @override
+  void didUpdateWidget(covariant RectLeaguesHeader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedLeagueId != oldWidget.initialSelectedLeagueId) {
+      selectedLeagueId = widget.initialSelectedLeagueId;
+    }
   }
 
   @override
@@ -108,55 +110,59 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: SizedBox(
-        height: 40.height,
+        height: 48,
         child: Row(
+          spacing: 8,
           children: [
-            if (widget.prefixIcon != null) ...[
-              GestureDetector(
-                onTap: () {
-                  if (widget.onPrefixIconTap != null) {
-                    widget.onPrefixIconTap!();
-                  }
-                  setState(() => selectedLeagueId = null);
-                },
-                child: widget.prefixIcon,
+            if (widget.prefixIcon != null)
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    if (widget.onPrefixIconTap != null) {
+                      widget.onPrefixIconTap!();
+                    }
+                    setState(() => selectedLeagueId = null);
+                  },
+                  child: widget.prefixIcon,
+                ),
               ),
-              SizedBox(width: 5.width),
-            ],
             Expanded(
               child: ListView.separated(
                 physics: const AlwaysScrollableScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.leagues.length,
-                separatorBuilder: (_, _) {
-                  return SizedBox(width: 5.width);
-                },
+                separatorBuilder: (_, _) => const SizedBox(width: 6),
                 itemBuilder: (context, index) {
                   final viewCountryName = widget.leagues.any((l) {
                     return l.name == widget.leagues[index].name &&
                         l.id != widget.leagues[index].id;
                   });
-                  return InkWell(
-                    onTap: () {
-                      if (widget.getFixtures == false) {
-                        final params = StandingsParams(
-                          leagueId: widget.leagues[index].id,
+                  return MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: InkWell(
+                      onTap: () {
+                        if (widget.getFixtures == false) {
+                          final params = StandingsParams(
+                            leagueId: widget.leagues[index].id,
+                          );
+                          context.read<SoccerCubit>().getStandings(params);
+                        } else {
+                          context.read<SoccerCubit>().getCurrentRoundFixtures(
+                            competitionId: widget.leagues[index].id,
+                          );
+                        }
+                        setState(
+                          () => selectedLeagueId = widget.leagues[index].id,
                         );
-                        context.read<SoccerCubit>().getStandings(params);
-                      } else {
-                        context.read<SoccerCubit>().getCurrentRoundFixtures(
-                          competitionId: widget.leagues[index].id,
-                        );
-                      }
-                      setState(
-                        () => selectedLeagueId = widget.leagues[index].id,
-                      );
-                    },
-                    child: LeagueCard(
-                      league: widget.leagues[index],
-                      isSelected: selectedLeagueId == widget.leagues[index].id,
-                      viewCountryName: viewCountryName,
+                      },
+                      child: LeagueCard(
+                        league: widget.leagues[index],
+                        isSelected:
+                            selectedLeagueId == widget.leagues[index].id,
+                        viewCountryName: viewCountryName,
+                      ),
                     ),
                   );
                 },

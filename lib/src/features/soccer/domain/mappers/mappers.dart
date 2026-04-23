@@ -27,5 +27,5 @@ extension TeamRankStatsExtension on TeamRankStatsModel {
 }
 
 extension StandingsExtension on StandingsModel {
-  Standings toDomain() => Standings(standings: standings);
+  Standings toDomain() => Standings(standings: standings, groups: groups);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
-import 'package:live_score/src/core/extensions/nums.dart';
+import 'package:live_score/src/core/layout/adaptive_layout.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/utils/app_assets.dart';
@@ -15,6 +15,7 @@ class SoccerLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final String location = GoRouterState.of(context).uri.toString();
     final l10n = context.l10n;
+    final useRailNavigation = !context.isCompactWindow;
 
     final int currentIndex = switch (location) {
       Routes.soccer => 0,
@@ -34,25 +35,58 @@ class SoccerLayout extends StatelessWidget {
           ),
         ],
       ),
-      body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) => _onTap(context, index),
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: l10n.home,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.sports_soccer_rounded),
-            label: l10n.fixtures,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.bar_chart),
-            label: l10n.standings,
-          ),
+      body: Row(
+        children: [
+          if (useRailNavigation) ...[
+            NavigationRail(
+              selectedIndex: currentIndex,
+              onDestinationSelected: (index) => _onTap(context, index),
+              extended: context.isExpandedWindow,
+              labelType:
+                  context.isExpandedWindow
+                      ? NavigationRailLabelType.none
+                      : NavigationRailLabelType.all,
+              destinations: [
+                NavigationRailDestination(
+                  icon: const Icon(Icons.home),
+                  label: Text(l10n.home),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.sports_soccer_rounded),
+                  label: Text(l10n.fixtures),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.bar_chart),
+                  label: Text(l10n.standings),
+                ),
+              ],
+            ),
+            const VerticalDivider(width: 1),
+          ],
+          Expanded(child: AdaptiveContentArea(child: child)),
         ],
       ),
+      bottomNavigationBar:
+          useRailNavigation
+              ? null
+              : BottomNavigationBar(
+                currentIndex: currentIndex,
+                onTap: (index) => _onTap(context, index),
+                items: [
+                  BottomNavigationBarItem(
+                    icon: const Icon(Icons.home),
+                    label: l10n.home,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(Icons.sports_soccer_rounded),
+                    label: l10n.fixtures,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(Icons.bar_chart),
+                    label: l10n.standings,
+                  ),
+                ],
+              ),
     );
   }
 
@@ -75,8 +109,9 @@ class _SoccerHead extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
+      spacing: 12,
       children: [
-        Image.asset(AppAssets.appLogo, height: 40.height),
+        Image.asset(AppAssets.appLogo, height: 32),
         Text(
           context.l10n.bottomNavigationTitle(currentIndex),
           style: Theme.of(context).textTheme.titleMedium,
