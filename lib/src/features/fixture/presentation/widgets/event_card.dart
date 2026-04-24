@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:live_score/src/core/extensions/responsive_size.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../../core/constants/app_decorations.dart';
@@ -45,7 +44,10 @@ class EventCard extends StatelessWidget {
                   color: context.colorsExt.dividerSubtle,
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: context.colorsExt.blue,
                     borderRadius: BorderRadius.circular(8),
@@ -57,17 +59,20 @@ class EventCard extends StatelessWidget {
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
-                          ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
                     ),
                   ),
                 ),
                 Expanded(
                   child: Container(
                     width: 2,
-                    color: isLast ? Colors.transparent : context.colorsExt.dividerSubtle,
+                    color:
+                        isLast
+                            ? Colors.transparent
+                            : context.colorsExt.dividerSubtle,
                   ),
                 ),
               ],
@@ -106,7 +111,8 @@ class EventCard extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 4),
-                        if (event.type.id.isGoalOrOwnGoal || event.type.id.isMissedPenalty)
+                        if (event.type.id.isGoalOrOwnGoal ||
+                            event.type.id.isMissedPenalty)
                           _EventGoal(event: event),
                         if (event.type.id.isCard)
                           _EventCardIndicator(event: event),
@@ -210,7 +216,7 @@ class _EventGoal extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          event.player?.name.playerName ?? '',
+          event.player?.displayName ?? '',
           style: Theme.of(
             context,
           ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
@@ -220,7 +226,7 @@ class _EventGoal extends StatelessWidget {
             event.extraPlayerDetails!.isNotEmpty) ...[
           const SizedBox(height: 2),
           Text(
-            '${context.l10n.assist}: ${event.extraPlayerDetails!.map((e) => e.name.playerName).join(', ')}',
+            '${context.l10n.assist}: ${event.extraPlayerDetails!.map((e) => e.displayName).join(', ')}',
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(color: context.colorsExt.textMuted),
@@ -264,7 +270,7 @@ class _EventCardIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      event.player?.name.playerName ?? '',
+      event.player?.displayName ?? '',
       style: Theme.of(
         context,
       ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
@@ -316,7 +322,7 @@ class _EventSubstitute extends StatelessWidget {
             const SizedBox(width: 4),
             Flexible(
               child: Text(
-                event.player?.name.playerName ?? '',
+                event.player?.displayName ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: context.colorsExt.red,
                   fontWeight: FontWeight.bold,

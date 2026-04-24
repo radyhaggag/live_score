@@ -3,7 +3,6 @@ import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/domain/entities/teams.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/responsive_size.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/features/fixture/domain/entities/fixture_details.dart';
 
 import '../../../../core/extensions/context_ext.dart';
@@ -142,12 +141,12 @@ class _LineupsViewState extends State<LineupsView> {
             onTap: () => setState(() => _selectedIndex = 0),
           ),
           _SelectorItem(
-            label: homeTeam.shortName ?? homeTeam.name.teamName,
+            label: homeTeam.displayName,
             isSelected: _selectedIndex == 1,
             onTap: () => setState(() => _selectedIndex = 1),
           ),
           _SelectorItem(
-            label: awayTeam.shortName ?? awayTeam.name.teamName,
+            label: awayTeam.displayName,
             isSelected: _selectedIndex == 2,
             onTap: () => setState(() => _selectedIndex = 2),
           ),
@@ -227,15 +226,19 @@ class _LineupTeamHeader extends StatelessWidget {
         vertical: AppSpacing.s,
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           CustomImage(width: 24, height: 24, imageUrl: team.logo),
           const SizedBox(width: AppSpacing.s),
           Expanded(
-            child: Text(
-              team.name.teamName,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: textColor,
-                fontWeight: FontWeight.bold,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                team.name,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: textColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

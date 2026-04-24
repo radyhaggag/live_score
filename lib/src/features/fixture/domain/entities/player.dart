@@ -20,6 +20,8 @@ class Player extends Equatable {
     this.imageId,
   });
 
+  String get displayName => shortName.isNotEmpty ? shortName : name;
+
   @override
   List<Object?> get props => [id, name, number, shortName, nameForURL, imageId];
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
-import 'package:live_score/src/core/extensions/context_ext.dart';
 import 'package:live_score/src/core/extensions/color.dart';
+import 'package:live_score/src/core/extensions/context_ext.dart';
 
 import '../../../../core/widgets/custom_image.dart';
 import '../../domain/entities/team_rank.dart';
@@ -82,7 +81,7 @@ class StandingsItem extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            teamRank.team.name.teamName,
+                            teamRank.team.displayName,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: isLeader ? FontWeight.bold : null,
                             ),

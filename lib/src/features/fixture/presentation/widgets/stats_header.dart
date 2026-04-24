@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 import '../../../../core/domain/entities/teams.dart';
-import '../../../../core/widgets/custom_image.dart';
 import '../../../../core/extensions/context_ext.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
+import '../../../../core/widgets/custom_image.dart';
 
 /// Header showing both team logos and names for the statistics view.
 class StatsHeader extends StatelessWidget {
@@ -26,7 +25,7 @@ class StatsHeader extends StatelessWidget {
               Expanded(
                 child: _StatsTeamInfo(
                   logo: teams.home.logo,
-                  name: teams.home.name,
+                  name: teams.home.displayName,
                   alignment: MainAxisAlignment.start,
                 ),
               ),
@@ -34,7 +33,7 @@ class StatsHeader extends StatelessWidget {
               Expanded(
                 child: _StatsTeamInfo(
                   logo: teams.away.logo,
-                  name: teams.away.name,
+                  name: teams.away.displayName,
                   alignment: MainAxisAlignment.end,
                   isReverse: true,
                 ),
@@ -72,31 +71,32 @@ class _StatsTeamInfo extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.colorsExt.surfaceElevated,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: context.colorsExt.dividerSubtle,
-          width: 1,
-        ),
+        border: Border.all(color: context.colorsExt.dividerSubtle, width: 1),
       ),
       child: CustomImage(width: 24, height: 24, imageUrl: logo),
     );
 
     final nameWidget = Flexible(
-      child: Text(
-        name.teamName,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        textAlign: isReverse ? TextAlign.end : TextAlign.start,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          name,
+          maxLines: 1,
+          textAlign: isReverse ? TextAlign.end : TextAlign.start,
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.colors.onSurface,
+          ),
+        ),
       ),
     );
 
     return Row(
       mainAxisAlignment: alignment,
-      children: isReverse 
-          ? [nameWidget, const SizedBox(width: AppSpacing.s), logoWidget]
-          : [logoWidget, const SizedBox(width: AppSpacing.s), nameWidget],
+      children:
+          isReverse
+              ? [nameWidget, const SizedBox(width: AppSpacing.s), logoWidget]
+              : [logoWidget, const SizedBox(width: AppSpacing.s), nameWidget],
     );
   }
 }

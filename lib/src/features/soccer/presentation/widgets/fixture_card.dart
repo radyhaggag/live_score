@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/constants/app_decorations.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/extensions/context_ext.dart';
@@ -80,7 +79,7 @@ class FixtureCard extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.s),
                       Text(
-                        homeTeam.name.teamName,
+                        homeTeam.displayName,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -160,7 +159,7 @@ class FixtureCard extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.s),
                       Text(
-                        awayTeam.name.teamName,
+                        awayTeam.displayName,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,

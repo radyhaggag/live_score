@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/constants/app_decorations.dart';
 import 'package:live_score/src/core/extensions/responsive_size.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/domain/entities/teams.dart';
@@ -34,7 +33,7 @@ class ViewTeam extends StatelessWidget {
         const SizedBox(height: AppSpacing.s),
         FittedBox(
           child: Text(
-            team.name.teamName,
+            team.displayName,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: context.colorsExt.white,

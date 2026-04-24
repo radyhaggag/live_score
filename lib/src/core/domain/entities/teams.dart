@@ -49,4 +49,6 @@ class Team extends Equatable {
     lineup,
     shortName,
   ];
+
+  String get displayName => shortName ?? name;
 }

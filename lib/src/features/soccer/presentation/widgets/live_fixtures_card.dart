@@ -3,7 +3,6 @@ import 'package:live_score/src/core/constants/app_decorations.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/responsive_size.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/core/theme/app_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -99,7 +98,7 @@ class LiveFixtureCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               LiveTeamTile(
-                name: soccerFixture.teams.home.name.teamName,
+                name: soccerFixture.teams.home.displayName,
                 goals: soccerFixture.teams.home.score.toString(),
                 teamTextStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: context.colorsExt.white,
@@ -112,7 +111,7 @@ class LiveFixtureCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               LiveTeamTile(
-                name: soccerFixture.teams.away.name.teamName,
+                name: soccerFixture.teams.away.displayName,
                 goals: soccerFixture.teams.away.score.toString(),
                 teamTextStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: context.colorsExt.white,

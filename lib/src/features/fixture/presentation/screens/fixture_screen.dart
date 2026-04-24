@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/core/layout/adaptive_layout.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
@@ -113,7 +112,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
             opacity: _appBarOpacity,
             child: FittedBox(
               child: Text(
-                '${homeTeam.name.teamName} ${context.l10n.versus} ${awayTeam.name.teamName}',
+                '${homeTeam.displayName} ${context.l10n.versus} ${awayTeam.displayName}',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -183,10 +182,11 @@ class _FixtureScreenState extends State<FixtureScreen> {
                       physics: const BouncingScrollPhysics(),
                       slivers: [
                         SliverToBoxAdapter(
-                          child: detail_widget.FixtureDetails(soccerFixture: fixture),
+                          child: detail_widget.FixtureDetails(
+                            soccerFixture: fixture,
+                          ),
                         ),
-                        SliverFillRemaining(
-                          hasScrollBody: false,
+                        SliverToBoxAdapter(
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(
                               context.pageHorizontalPadding / 2,
