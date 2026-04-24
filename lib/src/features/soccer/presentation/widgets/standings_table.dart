@@ -32,7 +32,7 @@ class StandingsHeader extends StatelessWidget {
 }
 
 /// Grouped standings table (used in cup/group phase competitions).
-class StandingsTable extends StatelessWidget {
+class StandingsTable extends StatefulWidget {
   const StandingsTable({
     super.key,
     required this.teams,
@@ -45,57 +45,23 @@ class StandingsTable extends StatelessWidget {
   final bool isGrouped;
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const minWidth = 680.0;
-        final tableWidth =
-            constraints.maxWidth.isFinite && constraints.maxWidth > minWidth
-                ? constraints.maxWidth
-                : minWidth;
-
-        return Scrollbar(
-          thumbVisibility: true,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            child: SizedBox(
-              width: tableWidth,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const StandingsHeaders(),
-                  const SizedBox(height: AppSpacing.s),
-                  ...List.generate(teams.length, (teamIndex) {
-                    final team = teams[teamIndex];
-                    return StandingsItem(
-                      teamRank: team,
-                      totalTeams: totalTeams,
-                      isGrouped: isGrouped,
-                      index: teamIndex,
-                    );
-                  }),
-                  const SizedBox(height: AppSpacing.s),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  State<StandingsTable> createState() => _StandingsTableState();
 }
 
-/// Full standings table with vertical + horizontal scroll (league phase).
-class ScrollableStandingsTable extends StatelessWidget {
-  const ScrollableStandingsTable({
-    super.key,
-    required this.teams,
-    required this.totalTeams,
-  });
+class _StandingsTableState extends State<StandingsTable> {
+  late final ScrollController _scrollController;
 
-  final List<TeamRank> teams;
-  final int totalTeams;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,35 +73,105 @@ class ScrollableStandingsTable extends StatelessWidget {
                 ? constraints.maxWidth
                 : minWidth;
 
-        return Scrollbar(
-          thumbVisibility: true,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            child: SizedBox(
-              width: tableWidth,
-              child: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: _StandingsHeaderDelegate(),
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
-                  SliverList.builder(
-                    itemCount: teams.length,
-                    itemBuilder: (context, index) {
-                      final team = teams[index];
-                      return StandingsItem(
-                        teamRank: team,
-                        totalTeams: totalTeams,
-                        index: index,
-                      );
-                    },
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
-                ],
-              ),
+        return SingleChildScrollView(
+          controller: _scrollController,
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: SizedBox(
+            width: tableWidth,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const StandingsHeaders(),
+                const SizedBox(height: AppSpacing.s),
+                ...List.generate(widget.teams.length, (teamIndex) {
+                  final team = widget.teams[teamIndex];
+                  return StandingsItem(
+                    teamRank: team,
+                    totalTeams: widget.totalTeams,
+                    isGrouped: widget.isGrouped,
+                    index: teamIndex,
+                  );
+                }),
+                const SizedBox(height: AppSpacing.s),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Full standings table with vertical + horizontal scroll (league phase).
+class ScrollableStandingsTable extends StatefulWidget {
+  const ScrollableStandingsTable({
+    super.key,
+    required this.teams,
+    required this.totalTeams,
+    this.bottomPadding = 0,
+  });
+
+  final List<TeamRank> teams;
+  final int totalTeams;
+  final double bottomPadding;
+
+  @override
+  State<ScrollableStandingsTable> createState() => _ScrollableStandingsTableState();
+}
+
+class _ScrollableStandingsTableState extends State<ScrollableStandingsTable> {
+  late final ScrollController _horizontalController;
+
+  @override
+  void initState() {
+    super.initState();
+    _horizontalController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _horizontalController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const minWidth = 680.0;
+        final tableWidth =
+            constraints.maxWidth.isFinite && constraints.maxWidth > minWidth
+                ? constraints.maxWidth
+                : minWidth;
+
+        return SingleChildScrollView(
+          controller: _horizontalController,
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: SizedBox(
+            width: tableWidth,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _StandingsHeaderDelegate(),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
+                SliverList.builder(
+                  itemCount: widget.teams.length,
+                  itemBuilder: (context, index) {
+                    final team = widget.teams[index];
+                    return StandingsItem(
+                      teamRank: team,
+                      totalTeams: widget.totalTeams,
+                      index: index,
+                    );
+                  },
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: widget.bottomPadding + AppSpacing.s)),
+              ],
             ),
           ),
         );

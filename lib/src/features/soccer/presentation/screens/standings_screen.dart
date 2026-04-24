@@ -27,14 +27,22 @@ class StandingsScreen extends StatefulWidget {
 
 class _StandingsScreenState extends State<StandingsScreen> {
   late final int _leagueId;
+  late final ScrollController _groupedHorizontalController;
 
   @override
   void initState() {
     super.initState();
     _leagueId = widget.competitionId ?? AppConstants.defaultLeagueId;
+    _groupedHorizontalController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchStandings();
     });
+  }
+
+  @override
+  void dispose() {
+    _groupedHorizontalController.dispose();
+    super.dispose();
   }
 
   void _fetchStandings() {
@@ -110,74 +118,79 @@ class _StandingsScreenState extends State<StandingsScreen> {
     final groups = state.standings.groups ?? [];
 
     if (groups.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 120),
-        child: ScrollableStandingsTable(
-          teams: state.standings.standings,
-          totalTeams: state.standings.standings.length,
-        ),
+      return ScrollableStandingsTable(
+        teams: state.standings.standings,
+        totalTeams: state.standings.standings.length,
+        bottomPadding: 120,
       );
     }
 
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 120),
-      itemCount: groups.length,
-      itemBuilder: (context, groupIndex) {
-        final group = groups[groupIndex];
-        final groupTeams =
-            state.standings.standings
-                .where((team) => team.groupNum == group.number)
-                .toList();
+    return SingleChildScrollView(
+      controller: _groupedHorizontalController,
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        width: 680, // Match minWidth in StandingsTable
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.only(bottom: 120),
+          itemCount: groups.length,
+          itemBuilder: (context, groupIndex) {
+            final group = groups[groupIndex];
+            final groupTeams =
+                state.standings.standings
+                    .where((team) => team.groupNum == group.number)
+                    .toList();
 
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.l,
-                  vertical: AppSpacing.m,
-                ),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.m,
-                    vertical: AppSpacing.xs,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: context.colorsExt.liveGradient,
-                    borderRadius: BorderRadius.circular(999),
-                    boxShadow: [
-                      BoxShadow(
-                        color: context.colorsExt.lightRed.withOpacitySafe(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.l,
+                      vertical: AppSpacing.m,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.m,
+                        vertical: AppSpacing.xs,
                       ),
-                    ],
-                  ),
-                  child: Text(
-                    group.name.toUpperCase(),
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: context.colorsExt.white,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.5,
+                      decoration: BoxDecoration(
+                        gradient: context.colorsExt.liveGradient,
+                        borderRadius: BorderRadius.circular(999),
+                        boxShadow: [
+                          BoxShadow(
+                            color: context.colorsExt.lightRed.withOpacitySafe(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        group.name.toUpperCase(),
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: context.colorsExt.white,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  FadeSlideIn(
+                    delay: Duration(milliseconds: 50 * groupIndex),
+                    child: StandingsTable(
+                      teams: groupTeams,
+                      totalTeams: groupTeams.length,
+                      isGrouped: true,
+                    ),
+                  ),
+                ],
               ),
-              FadeSlideIn(
-                delay: Duration(milliseconds: 50 * groupIndex),
-                child: StandingsTable(
-                  teams: groupTeams,
-                  totalTeams: groupTeams.length,
-                  isGrouped: true,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 }
