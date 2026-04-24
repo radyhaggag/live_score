@@ -50,13 +50,18 @@ class EventCard extends StatelessWidget {
                     color: context.colorsExt.blue,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
-                    event.gameTimeDisplay,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                        ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      event.gameTimeDisplay,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                          ),
+                    ),
                   ),
                 ),
                 Expanded(

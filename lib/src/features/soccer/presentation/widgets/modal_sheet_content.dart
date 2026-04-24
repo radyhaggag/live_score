@@ -10,7 +10,7 @@ import 'package:live_score/src/core/extensions/responsive_size.dart';
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
-import '../cubit/soccer_cubit.dart';
+import '../cubit/soccer/soccer_cubit.dart';
 import 'sheet_action.dart';
 
 /// Sheet drag handle width and height constants.

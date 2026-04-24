@@ -14,7 +14,8 @@ import '../../../../core/widgets/app_loading.dart';
 import '../../../../core/widgets/settings_language_listener.dart';
 import '../../domain/entities/fixture_details.dart';
 import '../../domain/entities/statistics.dart';
-import '../cubit/fixture_cubit.dart';
+import '../cubit/fixture/fixture_cubit.dart';
+import '../cubit/statistics/statistics_cubit.dart';
 import '../widgets/fixture_details.dart' as detail_widget;
 import '../widgets/fixture_tab_bar.dart';
 
@@ -30,8 +31,11 @@ class FixtureScreen extends StatefulWidget {
 class _FixtureScreenState extends State<FixtureScreen> {
   int _selectedTabIndex = 1;
   Timer? _timer;
+
+  // Each stream is cached independently — no race condition possible.
   Statistics? _statistics;
   FixtureDetails? _fixtureDetails;
+
   late ScrollController _scrollController;
   double _appBarOpacity = 0;
 
@@ -41,7 +45,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
     _scrollController = ScrollController()..addListener(_onScroll);
     if (widget.soccerFixture.status.isLive) _activateTimerFetching();
     context.read<FixtureCubit>().getFixtureDetails(widget.soccerFixture.id);
-    context.read<FixtureCubit>().getStatistics(widget.soccerFixture.id);
+    context.read<StatisticsCubit>().getStatistics(widget.soccerFixture.id);
   }
 
   void _onScroll() {
@@ -58,7 +62,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
         widget.soccerFixture.id,
         isTimerLoading: true,
       );
-      context.read<FixtureCubit>().getStatistics(
+      context.read<StatisticsCubit>().getStatistics(
         widget.soccerFixture.id,
         isTimerLoading: true,
       );
@@ -79,25 +83,28 @@ class _FixtureScreenState extends State<FixtureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<FixtureCubit>();
     final homeTeam = widget.soccerFixture.teams.home;
     final awayTeam = widget.soccerFixture.teams.away;
 
     return SettingsLanguageListener(
       onLanguageChanged: (context, state) {
         context.read<FixtureCubit>().getFixtureDetails(widget.soccerFixture.id);
-        context.read<FixtureCubit>().getStatistics(widget.soccerFixture.id);
+        context.read<StatisticsCubit>().getStatistics(widget.soccerFixture.id);
       },
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: _appBarOpacity > 0 
+          backgroundColor: _appBarOpacity > 0
               ? _fixtureColor.withValues(alpha: _appBarOpacity)
               : Colors.transparent,
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: Colors.white),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              size: 20,
+              color: Colors.white,
+            ),
             onPressed: () => context.pop(),
           ),
           title: AnimatedOpacity(
@@ -106,9 +113,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
             child: FittedBox(
               child: Text(
                 '${homeTeam.name.teamName} ${context.l10n.versus} ${awayTeam.name.teamName}',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -117,77 +122,109 @@ class _FixtureScreenState extends State<FixtureScreen> {
           ),
           centerTitle: true,
         ),
-        body: BlocListener<FixtureCubit, FixtureState>(
-          listener: (context, state) {
-            if (state is FixtureStatisticsLoaded) {
-              setState(() => _statistics = state.statistics);
-            } else if (state is FixtureDetailsLoaded) {
-              setState(() => _fixtureDetails = state.fixtureDetails);
-            }
-          },
-          child: BlocSelector<FixtureCubit, FixtureState, bool>(
-            selector: (state) {
-              return (state is FixtureStatisticsLoading &&
-                      !state.isTimerLoading) ||
-                  (state is FixtureDetailsLoading && !state.isTimerLoading);
-            },
-            builder: (context, isLoading) {
-              final fixture = _fixtureDetails?.fixture ?? widget.soccerFixture;
+        body: MultiBlocListener(
+          listeners: [
+            // Statistics stream — updates independently.
+            BlocListener<StatisticsCubit, StatisticsState>(
+              listener: (context, state) {
+                if (state is StatisticsLoaded) {
+                  setState(() => _statistics = state.statistics);
+                }
+              },
+            ),
+            // Fixture details stream — updates independently.
+            BlocListener<FixtureCubit, FixtureState>(
+              listener: (context, state) {
+                if (state is FixtureDetailsLoaded) {
+                  setState(() => _fixtureDetails = state.fixtureDetails);
+                }
+              },
+            ),
+          ],
+          child: BlocBuilder<FixtureCubit, FixtureState>(
+            buildWhen: (prev, curr) =>
+                // Only rebuild the loading indicator when initial loading changes.
+                (curr is FixtureDetailsLoading && !curr.isTimerLoading) ||
+                (prev is FixtureDetailsLoading && curr is! FixtureDetailsLoading),
+            builder: (context, fixtureState) {
+              // Also watch statistics loading state for the shared indicator.
+              return BlocBuilder<StatisticsCubit, StatisticsState>(
+                buildWhen: (prev, curr) =>
+                    (curr is StatisticsLoading && !curr.isTimerLoading) ||
+                    (prev is StatisticsLoading && curr is! StatisticsLoading),
+                builder: (context, statisticsState) {
+                  final isLoading =
+                      (fixtureState is FixtureDetailsLoading &&
+                          !fixtureState.isTimerLoading) ||
+                      (statisticsState is StatisticsLoading &&
+                          !statisticsState.isTimerLoading);
 
-              return RefreshIndicator(
-                onRefresh: () async {
-                  await cubit.getFixtureDetails(widget.soccerFixture.id);
-                  await cubit.getStatistics(widget.soccerFixture.id);
-                },
-                child: ListView(
-                  controller: _scrollController,
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  children: [
-                    detail_widget.FixtureDetails(soccerFixture: fixture),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        context.pageHorizontalPadding / 2,
-                        12,
-                        context.pageHorizontalPadding / 2,
-                        20,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FixtureTabBar(
-                            selectedIndex: _selectedTabIndex,
-                            fixtureColor: _fixtureColor,
-                            onTabSelected:
-                                (i) => setState(() => _selectedTabIndex = i),
+                  final fixture =
+                      _fixtureDetails?.fixture ?? widget.soccerFixture;
+
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await Future.wait([
+                        context
+                            .read<FixtureCubit>()
+                            .getFixtureDetails(widget.soccerFixture.id),
+                        context
+                            .read<StatisticsCubit>()
+                            .getStatistics(widget.soccerFixture.id),
+                      ]);
+                    },
+                    child: ListView(
+                      controller: _scrollController,
+                      physics: const BouncingScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      children: [
+                        detail_widget.FixtureDetails(soccerFixture: fixture),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                            context.pageHorizontalPadding / 2,
+                            12,
+                            context.pageHorizontalPadding / 2,
+                            20,
                           ),
-                          if (isLoading)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12),
-                              child: AppLoadingIndicator(
-                                isLinear: true,
-                                color: _fixtureColor,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FixtureTabBar(
+                                selectedIndex: _selectedTabIndex,
+                                fixtureColor: _fixtureColor,
+                                onTabSelected: (i) =>
+                                    setState(() => _selectedTabIndex = i),
                               ),
-                            )
-                          else
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16),
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                child: FixtureTabContent(
-                                  key: ValueKey(_selectedTabIndex),
-                                  selectedIndex: _selectedTabIndex,
-                                  statistics: _statistics,
-                                  fixtureDetails: _fixtureDetails,
-                                  fixtureColor: _fixtureColor,
+                              if (isLoading)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12),
+                                  child: AppLoadingIndicator(
+                                    isLinear: true,
+                                    color: _fixtureColor,
+                                  ),
+                                )
+                              else
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16),
+                                  child: AnimatedSwitcher(
+                                    duration:
+                                        const Duration(milliseconds: 300),
+                                    child: FixtureTabContent(
+                                      key: ValueKey(_selectedTabIndex),
+                                      selectedIndex: _selectedTabIndex,
+                                      statistics: _statistics,
+                                      fixtureDetails: _fixtureDetails,
+                                      fixtureColor: _fixtureColor,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                        ],
-                      ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           ),

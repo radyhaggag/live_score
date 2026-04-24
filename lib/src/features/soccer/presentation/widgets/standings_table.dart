@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/leagues_cubit.dart';
-import '../cubit/soccer_cubit.dart';
-import '../../domain/use_cases/standings_usecase.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
-import '../../domain/entities/team_rank.dart';
 import '../../../../core/widgets/leagues_header.dart';
+import '../../domain/entities/team_rank.dart';
+import '../../domain/use_cases/standings_usecase.dart';
+import '../cubit/leagues/leagues_cubit.dart';
+import '../cubit/soccer/soccer_cubit.dart';
 import '../widgets/standings_headers.dart';
 import '../widgets/standings_item.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
 
 /// Header with league selector for the standings screen.
 class StandingsHeader extends StatelessWidget {

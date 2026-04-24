@@ -1,5 +1,5 @@
-import '../../../../core/domain/entities/soccer_fixture.dart';
-import '../../domain/entities/standings.dart';
+import '../../../../../core/domain/entities/soccer_fixture.dart';
+import '../../../domain/entities/standings.dart';
 
 sealed class SoccerState {}
 

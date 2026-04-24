@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import '../../../../core/domain/entities/league.dart';
+
+import '../../../../../core/domain/entities/league.dart';
 
 @immutable
 sealed class LeaguesState {}

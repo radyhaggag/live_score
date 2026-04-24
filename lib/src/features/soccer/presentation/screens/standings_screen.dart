@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
-import 'package:live_score/src/core/extensions/context_ext.dart';
 import 'package:live_score/src/core/extensions/color.dart';
-import 'package:live_score/src/features/soccer/domain/use_cases/standings_usecase.dart';
-import 'package:live_score/src/core/widgets/app_error_dialog.dart';
+import 'package:live_score/src/core/extensions/context_ext.dart';
 import 'package:live_score/src/core/utils/app_animations.dart';
+import 'package:live_score/src/core/widgets/app_error_dialog.dart';
+import 'package:live_score/src/features/soccer/domain/use_cases/standings_usecase.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../cubit/leagues_cubit.dart';
-import '../cubit/soccer_cubit.dart';
-import '../cubit/soccer_state.dart';
 import '../../../../core/widgets/app_empty.dart';
 import '../../../../core/widgets/settings_language_listener.dart';
-import '../widgets/standings_table.dart';
+import '../cubit/leagues/leagues_cubit.dart';
+import '../cubit/soccer/soccer_cubit.dart';
+import '../cubit/soccer/soccer_state.dart';
 import '../widgets/standings_shimmer.dart';
+import '../widgets/standings_table.dart';
 
 class StandingsScreen extends StatefulWidget {
   const StandingsScreen({super.key, this.competitionId});
