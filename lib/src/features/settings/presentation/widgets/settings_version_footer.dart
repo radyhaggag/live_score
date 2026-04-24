@@ -5,13 +5,14 @@ import '../../../../core/l10n/app_l10n.dart';
 import '../cubit/settings_cubit.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 
+import 'package:live_score/src/core/extensions/context_ext.dart';
+
 class SettingsVersionFooter extends StatelessWidget {
   const SettingsVersionFooter({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
 
     return BlocSelector<SettingsCubit, SettingsState, String>(
@@ -21,18 +22,28 @@ class SettingsVersionFooter extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                l10n.appVersion,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.5),
-                  letterSpacing: 1.2,
+                l10n.appVersion.toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: context.colorsExt.textMuted,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                appVersion.isEmpty ? '--' : appVersion,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.7),
-                  fontWeight: FontWeight.bold,
+              const SizedBox(height: AppSpacing.s),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: context.colorsExt.surfaceGlass,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: context.colorsExt.dividerSubtle),
+                ),
+                child: Text(
+                  appVersion.isEmpty ? 'v1.0.0' : 'v$appVersion',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Monospace',
+                  ),
                 ),
               ),
             ],
