@@ -30,9 +30,9 @@ class StatisticsView extends StatelessWidget {
       children: [
         StatsHeader(teams: statistics!.teams!),
         ListView.separated(
+          shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.all(AppSpacing.xl),
-          shrinkWrap: true,
           itemBuilder: (context, index) {
             final group = grouped[index];
             return StatsCategorySection(

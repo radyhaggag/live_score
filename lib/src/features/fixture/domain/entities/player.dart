@@ -8,6 +8,7 @@ class Player extends Equatable {
   final String shortName;
   final String nameForURL;
   final int number;
+  final int? imageId;
 
   const Player({
     required this.id,
@@ -16,6 +17,7 @@ class Player extends Equatable {
     required this.number,
     required this.shortName,
     required this.nameForURL,
+    this.imageId,
   });
 
   @override

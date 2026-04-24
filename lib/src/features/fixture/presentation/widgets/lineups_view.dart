@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/domain/entities/teams.dart';
+import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/features/fixture/domain/entities/fixture_details.dart';
@@ -58,10 +59,16 @@ class LineupsView extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
-            _LineupTeamHeader(team: homeTeam!, isTop: true),
+            _LineupTeamHeader(
+              team: homeTeam!,
+              isTop: true,
+              teamColor:
+                  ('#${homeTeam.color ?? homeTeam.awayColor ?? "1E5631"}')
+                      .toColor,
+            ),
             SizedBox(
+              height: 640.h,
               width: double.infinity,
-              height: 560.h,
               child: CustomPaint(
                 painter: PitchPainter(pitchColor: context.colorsExt.darkGreen),
                 child: Padding(
@@ -74,7 +81,13 @@ class LineupsView extends StatelessWidget {
                 ),
               ),
             ),
-            _LineupTeamHeader(team: awayTeam!, isTop: false),
+            _LineupTeamHeader(
+              team: awayTeam!,
+              isTop: false,
+              teamColor:
+                  ('#${awayTeam.color ?? awayTeam.awayColor ?? "FFFFFF"}')
+                      .toColor,
+            ),
           ],
         ),
       ),
@@ -84,20 +97,23 @@ class LineupsView extends StatelessWidget {
 
 /// Team header row showing logo, name, and formation string.
 class _LineupTeamHeader extends StatelessWidget {
-  const _LineupTeamHeader({required this.team, required this.isTop});
+  const _LineupTeamHeader({
+    required this.team,
+    required this.isTop,
+    required this.teamColor,
+  });
 
   final Team team;
   final bool isTop;
+  final Color teamColor;
 
   @override
   Widget build(BuildContext context) {
+    final textColor = _contrastColor(teamColor);
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            context.colorsExt.darkGreen.withValues(alpha: 0.9),
-            context.colorsExt.darkGreen,
-          ],
+          colors: [teamColor.withValues(alpha: 0.9), teamColor],
           begin: isTop ? Alignment.topCenter : Alignment.bottomCenter,
           end: isTop ? Alignment.bottomCenter : Alignment.topCenter,
         ),
@@ -114,7 +130,7 @@ class _LineupTeamHeader extends StatelessWidget {
             child: Text(
               team.name.teamName,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: context.colorsExt.white,
+                color: textColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -122,13 +138,13 @@ class _LineupTeamHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: context.colorsExt.white.withValues(alpha: 0.2),
+              color: textColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Text(
               team.lineup?.formation ?? '',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: context.colorsExt.white,
+                color: textColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -136,5 +152,14 @@ class _LineupTeamHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Color _contrastColor(Color backgroundColor) {
+    final double luminance =
+        (0.299 * backgroundColor.r * 255.0 +
+            0.587 * backgroundColor.g * 255.0 +
+            0.114 * backgroundColor.b * 255.0) /
+        255;
+    return luminance > 0.5 ? Colors.black : Colors.white;
   }
 }

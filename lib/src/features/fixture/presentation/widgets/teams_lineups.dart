@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:live_score/src/core/extensions/color.dart';
+
 import '../../domain/entities/fixture_details.dart';
 import 'lineup_player.dart';
 
@@ -40,8 +41,10 @@ class TeamsLineups extends StatelessWidget {
       });
     }
 
-    final homeColor = ('#${homeTeam.awayColor ?? homeTeam.color}').toColor;
-    final awayColor = ('#${awayTeam.color ?? awayTeam.awayColor}').toColor;
+    final homeColor =
+        ('#${homeTeam.color ?? homeTeam.awayColor ?? "1E5631"}').toColor;
+    final awayColor =
+        ('#${awayTeam.color ?? awayTeam.awayColor ?? "FFFFFF"}').toColor;
 
     return Column(
       children: [

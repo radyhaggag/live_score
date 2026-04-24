@@ -178,49 +178,53 @@ class _FixtureScreenState extends State<FixtureScreen> {
                         ),
                       ]);
                     },
-                    child: ListView(
+                    child: CustomScrollView(
                       controller: _scrollController,
                       physics: const BouncingScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      children: [
-                        detail_widget.FixtureDetails(soccerFixture: fixture),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            context.pageHorizontalPadding / 2,
-                            12,
-                            context.pageHorizontalPadding / 2,
-                            20,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FixtureTabBar(
-                                selectedIndex: _selectedTabIndex,
-                                fixtureColor: _fixtureColor,
-                                onTabSelected: (i) {
-                                  setState(() => _selectedTabIndex = i);
-                                },
-                              ),
-                              if (isLoading)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12),
-                                  child: AppLoadingIndicator(
-                                    isLinear: true,
-                                    color: _fixtureColor,
-                                  ),
-                                )
-                              else
-                                AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 300),
-                                  child: FixtureTabContent(
-                                    key: ValueKey(_selectedTabIndex),
-                                    selectedIndex: _selectedTabIndex,
-                                    statistics: _statistics,
-                                    fixtureDetails: _fixtureDetails,
-                                    fixtureColor: _fixtureColor,
-                                  ),
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: detail_widget.FixtureDetails(soccerFixture: fixture),
+                        ),
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(
+                              context.pageHorizontalPadding / 2,
+                              8,
+                              context.pageHorizontalPadding / 2,
+                              8,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FixtureTabBar(
+                                  selectedIndex: _selectedTabIndex,
+                                  fixtureColor: _fixtureColor,
+                                  onTabSelected: (i) {
+                                    setState(() => _selectedTabIndex = i);
+                                  },
                                 ),
-                            ],
+                                if (isLoading)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: AppLoadingIndicator(
+                                      isLinear: true,
+                                      color: _fixtureColor,
+                                    ),
+                                  )
+                                else
+                                  AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 300),
+                                    child: FixtureTabContent(
+                                      key: ValueKey(_selectedTabIndex),
+                                      selectedIndex: _selectedTabIndex,
+                                      statistics: _statistics,
+                                      fixtureDetails: _fixtureDetails,
+                                      fixtureColor: _fixtureColor,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
