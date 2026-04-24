@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../l10n/app_l10n.dart';
-import '../constants/app_assets.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
+import '../constants/app_spacing.dart';
+import '../constants/app_decorations.dart';
+import '../extensions/context_ext.dart';
 
 /// Represents the app empty widget entity/model.
 class AppEmptyWidget extends StatelessWidget {
@@ -12,41 +15,71 @@ class AppEmptyWidget extends StatelessWidget {
     this.icon,
     this.image,
     this.color,
+    this.onRetry,
+    this.retryLabel,
   });
 
   final String? message;
   final IconData? icon;
-  final AssetImage? image;
+  final Widget? image; // changed to Widget to support other image types
   final Color? color;
+  final VoidCallback? onRetry;
+  final String? retryLabel;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    final themeColor = color ?? context.colorsExt.textMuted;
+    
+    return Container(
       width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 80.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null)
-              Icon(icon, size: 60, color: color)
-            else if (image != null)
-              Image(image: image!, width: 60, height: 60)
-            else
-              const Image(image: AssetImage(AppAssets.noFixtures), width: 60, height: 60),
-            const SizedBox(height: AppSpacing.m),
-            Text(
-              message ?? context.l10n.noFixtures,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(
-                color: color ?? context.colorsExt.blueGrey, 
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
+      padding: const EdgeInsets.symmetric(vertical: 60.0, horizontal: AppSpacing.xl),
+      decoration: BoxDecoration(
+        color: context.colorsExt.surfaceElevated.withValues(alpha: 0.5),
+        borderRadius: AppBorderRadius.largeAll,
+        border: Border.all(color: context.colorsExt.dividerSubtle),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Illustration / Icon Circle
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: themeColor.withValues(alpha: 0.1),
             ),
-          ],
-        ),
+            child: image ?? Icon(
+              icon ?? PhosphorIcons.soccerBall(PhosphorIconsStyle.regular),
+              size: 64,
+              color: themeColor,
+            ),
+          ).animate().scale(delay: 200.ms, curve: Curves.easeOutBack),
+          
+          const SizedBox(height: AppSpacing.xl),
+          
+          Text(
+            message ?? context.l10n.noFixtures,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: context.colors.onSurface,
+            ),
+            textAlign: TextAlign.center,
+          ).animate().fade(delay: 300.ms).slideY(begin: 0.2),
+          
+          if (onRetry != null) ...[
+            const SizedBox(height: AppSpacing.xl),
+            FilledButton.icon(
+              onPressed: onRetry,
+              icon: Icon(PhosphorIcons.arrowsClockwise(PhosphorIconsStyle.bold), size: 18),
+              label: Text(retryLabel ?? context.l10n.reload),
+              style: FilledButton.styleFrom(
+                backgroundColor: context.colors.primary,
+                foregroundColor: Colors.white,
+                shape: const StadiumBorder(),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+            ).animate().fade(delay: 400.ms).slideY(begin: 0.2),
+          ]
+        ],
       ),
     );
   }

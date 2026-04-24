@@ -19,6 +19,18 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Gradient blueGradient;
   final Gradient redGradient;
 
+  // New Fields
+  final Color surfaceGlass;
+  final Color surfaceElevated;
+  final Color textMuted;
+  final Color textSubtle;
+  final Color dividerSubtle;
+  final Color onLive;
+  final Color onScheduled;
+  final Color onEnded;
+  final Gradient liveGradient;
+  final Gradient accentGradient;
+
   const AppColorsExtension({
     required this.green,
     required this.red,
@@ -36,6 +48,16 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.darkGreen,
     required this.blueGradient,
     required this.redGradient,
+    required this.surfaceGlass,
+    required this.surfaceElevated,
+    required this.textMuted,
+    required this.textSubtle,
+    required this.dividerSubtle,
+    required this.onLive,
+    required this.onScheduled,
+    required this.onEnded,
+    required this.liveGradient,
+    required this.accentGradient,
   });
 
   @override
@@ -56,6 +78,16 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? darkGreen,
     Gradient? blueGradient,
     Gradient? redGradient,
+    Color? surfaceGlass,
+    Color? surfaceElevated,
+    Color? textMuted,
+    Color? textSubtle,
+    Color? dividerSubtle,
+    Color? onLive,
+    Color? onScheduled,
+    Color? onEnded,
+    Gradient? liveGradient,
+    Gradient? accentGradient,
   }) {
     return AppColorsExtension(
       green: green ?? this.green,
@@ -74,6 +106,16 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       darkGreen: darkGreen ?? this.darkGreen,
       blueGradient: blueGradient ?? this.blueGradient,
       redGradient: redGradient ?? this.redGradient,
+      surfaceGlass: surfaceGlass ?? this.surfaceGlass,
+      surfaceElevated: surfaceElevated ?? this.surfaceElevated,
+      textMuted: textMuted ?? this.textMuted,
+      textSubtle: textSubtle ?? this.textSubtle,
+      dividerSubtle: dividerSubtle ?? this.dividerSubtle,
+      onLive: onLive ?? this.onLive,
+      onScheduled: onScheduled ?? this.onScheduled,
+      onEnded: onEnded ?? this.onEnded,
+      liveGradient: liveGradient ?? this.liveGradient,
+      accentGradient: accentGradient ?? this.accentGradient,
     );
   }
 
@@ -102,6 +144,16 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       darkGreen: Color.lerp(darkGreen, other.darkGreen, t)!,
       blueGradient: Gradient.lerp(blueGradient, other.blueGradient, t)!,
       redGradient: Gradient.lerp(redGradient, other.redGradient, t)!,
+      surfaceGlass: Color.lerp(surfaceGlass, other.surfaceGlass, t)!,
+      surfaceElevated: Color.lerp(surfaceElevated, other.surfaceElevated, t)!,
+      textMuted: Color.lerp(textMuted, other.textMuted, t)!,
+      textSubtle: Color.lerp(textSubtle, other.textSubtle, t)!,
+      dividerSubtle: Color.lerp(dividerSubtle, other.dividerSubtle, t)!,
+      onLive: Color.lerp(onLive, other.onLive, t)!,
+      onScheduled: Color.lerp(onScheduled, other.onScheduled, t)!,
+      onEnded: Color.lerp(onEnded, other.onEnded, t)!,
+      liveGradient: Gradient.lerp(liveGradient, other.liveGradient, t)!,
+      accentGradient: Gradient.lerp(accentGradient, other.accentGradient, t)!,
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/responsive_size.dart';
 
@@ -30,7 +32,7 @@ class CircleLeaguesHeader extends StatelessWidget {
       height: _kCircleHeaderHeight,
       padding: const EdgeInsetsDirectional.only(start: AppSpacing.l),
       decoration: BoxDecoration(
-        gradient: context.colorsExt.blueGradient,
+        gradient: context.colorsExt.accentGradient,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(40.r),
           topLeft: Radius.circular(40.r),
@@ -41,7 +43,7 @@ class CircleLeaguesHeader extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemBuilder:
             (context, index) =>
-                _buildLeagueAvatar(league: leagues[index], context: context),
+                _buildLeagueAvatar(league: leagues[index], context: context, index: index),
         separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s),
         itemCount: leagues.length,
       ),
@@ -51,40 +53,44 @@ class CircleLeaguesHeader extends StatelessWidget {
   Widget _buildLeagueAvatar({
     required League league,
     required BuildContext context,
-  }) => MouseRegion(
-    cursor: SystemMouseCursors.click,
-    child: InkWell(
-      onTap: () => onLeagueTap(context, league),
-      borderRadius: BorderRadius.circular(_kLeagueAvatarRadius),
-      child: Container(
-        width: _kLeagueAvatarRadius * 2,
-        height: _kLeagueAvatarRadius * 2,
-        decoration: BoxDecoration(
-          color: league.color != null ? league.color!.toColor : context.colorsExt.white,
-          shape: BoxShape.circle,
-          border: Border.all(color: context.colorsExt.white.withValues(alpha: 0.8), width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        alignment: Alignment.center,
-        child: CustomImage(
-          fit: BoxFit.contain,
-          width: _kLeagueLogoSize,
-          height: _kLeagueLogoSize,
-          imageUrl: league.logo,
+    required int index,
+  }) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onLeagueTap(context, league);
+        },
+        child: Container(
+          width: _kLeagueAvatarRadius * 2,
+          height: _kLeagueAvatarRadius * 2,
+          decoration: BoxDecoration(
+            color: league.color != null ? league.color!.toColor : context.colorsExt.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: context.colorsExt.white.withValues(alpha: 0.8), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          alignment: Alignment.center,
+          child: CustomImage(
+            fit: BoxFit.contain,
+            width: _kLeagueLogoSize,
+            height: _kLeagueLogoSize,
+            imageUrl: league.logo,
+          ),
         ),
       ),
-    ),
-  );
+    ).animate().scale(delay: (index * 50).ms, duration: 300.ms, curve: Curves.easeOutBack);
+  }
 }
 
 /// Rect-chip league header used on fixtures and standings screens.
-
 class RectLeaguesHeader extends StatefulWidget {
   final List<League> leagues;
   final ValueChanged<League> onLeagueTap;
@@ -123,11 +129,13 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
   }
 
   void _onLeagueTap(League league) {
+    HapticFeedback.selectionClick();
     widget.onLeagueTap(league);
     setState(() => selectedLeagueId = league.id);
   }
 
   void _onPrefixTap() {
+    HapticFeedback.selectionClick();
     widget.onPrefixIconTap?.call();
     setState(() => selectedLeagueId = null);
   }
@@ -154,7 +162,7 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
               ),
             Expanded(
               child: ListView.separated(
-                physics: const AlwaysScrollableScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.leagues.length,
@@ -167,7 +175,7 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
                   );
                   return MouseRegion(
                     cursor: SystemMouseCursors.click,
-                    child: InkWell(
+                    child: GestureDetector(
                       onTap: () => _onLeagueTap(league),
                       child: LeagueCard(
                         league: league,
@@ -175,7 +183,7 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
                         viewCountryName: viewCountryName,
                       ),
                     ),
-                  );
+                  ).animate().fadeIn(delay: (index * 30).ms).slideX(begin: 0.1);
                 },
               ),
             ),
