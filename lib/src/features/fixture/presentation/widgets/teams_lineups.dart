@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:live_score/src/core/extensions/color.dart';
+
 import '../../domain/entities/fixture_details.dart';
 import 'lineup_player.dart';
 
 class TeamsLineups extends StatelessWidget {
   final FixtureDetails fixtureDetails;
+  final bool showHome;
+  final bool showAway;
 
-  const TeamsLineups({super.key, required this.fixtureDetails});
+  const TeamsLineups({
+    super.key,
+    required this.fixtureDetails,
+    this.showHome = true,
+    this.showAway = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     final homeTeam = fixtureDetails.fixture.teams.home;
     final awayTeam = fixtureDetails.fixture.teams.away;
+    final isFullView = showHome && showAway;
+
     final homePlan = homeTeam.lineup?.formation.split('-').toList();
-    final awayPlan = awayTeam.lineup?.formation.split('-').reversed.toList();
+    final awayPlan =
+        isFullView
+            ? awayTeam.lineup?.formation.split('-').reversed.toList()
+            : awayTeam.lineup?.formation.split('-').toList();
+
     final homePlayers =
         fixtureDetails.homePlayersInfo
             .where((player) => player.lineupMember.isStarting)
@@ -33,35 +48,46 @@ class TeamsLineups extends StatelessWidget {
 
     if (awayPlayers.any((player) => player.lineupMember.yardInfo != null)) {
       awayPlayers.sort((a, b) {
-        return b.lineupMember.yardInfo!.fieldPosition.compareTo(
-          a.lineupMember.yardInfo!.fieldPosition,
+        if (isFullView) {
+          return b.lineupMember.yardInfo!.fieldPosition.compareTo(
+            a.lineupMember.yardInfo!.fieldPosition,
+          );
+        }
+        return a.lineupMember.yardInfo!.fieldPosition.compareTo(
+          b.lineupMember.yardInfo!.fieldPosition,
         );
       });
     }
 
-    final homeColor = ('#${homeTeam.awayColor ?? homeTeam.color}').toColor;
-    final awayColor = ('#${awayTeam.color ?? awayTeam.awayColor}').toColor;
+    final homeColor =
+        ('#${homeTeam.color ?? homeTeam.awayColor ?? "1E5631"}').toColor;
+    final awayColor =
+        ('#${awayTeam.color ?? awayTeam.awayColor ?? "FFFFFF"}').toColor;
 
     return Column(
       children: [
-        Expanded(
-          child: _LineupTeamColumn(
-            plan: homePlan ?? const [],
-            players: homePlayers,
-            primaryColor: homeColor,
-            numberColor: _contrastColor(homeColor),
-            isReversed: false,
+        if (showHome)
+          Expanded(
+            flex: showAway ? 1 : 2,
+            child: _LineupTeamColumn(
+              plan: homePlan ?? const [],
+              players: homePlayers,
+              primaryColor: homeColor,
+              numberColor: _contrastColor(homeColor),
+              isReversed: false,
+            ),
           ),
-        ),
-        Expanded(
-          child: _LineupTeamColumn(
-            plan: awayPlan ?? const [],
-            players: awayPlayers,
-            primaryColor: awayColor,
-            numberColor: _contrastColor(awayColor),
-            isReversed: true,
+        if (showAway)
+          Expanded(
+            flex: showHome ? 1 : 2,
+            child: _LineupTeamColumn(
+              plan: awayPlan ?? const [],
+              players: awayPlayers,
+              primaryColor: awayColor,
+              numberColor: _contrastColor(awayColor),
+              isReversed: isFullView,
+            ),
           ),
-        ),
       ],
     );
   }
@@ -147,12 +173,19 @@ class _LineupTeamColumn extends StatelessWidget {
       );
     }
 
+    final animatedChildren = <Widget>[];
+    for (int i = 0; i < columnChildren.length; i++) {
+      animatedChildren.add(
+        columnChildren[i]
+            .animate()
+            .fade(duration: 400.ms, delay: (100 * i).ms)
+            .slideY(begin: isReversed ? -0.1 : 0.1),
+      );
+    }
+
     return Column(
-      mainAxisAlignment:
-          isReversed
-              ? MainAxisAlignment.spaceAround
-              : MainAxisAlignment.spaceEvenly,
-      children: columnChildren,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: animatedChildren,
     );
   }
 }

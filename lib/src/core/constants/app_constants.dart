@@ -46,10 +46,14 @@ class AppConstants {
   static const baseImageUrl = 'https://imagecache.365scores.com/image/upload/';
 
   static String clubImage(String clubId, {String size = '24'}) {
-    return '${baseImageUrl}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Competitors:default1.png/v7/Competitors/$clubId';
+    return '${baseImageUrl}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Competitors:default1.png/Competitors/$clubId';
   }
 
   static String competitionImage(int competitionId, {String size = '24'}) {
-    return '${baseImageUrl}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Countries:default1.png/v7/Competitions/$competitionId';
+    return '${baseImageUrl}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Countries:default1.png/Competitions/$competitionId';
+  }
+
+  static String athleteImage(int athleteId, {String size = '24'}) {
+    return '${baseImageUrl}f_png,w_$size,h_$size,c_limit,q_auto:eco,dpr_3,d_Athletes:default1.png/Athletes/$athleteId';
   }
 }

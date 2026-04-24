@@ -67,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "events": MessageLookupByLibrary.simpleMessage("Events"),
     "fixtures": MessageLookupByLibrary.simpleMessage("Fixtures"),
     "form": MessageLookupByLibrary.simpleMessage("Form"),
+    "fullLineups": MessageLookupByLibrary.simpleMessage("Full Lineups"),
     "goalDifferenceShort": MessageLookupByLibrary.simpleMessage("GD"),
     "goalsAgainstShort": MessageLookupByLibrary.simpleMessage("GA"),
     "goalsForShort": MessageLookupByLibrary.simpleMessage("GF"),

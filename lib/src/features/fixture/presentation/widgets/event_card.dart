@@ -1,254 +1,337 @@
-import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+import '../../../../core/constants/app_decorations.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/l10n/app_l10n.dart';
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../../domain/entities/event.dart';
 
-/// The full card for a single match event.
+/// The full card for a single match event, aligned left or right for timeline.
 class EventCard extends StatelessWidget {
-  const EventCard({super.key, required this.event, required this.color});
+  const EventCard({
+    super.key,
+    required this.event,
+    required this.color,
+    required this.isHomeTeam,
+    this.isLast = false,
+  });
 
   final Event event;
   final Color color;
+  final bool isHomeTeam;
+  final bool isLast;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppSpacing.m),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl - 2), // 18dp
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: AppSpacing.m,
-          children: [
-            _EventTeamHeader(event: event),
-            _EventDetailsRow(event: event, color: color),
-          ],
-        ),
+    final team = event.team;
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Timeline indicator
+          SizedBox(
+            width: 40,
+            child: Column(
+              children: [
+                Container(
+                  width: 2,
+                  height: 12,
+                  color: context.colorsExt.dividerSubtle,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.colorsExt.blue,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      event.gameTimeDisplay,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: 2,
+                    color:
+                        isLast
+                            ? Colors.transparent
+                            : context.colorsExt.dividerSubtle,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.s),
+          // Event Content
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(bottom: AppSpacing.m, top: 4),
+              padding: const EdgeInsets.all(AppSpacing.s),
+              decoration: BoxDecoration(
+                color: context.colorsExt.surfaceElevated,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: context.colorsExt.dividerSubtle),
+                boxShadow: const [AppShadows.cardShadow],
+              ),
+              child: Row(
+                children: [
+                  CustomImage(
+                    width: 20,
+                    height: 20,
+                    imageUrl: team?.logo ?? '',
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            _EventIcon(event: event),
+                            const SizedBox(width: AppSpacing.xs),
+                            Expanded(child: _EventTitle(event: event)),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        if (event.type.id.isGoalOrOwnGoal ||
+                            event.type.id.isMissedPenalty)
+                          _EventGoal(event: event),
+                        if (event.type.id.isCard)
+                          _EventCardIndicator(event: event),
+                        if (event.type.id.isSubstitute)
+                          _EventSubstitute(event: event),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Header row showing the team that performed the event.
-class _EventTeamHeader extends StatelessWidget {
-  const _EventTeamHeader({required this.event});
+class _EventTitle extends StatelessWidget {
+  const _EventTitle({required this.event});
   final Event event;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomImage(
-          width: AppSpacing.xl,
-          height: AppSpacing.xl,
-          imageUrl: event.team?.logo ?? '',
-        ),
-        const SizedBox(width: AppSpacing.s),
-        Flexible(
-          child: Text(
-            event.team?.name.teamName ?? '',
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(color: context.colorsExt.blueGrey),
-          ),
-        ),
-      ],
+    return Text(
+      event.type.subTypeName != null
+          ? '${event.type.name} (${event.type.subTypeName})'
+          : event.type.name,
+      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+        color: context.colorsExt.textSubtle,
+        fontWeight: FontWeight.w600,
+      ),
+      textAlign: TextAlign.start,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
 
-/// The main details row: time badge + event type and sub-detail.
-class _EventDetailsRow extends StatelessWidget {
-  const _EventDetailsRow({required this.event, required this.color});
+class _EventIcon extends StatelessWidget {
+  const _EventIcon({required this.event});
   final Event event;
-  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CircleAvatar(
-          radius: 14.r,
-          backgroundColor: color,
-          child: FittedBox(
-            child: Text(
-              event.gameTimeDisplay,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: context.colorsExt.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+    if (event.type.id.isGoalOrOwnGoal) {
+      return Icon(
+            PhosphorIcons.soccerBall(PhosphorIconsStyle.fill),
+            size: 16,
+            color: Theme.of(context).colorScheme.onSurface,
+          )
+          .animate(onPlay: (controller) => controller.repeat(reverse: true))
+          .scaleXY(
+            begin: 1,
+            end: 1.1,
+            duration: 800.ms,
+            curve: Curves.easeInOut,
+          );
+    } else if (event.type.id.isMissedPenalty) {
+      return const _PenaltyMissedIcon();
+    } else if (event.type.id.isYellowCard) {
+      return Container(
+        width: 10,
+        height: 14,
+        decoration: BoxDecoration(
+          color: context.colorsExt.yellow,
+          borderRadius: BorderRadius.circular(2),
         ),
-        const SizedBox(width: AppSpacing.m),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: AppSpacing.m - 2, // 10dp
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      event.type.name,
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                  ),
-                  if (event.type.subTypeName != null)
-                    Text(
-                      event.type.subTypeName ?? '',
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                ],
-              ),
-              if (event.type.id.isGoalOrOwnGoal ||
-                  event.type.id.isMissedPenalty)
-                _EventGoal(event: event),
-              if (event.type.id.isCard) _EventCardIndicator(event: event),
-              if (event.type.id.isSubstitute) _EventSubstitute(event: event),
-            ],
-          ),
+      );
+    } else if (event.type.id.isRedCard) {
+      return Container(
+        width: 10,
+        height: 14,
+        decoration: BoxDecoration(
+          color: context.colorsExt.red,
+          borderRadius: BorderRadius.circular(2),
         ),
-      ],
+      );
+    } else if (event.type.id.isSubstitute) {
+      return Icon(
+        PhosphorIcons.arrowsLeftRight(PhosphorIconsStyle.bold),
+        size: 16,
+        color: context.colorsExt.blue,
+      );
+    }
+    return Icon(
+      PhosphorIcons.info(PhosphorIconsStyle.regular),
+      size: 16,
+      color: context.colorsExt.textSubtle,
     );
   }
 }
 
-/// Shows the goal scorer and assist provider.
 class _EventGoal extends StatelessWidget {
   const _EventGoal({required this.event});
   final Event event;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Text(
-            event.player?.name.playerName ?? '',
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(color: context.colorsExt.blue),
-          ),
+        Text(
+          event.player?.displayName ?? '',
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+          textAlign: TextAlign.start,
         ),
-        const SizedBox(width: AppSpacing.s),
-        event.type.id.isGoalOrOwnGoal
-            ? const Icon(Icons.sports_soccer, size: 24)
-            : const _PenaltyMissedIcon(),
-        const SizedBox(width: AppSpacing.s),
-        Expanded(
-          child: Text(
-            event.extraPlayerDetails != null &&
-                    event.extraPlayerDetails!.isNotEmpty
-                ? '${context.l10n.assist}: ${event.extraPlayerDetails!.map((e) => e.name.playerName).join(', ')}'
-                : '',
-            textAlign: TextAlign.end,
+        if (event.extraPlayerDetails != null &&
+            event.extraPlayerDetails!.isNotEmpty) ...[
+          const SizedBox(height: 2),
+          Text(
+            '${context.l10n.assist}: ${event.extraPlayerDetails!.map((e) => e.displayName).join(', ')}',
             style: Theme.of(
               context,
-            ).textTheme.titleSmall?.copyWith(color: context.colorsExt.green),
-            maxLines: 2,
+            ).textTheme.bodySmall?.copyWith(color: context.colorsExt.textMuted),
+            textAlign: TextAlign.start,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-        ),
+        ],
       ],
     );
   }
 }
 
-/// Shows the penalty missed icon (soccer ball + X overlay).
 class _PenaltyMissedIcon extends StatelessWidget {
   const _PenaltyMissedIcon();
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: AlignmentDirectional.bottomEnd,
+      alignment: AlignmentDirectional.center,
       children: [
-        const Icon(Icons.sports_soccer, size: 24),
-        CircleAvatar(
-          radius: 8.r,
-          backgroundColor: context.colorsExt.red,
-          child: Icon(Icons.close, color: context.colorsExt.white, size: 10),
+        Icon(
+          PhosphorIcons.soccerBall(PhosphorIconsStyle.fill),
+          size: 18,
+          color: context.colorsExt.textMuted,
+        ),
+        Icon(
+          PhosphorIcons.x(PhosphorIconsStyle.bold),
+          size: 14,
+          color: context.colorsExt.red,
         ),
       ],
     );
   }
 }
 
-/// Shows the yellow or red card indicator.
 class _EventCardIndicator extends StatelessWidget {
   const _EventCardIndicator({required this.event});
   final Event event;
 
-  /// Card indicator dimensions — fixed by design spec (standard card aspect ratio).
-  static const double _cardWidth = 18;
-  static const double _cardHeight = 24;
-
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            event.player?.name.playerName ?? '',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-        const SizedBox(width: AppSpacing.s),
-        Container(
-          color:
-              event.type.id.isYellowCard
-                  ? context.colorsExt.yellow
-                  : context.colorsExt.red,
-          width: _cardWidth,
-          height: _cardHeight,
-        ),
-      ],
+    return Text(
+      event.player?.displayName ?? '',
+      style: Theme.of(
+        context,
+      ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+      textAlign: TextAlign.start,
     );
   }
 }
 
-/// Shows the substitution (player off → player on).
 class _EventSubstitute extends StatelessWidget {
   const _EventSubstitute({required this.event});
   final Event event;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Text(
-            event.player?.name.playerName ?? '',
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(color: context.colorsExt.red),
-          ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              PhosphorIcons.arrowUp(PhosphorIconsStyle.bold),
+              size: 12,
+              color: context.colorsExt.green,
+            ),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                event.extraPlayerDetails?.firstOrNull?.name ?? '',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: context.colorsExt.green,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: AppSpacing.s),
-        const Image(width: 28, height: 28, image: AssetImage(AppAssets.subs)),
-        const SizedBox(width: AppSpacing.s),
-        Expanded(
-          child: Text(
-            event.extraPlayerDetails != null &&
-                    event.extraPlayerDetails!.isNotEmpty
-                ? event.extraPlayerDetails!.first.name
-                : '',
-            textAlign: TextAlign.end,
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(color: context.colorsExt.green),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
+        const SizedBox(height: 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              PhosphorIcons.arrowDown(PhosphorIconsStyle.bold),
+              size: 12,
+              color: context.colorsExt.red,
+            ),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                event.player?.displayName ?? '',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: context.colorsExt.red,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
       ],
     );

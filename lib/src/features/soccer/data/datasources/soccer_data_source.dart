@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:live_score/src/core/models/country_model.dart';
+import 'package:intl/intl.dart';
 import 'package:live_score/src/core/constants/app_constants.dart';
+import 'package:live_score/src/core/models/country_model.dart';
 
 import '../../../../core/api/dio_helper.dart';
 import '../../../../core/api/endpoints.dart';
@@ -24,6 +25,8 @@ abstract class SoccerDataSource {
 
 class SoccerDataSourceImpl implements SoccerDataSource {
   final DioHelper dioHelper;
+  static final Set<int> _availableLeagueIds =
+      AppConstants.availableLeagues.toSet();
 
   SoccerDataSourceImpl({required this.dioHelper});
 
@@ -36,7 +39,7 @@ class SoccerDataSourceImpl implements SoccerDataSource {
         url: Endpoints.currentRoundFixtures,
         queryParams: {'competitions': competitionId},
       );
-      return _getResult(response, getOnlyCurrentDayFixtures: false);
+      return _parseFixtures(response, allowedCompetitionIds: {competitionId});
     } catch (error) {
       rethrow;
     }
@@ -75,14 +78,21 @@ class SoccerDataSourceImpl implements SoccerDataSource {
   @override
   Future<List<SoccerFixtureModel>> getTodayFixtures() async {
     try {
-      final now = DateTime.now();
-      final today = now.toIso8601String().split('T').first;
+      final today = DateFormat('yyyy-MM-dd').format(DateTime.now().toLocal());
       final response = await dioHelper.get(
         url: Endpoints.todayFixtures,
-        queryParams: {'sports': 1, 'startDate': today, 'endDate': today},
+        queryParams: {
+          'sports': 1,
+          'startDate': today,
+          'endDate': today,
+          'competitions': AppConstants.availableLeagues.join(','),
+        },
       );
 
-      return _getResult(response, getOnlyCurrentDayFixtures: true);
+      return _parseFixtures(
+        response,
+        allowedCompetitionIds: _availableLeagueIds,
+      );
     } catch (error) {
       rethrow;
     }
@@ -106,40 +116,32 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     }
   }
 
-  List<SoccerFixtureModel> _getResult(
+  List<SoccerFixtureModel> _parseFixtures(
     Response response, {
-    bool getOnlyCurrentDayFixtures = true,
+    required Set<int> allowedCompetitionIds,
   }) {
-    final List<dynamic> result = response.data['games'];
+    final result = response.data['games'] as List<dynamic>? ?? const [];
+    return result
+        .whereType<Map>()
+        .map((fixture) => Map<String, dynamic>.from(fixture))
+        .where((fixture) {
+          final competitionId = (fixture['competitionId'] as num?)?.toInt();
+          return competitionId != null &&
+              allowedCompetitionIds.contains(competitionId);
+        })
+        .map(_buildFixtureModel)
+        .toList();
+  }
 
-    final List<SoccerFixtureModel> fixtures = [];
-    final today = DateTime.now();
-    final normalizedToday = DateTime(today.year, today.month, today.day);
-    for (var fixture in result) {
-      final competitionId = fixture['competitionId'] as int?;
-      if (competitionId == null ||
-          !AppConstants.availableLeagues.contains(competitionId)) {
-        continue;
-      }
-      final model = SoccerFixtureModel.fromJson(
-        fixture,
-        fixtureLeague: League.light(
-          id: competitionId,
-          name: fixture['competitionDisplayName'],
-        ),
-      );
-      if (getOnlyCurrentDayFixtures && model.startTime != null) {
-        final localStartTime = model.startTime!.toLocal();
-        final fixtureDate = DateTime(
-          localStartTime.year,
-          localStartTime.month,
-          localStartTime.day,
-        );
+  SoccerFixtureModel _buildFixtureModel(Map<String, dynamic> fixture) {
+    final competitionId = (fixture['competitionId'] as num).toInt();
 
-        if (fixtureDate.isAfter(normalizedToday)) continue;
-      }
-      fixtures.add(model);
-    }
-    return fixtures;
+    return SoccerFixtureModel.fromJson(
+      fixture,
+      fixtureLeague: League.light(
+        id: competitionId,
+        name: fixture['competitionDisplayName'],
+      ),
+    );
   }
 }

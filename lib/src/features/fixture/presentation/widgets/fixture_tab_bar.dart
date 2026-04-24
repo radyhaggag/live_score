@@ -10,8 +10,8 @@ import '../../domain/entities/statistics.dart';
 import '../widgets/events_view.dart';
 import '../widgets/lineups_view.dart';
 import '../widgets/statistics_view.dart';
+import 'package:flutter/services.dart';
 
-/// The tab bar with Statistics, Lineups, Events buttons.
 class FixtureTabBar extends StatelessWidget {
   const FixtureTabBar({
     super.key,
@@ -26,68 +26,90 @@ class FixtureTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labels = [
-      context.l10n.statistics,
-      context.l10n.lineups,
-      context.l10n.events,
+    final tabs = [
+      (Icons.bar_chart, context.l10n.statistics),
+      (Icons.people, context.l10n.lineups),
+      (Icons.bolt, context.l10n.events),
     ];
 
-    return DecoratedBox(
+    return Container(
+      height: 52,
       decoration: BoxDecoration(
-        color: fixtureColor.withOpacitySafe(0.12),
-        borderRadius: BorderRadius.circular(20.r),
+        color: fixtureColor.withOpacitySafe(0.15),
+        borderRadius: BorderRadius.circular(26.r),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xs),
-        child: Row(
-          children: List.generate(
-            labels.length,
-            (i) => _TabBarButton(
-              label: labels[i],
-              isSelected: selectedIndex == i,
-              color: fixtureColor,
-              onPressed: () => onTabSelected(i),
+      child: Stack(
+        children: [
+          AnimatedAlign(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            alignment: selectedIndex == 0
+                ? Alignment.centerLeft
+                : selectedIndex == 1
+                    ? Alignment.center
+                    : Alignment.centerRight,
+            child: FractionallySizedBox(
+              widthFactor: 1 / 3,
+              child: Container(
+                margin: const EdgeInsets.all(AppSpacing.xs),
+                decoration: BoxDecoration(
+                  color: fixtureColor,
+                  borderRadius: BorderRadius.circular(22.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: fixtureColor.withValues(alpha: 0.4),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TabBarButton extends StatelessWidget {
-  const _TabBarButton({
-    required this.label,
-    required this.isSelected,
-    required this.color,
-    required this.onPressed,
-  });
-
-  final String label;
-  final bool isSelected;
-  final Color color;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xs),
-        child: FilledButton(
-          onPressed: onPressed,
-          style: FilledButton.styleFrom(
-            backgroundColor: isSelected ? color : color.withOpacitySafe(0.72),
-            foregroundColor: context.colorsExt.white,
-            padding: const EdgeInsets.symmetric(
-              vertical: AppSpacing.l - 2, // 14dp
-              horizontal: AppSpacing.m,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14.r),
+          Row(
+            children: List.generate(
+              tabs.length,
+              (i) => Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    onTabSelected(i);
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          tabs[i].$1,
+                          size: 16,
+                          color: selectedIndex == i
+                              ? context.colorsExt.white
+                              : Theme.of(context).colorScheme.onSurface,
+                        ),
+                        const SizedBox(width: 4),
+                        FittedBox(
+                          child: Text(
+                            tabs[i].$2,
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  color: selectedIndex == i
+                                      ? context.colorsExt.white
+                                      : Theme.of(context).colorScheme.onSurface,
+                                  fontWeight: selectedIndex == i
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
-          child: Text(label, textAlign: TextAlign.center),
-        ),
+        ],
       ),
     );
   }

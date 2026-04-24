@@ -10,42 +10,46 @@ class FixtureDetails extends Equatable {
   final SoccerFixture fixture;
   final List<Event> events;
   final List<Player> members;
-  final Venue venue;
+  final Venue? venue;
 
   const FixtureDetails({
     required this.fixture,
     required this.events,
     required this.members,
-    required this.venue,
+    this.venue,
   });
 
   // match each player with his lineup info
   List<FixturePlayerInfo> get homePlayersInfo {
     final homeLineup = fixture.teams.home.lineup;
     if (homeLineup == null) return [];
-    return members
-        .where((player) => player.competitorId == fixture.teams.home.id)
-        .map((player) {
-          final lineupMember = homeLineup.members.firstWhere(
-            (member) => member.id == player.id,
-          );
-          return FixturePlayerInfo(player: player, lineupMember: lineupMember);
-        })
-        .toList();
+    
+    final result = <FixturePlayerInfo>[];
+    for (final player in members) {
+      if (player.competitorId == fixture.teams.home.id) {
+        final lineupMembers = homeLineup.members.where((m) => m.id == player.id);
+        if (lineupMembers.isNotEmpty) {
+          result.add(FixturePlayerInfo(player: player, lineupMember: lineupMembers.first));
+        }
+      }
+    }
+    return result;
   }
 
   List<FixturePlayerInfo> get awayPlayersInfo {
     final awayLineup = fixture.teams.away.lineup;
     if (awayLineup == null) return [];
-    return members
-        .where((player) => player.competitorId == fixture.teams.away.id)
-        .map((player) {
-          final lineupMember = awayLineup.members.firstWhere(
-            (member) => member.id == player.id,
-          );
-          return FixturePlayerInfo(player: player, lineupMember: lineupMember);
-        })
-        .toList();
+    
+    final result = <FixturePlayerInfo>[];
+    for (final player in members) {
+      if (player.competitorId == fixture.teams.away.id) {
+        final lineupMembers = awayLineup.members.where((m) => m.id == player.id);
+        if (lineupMembers.isNotEmpty) {
+          result.add(FixturePlayerInfo(player: player, lineupMember: lineupMembers.first));
+        }
+      }
+    }
+    return result;
   }
 
   List<Event> get sortedEvents {

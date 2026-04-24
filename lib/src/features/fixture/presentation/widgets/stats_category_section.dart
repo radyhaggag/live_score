@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
+import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../domain/entities/statistics.dart';
 import 'stats_row.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
 
 /// A section of statistics grouped by category.
 class StatsCategorySection extends StatelessWidget {
@@ -27,21 +29,50 @@ class StatsCategorySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.analytics_outlined,
+                  size: 20,
+                  color: context.colorsExt.blue,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Container(
+              height: 3,
+              width: 40,
+              decoration: BoxDecoration(
+                gradient: context.colorsExt.liveGradient,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: AppSpacing.s),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: homeStats.length,
-          separatorBuilder: (_, _) => const Divider(height: 20),
-          itemBuilder: (context, index) {
-            return StatsRow(home: homeStats[index], away: awayStats[index]);
-          },
+        const SizedBox(height: AppSpacing.m),
+        Column(
+          children: List.generate(homeStats.length, (index) {
+            return Column(
+              children: [
+                StatsRow(home: homeStats[index], away: awayStats[index])
+                    .animate()
+                    .fade(duration: 300.ms, delay: (50 * index).ms)
+                    .slideY(begin: 0.1),
+                if (index < homeStats.length - 1)
+                  const SizedBox(height: AppSpacing.l),
+              ],
+            );
+          }),
         ),
       ],
     );

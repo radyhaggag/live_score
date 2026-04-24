@@ -29,22 +29,25 @@ class StatisticsView extends StatelessWidget {
     return Column(
       children: [
         StatsHeader(teams: statistics!.teams!),
-        ListView.separated(
-          physics: const NeverScrollableScrollPhysics(),
+        Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            final group = grouped[index];
-            return StatsCategorySection(
-              isTop: group.isTop,
-              categoryName: group.categoryName,
-              homeStats: group.homeStats,
-              awayStats: group.awayStats,
-            );
-          },
-          separatorBuilder:
-              (context, index) => const SizedBox(height: AppSpacing.xl),
-          itemCount: grouped.length,
+          child: Column(
+            children: List.generate(grouped.length, (index) {
+              final group = grouped[index];
+              return Column(
+                children: [
+                  StatsCategorySection(
+                    isTop: group.isTop,
+                    categoryName: group.categoryName,
+                    homeStats: group.homeStats,
+                    awayStats: group.awayStats,
+                  ),
+                  if (index < grouped.length - 1)
+                    const SizedBox(height: AppSpacing.xl),
+                ],
+              );
+            }),
+          ),
         ),
       ],
     );

@@ -17,6 +17,7 @@ class Teams extends Equatable {
 class Team extends Equatable {
   final int id;
   final String name;
+  final String? shortName;
   final String logo;
   final int score;
   final int? aggregatedScore;
@@ -33,8 +34,21 @@ class Team extends Equatable {
     this.color,
     this.awayColor,
     this.lineup,
+    this.shortName,
   });
 
   @override
-  List<Object?> get props => [id, name, logo, color, awayColor, score];
+  List<Object?> get props => [
+    id,
+    name,
+    logo,
+    color,
+    awayColor,
+    score,
+    aggregatedScore,
+    lineup,
+    shortName,
+  ];
+
+  String get displayName => shortName ?? name;
 }

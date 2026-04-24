@@ -67,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "events": MessageLookupByLibrary.simpleMessage("الأحداث"),
     "fixtures": MessageLookupByLibrary.simpleMessage("المباريات"),
     "form": MessageLookupByLibrary.simpleMessage("النتائج"),
+    "fullLineups": MessageLookupByLibrary.simpleMessage("التشكيل الكامل"),
     "goalDifferenceShort": MessageLookupByLibrary.simpleMessage("فارق"),
     "goalsAgainstShort": MessageLookupByLibrary.simpleMessage("عليه"),
     "goalsForShort": MessageLookupByLibrary.simpleMessage("له"),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
@@ -9,7 +10,7 @@ import 'package:live_score/src/core/extensions/responsive_size.dart';
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
-import '../cubit/soccer_cubit.dart';
+import '../cubit/soccer/soccer_cubit.dart';
 import 'sheet_action.dart';
 
 /// Sheet drag handle width and height constants.
@@ -24,10 +25,15 @@ Future<dynamic> buildBottomSheet({
   return showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
-    barrierColor: Colors.transparent,
+    barrierColor: Colors.black54,
     elevation: 0,
     isScrollControlled: true,
-    builder: (context) => ModalSheetContent(league: league, cubit: cubit),
+    useRootNavigator: true,
+    showDragHandle: false,
+    builder: (context) => SafeArea(
+      bottom: true,
+      child: ModalSheetContent(league: league, cubit: cubit),
+    ),
   );
 }
 
@@ -87,6 +93,7 @@ class ModalSheetContent extends StatelessWidget {
               title: l10n.viewFixtures,
               subtitle: l10n.fixtures,
               onTap: () {
+                HapticFeedback.selectionClick();
                 context.push(Routes.fixtures, extra: league.id);
                 context.pop();
               },
@@ -97,6 +104,7 @@ class ModalSheetContent extends StatelessWidget {
               title: l10n.viewStandings,
               subtitle: l10n.standings,
               onTap: () {
+                HapticFeedback.selectionClick();
                 context.push(Routes.standings, extra: league.id);
                 context.pop();
               },

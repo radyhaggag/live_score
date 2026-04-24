@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/l10n/app_l10n.dart';
@@ -77,14 +79,23 @@ class _EventsViewState extends State<EventsView> {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.xs),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: events.length,
-        itemBuilder:
-            (context, index) =>
-                EventCard(event: events[index], color: widget.color),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.l),
+      child: Column(
+        children: List.generate(events.length, (index) {
+          final event = events[index];
+          final isHomeTeam = event.team?.id == widget.fixtureDetails?.fixture.teams.home.id;
+          final isLast = index == events.length - 1;
+
+          return EventCard(
+            event: event,
+            color: widget.color,
+            isHomeTeam: isHomeTeam,
+            isLast: isLast,
+          )
+          .animate()
+          .fade(duration: 400.ms, delay: (50 * index).ms)
+          .slideY(begin: 0.1);
+        }),
       ),
     );
   }

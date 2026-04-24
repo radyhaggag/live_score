@@ -1,13 +1,14 @@
-import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/widgets/match_time_with_progress.dart';
 
+import '../../../../core/constants/app_decorations.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/extensions/context_ext.dart';
+import '../../../../core/extensions/date_time.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
 import 'view_team.dart';
@@ -19,20 +20,28 @@ class FixtureDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = MediaQuery.paddingOf(context).top;
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.xl,
-        horizontal: AppSpacing.l,
+      padding: EdgeInsets.only(
+        top: topPadding + 8,
+        bottom: AppSpacing.s,
+        left: AppSpacing.m,
+        right: AppSpacing.m,
       ),
       decoration: BoxDecoration(gradient: soccerFixture.gradientColor(context)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _LeagueRow(soccerFixture: soccerFixture),
-          const SizedBox(height: AppSpacing.s),
+          const SizedBox(height: AppSpacing.m),
           Row(
             children: [
-              Expanded(child: ViewTeam(team: soccerFixture.teams.home)),
+              Expanded(
+                child: ViewTeam(
+                  team: soccerFixture.teams.home,
+                  fixtureId: soccerFixture.id,
+                ),
+              ),
               Expanded(
                 child:
                     (soccerFixture.gameTime != null &&
@@ -40,18 +49,25 @@ class FixtureDetails extends StatelessWidget {
                         ? _FixtureResult(soccerFixture: soccerFixture)
                         : _FixtureTime(soccerFixture: soccerFixture),
               ),
-              Expanded(child: ViewTeam(team: soccerFixture.teams.away)),
+              Expanded(
+                child: ViewTeam(
+                  team: soccerFixture.teams.away,
+                  fixtureId: soccerFixture.id,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s),
+          const SizedBox(height: AppSpacing.m),
           _StatusBadge(soccerFixture: soccerFixture),
           if (soccerFixture.status.isLive) ...[
-            const SizedBox(height: AppSpacing.s),
+            const SizedBox(height: AppSpacing.m),
             MatchTimeWithProgress(
               time: soccerFixture.gameTimeDisplay,
               mainColor: context.colorsExt.white,
-              widthFactor: 4,
+              progress: (soccerFixture.gameTime ?? 0) / 90.0,
+              isLive: soccerFixture.status.isLive,
             ),
+            const SizedBox(height: AppSpacing.m),
           ],
         ],
       ),
@@ -65,27 +81,41 @@ class _LeagueRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomImage(
-          width: AppSpacing.xl,
-          height: AppSpacing.xl,
-          imageUrl: soccerFixture.fixtureLeague.logo,
-        ),
-        const SizedBox(width: AppSpacing.xs),
-        Flexible(
-          child: FittedBox(
-            child: Text(
-              soccerFixture.fixtureLeague.name,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: context.colorsExt.white),
-              textAlign: TextAlign.center,
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.s,
+        vertical: 2,
+      ),
+      decoration: AppDecorations.glassMorphism(context).copyWith(
+        borderRadius: BorderRadius.circular(20.r),
+        color: Colors.black.withValues(alpha: 0.3),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomImage(
+            width: 18,
+            height: 18,
+            imageUrl: soccerFixture.fixtureLeague.logo,
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                soccerFixture.fixtureLeague.name,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: context.colorsExt.white,
+                  fontWeight: FontWeight.w600,
+                ),
+                // textAlign: TextAlign.center,
+                // maxLines: 2,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -96,9 +126,18 @@ class _FixtureResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displaySmall = Theme.of(
-      context,
-    ).textTheme.displaySmall?.copyWith(color: context.colorsExt.white);
+    final displayLarge = Theme.of(context).textTheme.displayMedium?.copyWith(
+      color: context.colorsExt.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 28,
+      shadows: [
+        Shadow(
+          color: Colors.black.withValues(alpha: 0.3),
+          blurRadius: 8,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
 
     return Column(
       children: [
@@ -107,18 +146,18 @@ class _FixtureResult extends StatelessWidget {
           children: [
             Text(
               soccerFixture.teams.home.score.toString(),
-              style: displaySmall,
+              style: displayLarge,
             ),
             const SizedBox(width: AppSpacing.s),
-            Text(':', style: displaySmall),
+            Text(':', style: displayLarge),
             const SizedBox(width: AppSpacing.s),
             Text(
               soccerFixture.teams.away.score.toString(),
-              style: displaySmall,
+              style: displayLarge,
             ),
           ],
         ),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.s),
         _FixtureRound(soccerFixture: soccerFixture),
       ],
     );
@@ -131,12 +170,14 @@ class _FixtureTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localTime =
-        DateTime.parse(soccerFixture.startTime.toString()).toLocal();
-    final formattedTime = DateFormat(
-      'h:mm a',
-      context.localeName,
-    ).format(localTime);
+    final fixtureStartTime = soccerFixture.startTime;
+    final formattedTime =
+        fixtureStartTime == null
+            ? context.l10n.tbd
+            : fixtureStartTime.formatForLocale(
+              context.localeName,
+              pattern: 'h:mm a',
+            );
 
     return Column(
       children: [
@@ -144,7 +185,7 @@ class _FixtureTime extends StatelessWidget {
           formattedTime,
           style: Theme.of(
             context,
-          ).textTheme.headlineSmall?.copyWith(color: context.colorsExt.white),
+          ).textTheme.titleMedium?.copyWith(color: context.colorsExt.white),
         ),
         const SizedBox(height: AppSpacing.xs),
         _FixtureRound(soccerFixture: soccerFixture),
@@ -180,21 +221,24 @@ class _StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xl,
-        vertical: AppSpacing.xs + 1,
+        horizontal: AppSpacing.s,
+        vertical: 2,
       ),
-      decoration: BoxDecoration(
-        color:
-            soccerFixture.isThereWinner
-                ? context.colorsExt.lightRed
-                : context.colorsExt.darkBlue,
-        borderRadius: BorderRadius.circular(20.r),
+      decoration: AppDecorations.glassMorphism(context).copyWith(
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(
+          color: context.colorsExt.white.withValues(alpha: 0.3),
+          width: 1,
+        ),
       ),
       child: Text(
         soccerFixture.statusText,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(color: context.colorsExt.white),
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: context.colorsExt.white,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.0,
+          fontSize: 10,
+        ),
       ),
     );
   }

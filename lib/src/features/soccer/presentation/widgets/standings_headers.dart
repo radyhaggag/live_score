@@ -24,9 +24,30 @@ class StandingsHeaders extends StatelessWidget {
           context.l10n.goalDifferenceShort,
           context.l10n.pointsShort,
         ];
+        
+        // Use full text for tooltips based on what they represent
+        final tooltips = [
+          'Played', // Replace with l10n full strings if available, assuming English for now since l10n lacks full strings
+          'Won',
+          'Drawn',
+          'Lost',
+          'Goals For',
+          'Goals Against',
+          'Goal Difference',
+          'Points',
+        ];
 
         return Container(
-          color: context.colorsExt.grey.withOpacitySafe(.05),
+          decoration: BoxDecoration(
+            color: context.colorsExt.surfaceElevated,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacitySafe(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           padding: EdgeInsets.symmetric(
             vertical: metrics.headerVerticalPadding,
             horizontal: metrics.headerHorizontalPadding,
@@ -50,10 +71,13 @@ class StandingsHeaders extends StatelessWidget {
                 headers.length,
                 (index) => SizedBox(
                   width: metrics.statColumnWidth,
-                  child: Text(
-                    headers[index],
-                    textAlign: TextAlign.center,
-                    style: _getHeaderTextStyle(context),
+                  child: Tooltip(
+                    message: tooltips[index],
+                    child: Text(
+                      headers[index],
+                      textAlign: TextAlign.center,
+                      style: _getHeaderTextStyle(context),
+                    ),
                   ),
                 ),
               ),

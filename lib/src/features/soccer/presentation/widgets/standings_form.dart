@@ -20,27 +20,38 @@ class StandingsForm extends StatelessWidget {
   Color _background(BuildContext context, int number) => switch (number) {
     1 => context.colorsExt.green,
     0 => context.colorsExt.red,
-    2 => context.colorsExt.grey,
+    2 => context.colorsExt.deepOrange, // Amber/Orange for Draw
     _ => context.colorsExt.grey.withOpacitySafe(0.2),
   };
 
-  Icon? _icon(BuildContext context, int number) => switch (number) {
-    0 => _smallIcon(context, Icons.close),
-    1 => _smallIcon(context, Icons.check),
-    2 => _smallIcon(context, Icons.remove),
+  String? _letter(int number) => switch (number) {
+    0 => 'L',
+    1 => 'W',
+    2 => 'D',
     _ => null,
   };
 
-  Icon _smallIcon(BuildContext context, IconData icon) =>
-      Icon(icon, color: context.colorsExt.white, size: itemSize * 0.8);
+  Widget? _text(BuildContext context, int number) {
+    final letter = _letter(number);
+    if (letter == null) return null;
+    return Text(
+      letter,
+      style: TextStyle(
+        color: context.colorsExt.white,
+        fontSize: itemSize * 0.7,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
 
-  Widget _circle({Widget? child, required Color color}) => Container(
+  Widget _square({Widget? child, required Color color}) => Container(
     width: itemSize,
     height: itemSize,
     decoration: BoxDecoration(
       color: color,
-      borderRadius: BorderRadius.circular(50.r),
+      borderRadius: BorderRadius.circular(4.r), // Rounded square
     ),
+    alignment: Alignment.center,
     child: child,
   );
 
@@ -57,8 +68,8 @@ class StandingsForm extends StatelessWidget {
       spacing: spacing,
       children: List.generate(
         5,
-        (index) => _circle(
-          child: _icon(context, padded[index]),
+        (index) => _square(
+          child: _text(context, padded[index]),
           color: _background(context, padded[index]),
         ),
       ),

@@ -10,9 +10,9 @@ import 'package:live_score/src/core/widgets/app_loading.dart';
 import '../../../../core/widgets/app_empty.dart';
 import '../../../../core/widgets/leagues_header.dart';
 import '../../../../core/widgets/settings_language_listener.dart';
-import '../cubit/leagues_cubit.dart';
-import '../cubit/soccer_cubit.dart';
-import '../cubit/soccer_state.dart';
+import '../cubit/leagues/leagues_cubit.dart';
+import '../cubit/soccer/soccer_cubit.dart';
+import '../cubit/soccer/soccer_state.dart';
 import '../widgets/grouped_fixtures_list.dart';
 
 class FixturesScreen extends StatefulWidget {
@@ -107,9 +107,9 @@ class _FixturesScreenState extends State<FixturesScreen> {
   Widget _buildBody(BuildContext context, SoccerState state) {
     return switch (state) {
       SoccerCurrentRoundFixturesLoading() ||
-      SoccerTodayFixturesLoading() => const Align(
-        alignment: Alignment.topCenter,
-        child: AppLoadingIndicator(isLinear: true),
+      SoccerTodayFixturesLoading() => const ShimmerList(
+        itemCount: 8,
+        padding: EdgeInsets.only(bottom: 120),
       ),
       SoccerCurrentRoundFixturesLoaded(fixtures: final f) when f.isNotEmpty =>
         GroupedFixturesList(fixtures: f, showLeagueLogo: true),

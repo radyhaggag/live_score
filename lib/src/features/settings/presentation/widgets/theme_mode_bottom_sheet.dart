@@ -5,6 +5,10 @@ import '../../../../core/l10n/app_l10n.dart';
 import '../cubit/settings_cubit.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 
+import 'dart:ui';
+import 'package:live_score/src/core/extensions/context_ext.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+
 class ThemeModeBottomSheet extends StatelessWidget {
   const ThemeModeBottomSheet({super.key, required this.currentThemeMode});
 
@@ -13,52 +17,72 @@ class ThemeModeBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.surface.withValues(alpha: 0.8),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          border: Border.all(color: context.colorsExt.dividerSubtle, width: 1),
+        ),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.paddingOf(context).bottom + AppSpacing.l,
+          top: AppSpacing.s,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              child: Text(
-                l10n.appearance,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            // Handle bar
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: AppSpacing.l),
+              decoration: BoxDecoration(
+                color: context.colorsExt.textMuted.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-              child: Text(
-                l10n.appearanceDescription,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.appearance,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l10n.appearanceDescription,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: context.colorsExt.textMuted,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: AppSpacing.l),
-            ThemeModeOptionTile(
+            const SizedBox(height: AppSpacing.xl),
+            _ThemeOption(
               title: l10n.themeModeLabel(ThemeMode.system),
-              icon: Icons.brightness_auto_rounded,
+              icon: PhosphorIcons.deviceMobile(PhosphorIconsStyle.regular),
               mode: ThemeMode.system,
-              currentThemeMode: currentThemeMode,
+              isSelected: currentThemeMode == ThemeMode.system,
             ),
-            ThemeModeOptionTile(
+            _ThemeOption(
               title: l10n.themeModeLabel(ThemeMode.light),
-              icon: Icons.light_mode_rounded,
+              icon: PhosphorIcons.sun(PhosphorIconsStyle.regular),
               mode: ThemeMode.light,
-              currentThemeMode: currentThemeMode,
+              isSelected: currentThemeMode == ThemeMode.light,
             ),
-            ThemeModeOptionTile(
+            _ThemeOption(
               title: l10n.themeModeLabel(ThemeMode.dark),
-              icon: Icons.dark_mode_rounded,
+              icon: PhosphorIcons.moon(PhosphorIconsStyle.regular),
               mode: ThemeMode.dark,
-              currentThemeMode: currentThemeMode,
+              isSelected: currentThemeMode == ThemeMode.dark,
             ),
           ],
         ),
@@ -67,50 +91,66 @@ class ThemeModeBottomSheet extends StatelessWidget {
   }
 }
 
-class ThemeModeOptionTile extends StatelessWidget {
-  const ThemeModeOptionTile({
-    super.key,
+class _ThemeOption extends StatelessWidget {
+  const _ThemeOption({
     required this.title,
     required this.icon,
     required this.mode,
-    required this.currentThemeMode,
+    required this.isSelected,
   });
 
   final String title;
   final IconData icon;
   final ThemeMode mode;
-  final ThemeMode currentThemeMode;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isSelected = currentThemeMode == mode;
-
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-      leading: Icon(
-        icon,
-        color:
-            isSelected
-                ? colorScheme.primary
-                : colorScheme.onSurface.withValues(alpha: 0.6),
-      ),
-      title: Text(
-        title,
-        style: theme.textTheme.titleMedium?.copyWith(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected ? colorScheme.primary : colorScheme.onSurface,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l, vertical: AppSpacing.xs),
+      child: InkWell(
+        onTap: () {
+          context.read<SettingsCubit>().setThemeMode(mode);
+          Navigator.pop(context);
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
+          decoration: BoxDecoration(
+            color: isSelected ? context.colors.primary.withValues(alpha: 0.1) : Colors.transparent,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isSelected ? context.colors.primary.withValues(alpha: 0.2) : Colors.transparent,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: isSelected ? context.colors.primary : context.colorsExt.textMuted,
+                size: 24,
+              ),
+              const SizedBox(width: AppSpacing.m),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        color: isSelected ? context.colors.primary : context.colors.onSurface,
+                      ),
+                ),
+              ),
+              if (isSelected)
+                Icon(
+                  PhosphorIcons.checkCircle(PhosphorIconsStyle.fill),
+                  color: context.colors.primary,
+                  size: 20,
+                ),
+            ],
+          ),
         ),
       ),
-      trailing:
-          isSelected
-              ? Icon(Icons.check_circle_rounded, color: colorScheme.primary)
-              : null,
-      onTap: () {
-        context.read<SettingsCubit>().setThemeMode(mode);
-        Navigator.pop(context);
-      },
     );
   }
 }

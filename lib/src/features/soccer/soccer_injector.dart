@@ -8,8 +8,8 @@ import 'domain/use_cases/day_fixtures_usecase.dart';
 import 'domain/use_cases/leagues_usecase.dart';
 import 'domain/use_cases/live_fixtures_usecase.dart';
 import 'domain/use_cases/standings_usecase.dart';
-import 'presentation/cubit/leagues_cubit.dart';
-import 'presentation/cubit/soccer_cubit.dart';
+import 'presentation/cubit/leagues/leagues_cubit.dart';
+import 'presentation/cubit/soccer/soccer_cubit.dart';
 
 void initSoccer() {
   sl.registerLazySingleton<SoccerDataSource>(

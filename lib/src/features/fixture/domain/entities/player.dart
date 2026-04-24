@@ -8,6 +8,7 @@ class Player extends Equatable {
   final String shortName;
   final String nameForURL;
   final int number;
+  final int? imageId;
 
   const Player({
     required this.id,
@@ -16,8 +17,11 @@ class Player extends Equatable {
     required this.number,
     required this.shortName,
     required this.nameForURL,
+    this.imageId,
   });
 
+  String get displayName => shortName.isNotEmpty ? shortName : name;
+
   @override
-  List<Object?> get props => [id, name, number, shortName, nameForURL];
+  List<Object?> get props => [id, name, number, shortName, nameForURL, imageId];
 }

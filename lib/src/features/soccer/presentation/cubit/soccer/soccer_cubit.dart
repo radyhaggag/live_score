@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/usecase/usecase.dart';
-import '../../domain/use_cases/day_fixtures_usecase.dart';
-import '../../domain/use_cases/live_fixtures_usecase.dart';
-import '../../domain/use_cases/standings_usecase.dart';
+import '../../../../../core/usecase/usecase.dart';
+import '../../../domain/use_cases/day_fixtures_usecase.dart';
+import '../../../domain/use_cases/live_fixtures_usecase.dart';
+import '../../../domain/use_cases/standings_usecase.dart';
 import 'soccer_state.dart';
 
 /// Represents the soccer cubit entity/model.

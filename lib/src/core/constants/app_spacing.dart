@@ -6,6 +6,9 @@
 class AppSpacing {
   const AppSpacing._();
 
+  /// 2.0 - hairline dividers
+  static const double micro = 2;
+
   /// 4.0 — hairline gaps, icon-to-text micro-spacing.
   static const double xs = 4;
 
@@ -26,6 +29,9 @@ class AppSpacing {
 
   /// 32.0 — large section dividers.
   static const double xxxl = 32;
+
+  /// 40.0 - between major page sections
+  static const double section = 40;
 
   /// 48.0 — jumbo spacing for hero sections, major separators.
   static const double jumbo = 48;

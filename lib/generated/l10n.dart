@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -450,6 +449,16 @@ class S {
     return Intl.message(
       'All leagues',
       name: 'allLeaguesTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full Lineups`
+  String get fullLineups {
+    return Intl.message(
+      'Full Lineups',
+      name: 'fullLineups',
       desc: '',
       args: [],
     );

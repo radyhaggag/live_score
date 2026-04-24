@@ -10,7 +10,7 @@ class FixtureDetailsModel extends FixtureDetails {
     required super.fixture,
     required super.events,
     required super.members,
-    required super.venue,
+    super.venue,
   });
 
   factory FixtureDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -33,7 +33,7 @@ class FixtureDetailsModel extends FixtureDetails {
                   .map((e) => PlayerModel.fromJson(e))
                   .toList()
               : [],
-      venue: VenueModel.fromJson(json['venue']),
+      venue: json['venue'] != null ? VenueModel.fromJson(json['venue']) : null,
     );
   }
 }

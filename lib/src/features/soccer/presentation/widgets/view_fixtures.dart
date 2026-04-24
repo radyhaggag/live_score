@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../config/app_route.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/extensions/context_ext.dart';
+import '../../../../core/extensions/date_time.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/app_empty.dart';
 import 'fixture_card.dart';
@@ -36,22 +38,30 @@ class ViewDayFixtures extends StatelessWidget {
         Row(
           spacing: AppSpacing.s,
           children: [
-            Icon(Icons.calendar_month, color: context.colorsExt.blue),
+            Icon(
+              PhosphorIcons.calendarBlank(PhosphorIconsStyle.fill),
+              color: context.colors.primary,
+            ),
             Expanded(
               child: Text(
                 l10n.fixtures,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
             ViewAllTile(onTap: () => context.push(Routes.fixtures)),
           ],
         ),
         ...List.generate(fixtures.length, (index) {
-          final localTime = fixtures[index].startTime?.toLocal();
+          final localTime = fixtures[index].startTime;
           final formattedTime =
               localTime == null
                   ? l10n.tbd
-                  : DateFormat('h:mm a', context.localeName).format(localTime);
+                  : localTime.formatForLocale(
+                    context.localeName,
+                    pattern: 'h:mm a',
+                  );
 
           return InkWell(
             splashColor: Colors.transparent,
@@ -63,7 +73,7 @@ class ViewDayFixtures extends StatelessWidget {
               soccerFixture: fixtures[index],
               fixtureTime: formattedTime,
             ),
-          );
+          ).animate().fadeIn(delay: (index * 50).ms).slideY(begin: 0.1);
         }),
       ],
     );
@@ -137,7 +147,7 @@ class _ViewLiveFixturesState extends State<ViewLiveFixtures> {
           >= 760 => 205.0,
           _ => 190.0,
         };
-        final railHeight = constraints.maxWidth >= 760 ? 246.0 : 238.0;
+        final railHeight = constraints.maxWidth >= 760 ? 250.0 : 246.0;
         final scrollAmount = cardWidth + AppSpacing.xl;
 
         return Column(
@@ -147,20 +157,29 @@ class _ViewLiveFixturesState extends State<ViewLiveFixtures> {
             Row(
               spacing: AppSpacing.s,
               children: [
-                Icon(Icons.stream, color: context.colorsExt.red),
+                Icon(
+                      PhosphorIcons.monitorPlay(PhosphorIconsStyle.fill),
+                      color: context.colorsExt.red,
+                    )
+                    .animate(
+                      onPlay: (controller) => controller.repeat(reverse: true),
+                    )
+                    .fade(begin: 0.5, end: 1.0, duration: 1.seconds),
                 Expanded(
                   child: Text(
                     l10n.liveFixtures,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 _RailArrow(
-                  icon: Icons.arrow_back_ios_new_rounded,
+                  icon: PhosphorIcons.caretLeft(PhosphorIconsStyle.bold),
                   enabled: _canScrollLeft,
                   onTap: () => _scrollBy(-scrollAmount),
                 ),
                 _RailArrow(
-                  icon: Icons.arrow_forward_ios_rounded,
+                  icon: PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
                   enabled: _canScrollRight,
                   onTap: () => _scrollBy(scrollAmount),
                 ),
@@ -174,16 +193,19 @@ class _ViewLiveFixturesState extends State<ViewLiveFixtures> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap:
-                        () => context.push(
-                          Routes.fixtureDetails,
-                          extra: widget.fixtures[index],
+                        onTap:
+                            () => context.push(
+                              Routes.fixtureDetails,
+                              extra: widget.fixtures[index],
+                            ),
+                        child: LiveFixtureCard(
+                          soccerFixture: widget.fixtures[index],
+                          width: cardWidth,
                         ),
-                    child: LiveFixtureCard(
-                      soccerFixture: widget.fixtures[index],
-                      width: cardWidth,
-                    ),
-                  );
+                      )
+                      .animate()
+                      .fadeIn(delay: (index * 100).ms)
+                      .slideX(begin: 0.1);
                 },
                 separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.m),
                 itemCount: widget.fixtures.length,
@@ -215,7 +237,14 @@ class _RailArrow extends StatelessWidget {
         onPressed: enabled ? onTap : null,
         visualDensity: VisualDensity.compact,
         iconSize: 18,
-        icon: Icon(icon, color: context.colorsExt.white),
+        icon: Icon(
+          icon,
+          color:
+              enabled ? context.colors.onSurface : context.colorsExt.textMuted,
+        ),
+        style: IconButton.styleFrom(
+          backgroundColor: context.colorsExt.surfaceGlass,
+        ),
       ),
     );
   }

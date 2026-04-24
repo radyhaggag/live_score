@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/domain/entities/league.dart';
-import '../../../../core/usecase/usecase.dart';
-import '../../domain/use_cases/leagues_usecase.dart';
+
+import '../../../../../core/domain/entities/league.dart';
+import '../../../../../core/usecase/usecase.dart';
+import '../../../domain/use_cases/leagues_usecase.dart';
 import 'leagues_state.dart';
 
 /// Represents the leagues cubit entity/model.

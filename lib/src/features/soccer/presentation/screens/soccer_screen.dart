@@ -1,20 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/widgets/app_error_dialog.dart';
 
+import '../../../../core/utils/app_animations.dart';
 import '../../../../core/widgets/app_empty.dart';
-import '../../../../core/widgets/settings_language_listener.dart';
 import '../../../../core/widgets/app_loading.dart';
-import '../cubit/leagues_cubit.dart';
-import '../cubit/leagues_state.dart';
-import '../cubit/soccer_cubit.dart';
-import '../cubit/soccer_state.dart';
-import '../widgets/view_fixtures.dart';
 import '../../../../core/widgets/leagues_header.dart';
+import '../../../../core/widgets/settings_language_listener.dart';
+import '../cubit/leagues/leagues_cubit.dart';
+import '../cubit/leagues/leagues_state.dart';
+import '../cubit/soccer/soccer_cubit.dart';
+import '../cubit/soccer/soccer_state.dart';
 import '../widgets/modal_sheet_content.dart';
+import '../widgets/view_fixtures.dart';
 
 class SoccerScreen extends StatefulWidget {
   const SoccerScreen({super.key});
@@ -104,8 +106,10 @@ class _SoccerScreenState extends State<SoccerScreen> {
       child: RefreshIndicator(
         onRefresh: context.read<SoccerCubit>().getTodayFixtures,
         child: const SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.zero,
+          physics: BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          padding: EdgeInsets.only(bottom: 120), // Padding for floating nav bar
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: AppSpacing.xl,
@@ -175,23 +179,29 @@ class _ViewFixtures extends StatelessWidget {
           (context, state) => switch (state) {
             SoccerTodayFixturesLoading() => const Padding(
               padding: EdgeInsets.symmetric(vertical: AppSpacing.xxxl),
-              child: AppLoadingIndicator(),
+              child:
+                  ShimmerList(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                  ), // Use ShimmerList from Phase 2 instead of circular loading
             ),
             SoccerTodayFixturesLoaded(
               liveFixtures: final live,
               todayFixtures: final today,
             )
                 when today.isNotEmpty =>
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: AppSpacing.m,
+              StaggeredList(
                 children: [
                   if (live.isNotEmpty)
-                    RepaintBoundary(child: ViewLiveFixtures(fixtures: live)),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
+                      child: RepaintBoundary(child: ViewLiveFixtures(fixtures: live)),
+                    ),
                   if (today.isNotEmpty) ViewDayFixtures(fixtures: today),
                 ],
               ),
-            SoccerTodayFixturesLoaded() => const AppEmptyWidget(),
+            SoccerTodayFixturesLoaded() =>
+              const AppEmptyWidget().animate().fade().scale(),
             _ => const SizedBox.shrink(),
           },
     );
