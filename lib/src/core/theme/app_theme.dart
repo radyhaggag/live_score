@@ -70,12 +70,12 @@ ThemeData _buildTheme({
       fontSize: FontSize.bodyText,
       fontWeight: FontWeights.regular,
     ),
-    bodySmall: const TextStyle(
+    bodySmall: TextStyle(
       color: AppColors.white,
       fontSize: FontSize.details,
       fontWeight: FontWeights.medium,
     ),
-    labelMedium: const TextStyle(
+    labelMedium: TextStyle(
       color: AppColors.white,
       fontSize: FontSize.details,
       fontWeight: FontWeights.medium,
@@ -112,7 +112,8 @@ ThemeData _buildTheme({
       titleTextStyle: TextStyle(
         color: onSurfaceColor,
         fontWeight: FontWeight.bold,
-        fontSize: 17,
+        fontSize:
+            FontSize.subTitle + 1, // 19sp — matches Material AppBar title spec
       ),
       surfaceTintColor: surfaceColor,
     ),

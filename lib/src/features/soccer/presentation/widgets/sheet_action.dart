@@ -1,68 +1,9 @@
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/extensions/context_ext.dart';
-import '../../../../core/widgets/custom_image.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
-
-/// A team's logo inside a white circular avatar for the live fixture card.
-class LiveTeamLogo extends StatelessWidget {
-  const LiveTeamLogo({
-    super.key,
-    required this.logo,
-    required this.radius,
-    required this.imageSize,
-  });
-
-  final String logo;
-  final double radius;
-  final double imageSize;
-
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: context.colorsExt.white,
-      radius: radius,
-      child: CustomImage(width: imageSize, height: imageSize, imageUrl: logo),
-    );
-  }
-}
-
-/// A row showing a team name and their score in the live fixture card.
-class LiveTeamTile extends StatelessWidget {
-  const LiveTeamTile({
-    super.key,
-    required this.name,
-    required this.goals,
-    required this.teamTextStyle,
-    required this.goalsTextStyle,
-  });
-
-  final String name;
-  final String goals;
-  final TextStyle? teamTextStyle;
-  final TextStyle? goalsTextStyle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            name,
-            maxLines: 1,
-            softWrap: false,
-            overflow: TextOverflow.ellipsis,
-            style: teamTextStyle,
-          ),
-        ),
-        const SizedBox(width: AppSpacing.s),
-        Text(goals, style: goalsTextStyle),
-      ],
-    );
-  }
-}
 
 /// A sheet action button row used in the league bottom sheet.
 class SheetAction extends StatelessWidget {
@@ -86,13 +27,13 @@ class SheetAction extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           onTap: onTap,
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.l),
             decoration: BoxDecoration(
               color: context.colorsExt.white.withOpacitySafe(0.12),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
                 color: context.colorsExt.white.withOpacitySafe(0.18),
               ),
@@ -104,7 +45,7 @@ class SheetAction extends StatelessWidget {
                   height: 46,
                   decoration: BoxDecoration(
                     color: context.colorsExt.white.withOpacitySafe(0.15),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: Icon(icon, color: context.colorsExt.white),
                 ),
@@ -122,7 +63,7 @@ class SheetAction extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSpacing.xs),
                       Text(
                         subtitle,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(

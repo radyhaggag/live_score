@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/constants/app_assets.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
 
-/// Shows when no statistics are available.
+/// Shown when no statistics are available for the selected fixture.
 class NoStatistics extends StatelessWidget {
   const NoStatistics({super.key});
 
@@ -16,10 +17,10 @@ class NoStatistics extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Image(
-            image: AssetImage(AppAssets.noStats),
-            width: 100,
-            height: 100,
+          Image(
+            image: const AssetImage(AppAssets.noStats),
+            width: 100.w,
+            height: 100.h,
           ),
           const SizedBox(height: AppSpacing.s),
           Text(

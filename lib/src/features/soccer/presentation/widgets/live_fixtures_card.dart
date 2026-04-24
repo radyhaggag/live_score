@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../../../../core/widgets/match_time_with_progress.dart';
-import 'sheet_action.dart';
+import 'live_team_logo.dart';
+import 'live_team_tile.dart';
 
+/// A compact card displaying a live fixture in the horizontal rail.
 class LiveFixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
   final double? width;
@@ -17,175 +21,106 @@ class LiveFixtureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width ?? 200,
+      width: width ?? 200.w,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         gradient: soccerFixture.gradientColor(context),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isTightCard =
-              constraints.maxWidth < 210 || constraints.maxHeight < 250;
-          final isVeryTightCard =
-              constraints.maxWidth < 195 || constraints.maxHeight < 235;
-          final horizontalPadding = isVeryTightCard ? 12.0 : 15.0;
-          final verticalPadding =
-              isVeryTightCard
-                  ? 6.0
-                  : isTightCard
-                  ? 7.0
-                  : 9.0;
-          final contentSpacing =
-              isVeryTightCard
-                  ? 4.0
-                  : isTightCard
-                  ? 6.0
-                  : 10.0;
-          final leagueLogoSize =
-              isVeryTightCard
-                  ? 18.0
-                  : isTightCard
-                  ? 22.0
-                  : 26.0;
-          final leagueLogoPadding = isVeryTightCard ? 2.0 : 4.0;
-          final teamLogoRadius =
-              isVeryTightCard
-                  ? 10.0
-                  : isTightCard
-                  ? 12.0
-                  : 14.0;
-          final teamLogoSize =
-              isVeryTightCard
-                  ? 15.0
-                  : isTightCard
-                  ? 19.0
-                  : 22.0;
-          final statusHorizontalPadding =
-              isVeryTightCard
-                  ? 10.0
-                  : isTightCard
-                  ? 12.0
-                  : 16.0;
-          final leagueTextStyle = (isVeryTightCard
-                  ? Theme.of(context).textTheme.labelSmall
-                  : Theme.of(context).textTheme.bodySmall)
-              ?.copyWith(
-                color: context.colorsExt.white,
-                fontWeight: FontWeight.bold,
-              );
-          final teamTextStyle = (isVeryTightCard
-                  ? Theme.of(context).textTheme.bodySmall
-                  : Theme.of(context).textTheme.bodyMedium)
-              ?.copyWith(color: context.colorsExt.white);
-          final goalsTextStyle = (isVeryTightCard
-                  ? Theme.of(context).textTheme.titleSmall
-                  : Theme.of(context).textTheme.bodyLarge)
-              ?.copyWith(
-                color: context.colorsExt.white,
-                fontWeight: FontWeight.bold,
-              );
-          final statusTextStyle = (isVeryTightCard
-                  ? Theme.of(context).textTheme.labelSmall
-                  : Theme.of(context).textTheme.bodySmall)
-              ?.copyWith(
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: AppSpacing.l,
+        vertical: AppSpacing.m,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: AppSpacing.m,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: AppSpacing.s,
+            children: [
+              CustomImage(
+                height: 22.w,
+                width: 22.w,
+                imageUrl: soccerFixture.fixtureLeague.logo,
+              ),
+              Flexible(
+                child: Text(
+                  soccerFixture.fixtureLeague.name,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: context.colorsExt.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              LiveTeamLogo(
+                logo: soccerFixture.teams.home.logo,
+                radius: 14.r,
+                imageSize: 22.w,
+              ),
+              LiveTeamLogo(
+                logo: soccerFixture.teams.away.logo,
+                radius: 14.r,
+                imageSize: 22.w,
+              ),
+            ],
+          ),
+          LiveTeamTile(
+            name: soccerFixture.teams.home.name.teamName,
+            goals: soccerFixture.teams.home.score.toString(),
+            teamTextStyle: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.colorsExt.white),
+            goalsTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: context.colorsExt.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          LiveTeamTile(
+            name: soccerFixture.teams.away.name.teamName,
+            goals: soccerFixture.teams.away.score.toString(),
+            teamTextStyle: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.colorsExt.white),
+            goalsTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: context.colorsExt.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          MatchTimeWithProgress(
+            time: soccerFixture.gameTimeDisplay,
+            mainColor: context.colorsExt.white,
+            widthFactor: 3,
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.l,
+              vertical: AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: context.colorsExt.white,
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Text(
+              soccerFixture.statusText,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: context.colorsExt.red,
                 fontWeight: FontWeight.bold,
-              );
-
-          return Padding(
-            padding: EdgeInsetsDirectional.symmetric(
-              horizontal: horizontalPadding,
-              vertical: verticalPadding,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            child: Column(
-              mainAxisAlignment:
-                  isVeryTightCard
-                      ? MainAxisAlignment.spaceEvenly
-                      : MainAxisAlignment.center,
-              spacing: contentSpacing,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: isVeryTightCard ? 6 : 8,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(leagueLogoPadding),
-                      child: CustomImage(
-                        height: leagueLogoSize,
-                        width: leagueLogoSize,
-                        imageUrl: soccerFixture.fixtureLeague.logo,
-                      ),
-                    ),
-                    Flexible(
-                      child: Text(
-                        soccerFixture.fixtureLeague.name,
-                        style: leagueTextStyle,
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    LiveTeamLogo(
-                      logo: soccerFixture.teams.home.logo,
-                      radius: teamLogoRadius,
-                      imageSize: teamLogoSize,
-                    ),
-                    LiveTeamLogo(
-                      logo: soccerFixture.teams.away.logo,
-                      radius: teamLogoRadius,
-                      imageSize: teamLogoSize,
-                    ),
-                  ],
-                ),
-                LiveTeamTile(
-                  name: soccerFixture.teams.home.name.teamName,
-                  goals: soccerFixture.teams.home.score.toString(),
-                  teamTextStyle: teamTextStyle,
-                  goalsTextStyle: goalsTextStyle,
-                ),
-                LiveTeamTile(
-                  name: soccerFixture.teams.away.name.teamName,
-                  goals: soccerFixture.teams.away.score.toString(),
-                  teamTextStyle: teamTextStyle,
-                  goalsTextStyle: goalsTextStyle,
-                ),
-                MatchTimeWithProgress(
-                  time: soccerFixture.gameTimeDisplay,
-                  mainColor: context.colorsExt.white,
-                  widthFactor: isVeryTightCard ? 2 : 3,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: statusHorizontalPadding,
-                    vertical:
-                        isVeryTightCard
-                            ? 3
-                            : isTightCard
-                            ? 4
-                            : 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.colorsExt.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    soccerFixture.statusText,
-                    style: statusTextStyle,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

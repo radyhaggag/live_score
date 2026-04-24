@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
-import 'package:live_score/src/core/layout/adaptive_layout.dart';
-import 'package:live_score/src/core/extensions/context_ext.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/color.dart';
+import 'package:live_score/src/core/extensions/context_ext.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
+import 'package:live_score/src/core/layout/adaptive_layout.dart';
 
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../cubit/soccer_cubit.dart';
 import 'sheet_action.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
+
+/// Sheet drag handle width and height constants.
+const double _kDragHandleWidth = 46;
+const double _kDragHandleHeight = 5;
 
 Future<dynamic> buildBottomSheet({
   required BuildContext context,
@@ -41,21 +46,21 @@ class ModalSheetContent extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.l),
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: context.isCompactWindow ? double.infinity : 520,
             ),
             child: Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSpacing.xxl),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [Color(0xFF102B68), Color(0xFF2C6BED)],
                 ),
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(28.r),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacitySafe(0.18),
@@ -70,11 +75,11 @@ class ModalSheetContent extends StatelessWidget {
                 children: [
                   Center(
                     child: Container(
-                      width: 46,
-                      height: 5,
+                      width: _kDragHandleWidth,
+                      height: _kDragHandleHeight,
                       decoration: BoxDecoration(
                         color: context.colorsExt.white.withOpacitySafe(0.6),
-                        borderRadius: BorderRadius.circular(999),
+                        borderRadius: BorderRadius.circular(999.r),
                       ),
                     ),
                   ),
@@ -119,14 +124,18 @@ class _LeagueHeader extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 60,
-          height: 60,
+          width: 60.w,
+          height: 60.h,
           decoration: BoxDecoration(
             color: context.colorsExt.white.withValues(alpha: 0.14),
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(18.r),
           ),
           child: Center(
-            child: CustomImage(width: 34, height: 34, imageUrl: league.logo),
+            child: CustomImage(
+              width: 34.w,
+              height: 34.h,
+              imageUrl: league.logo,
+            ),
           ),
         ),
         const SizedBox(width: AppSpacing.m),

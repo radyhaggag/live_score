@@ -3,16 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/context_ext.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/widgets/app_error_dialog.dart';
 import 'package:live_score/src/core/widgets/app_loading.dart';
 
 import '../../../../core/widgets/app_empty.dart';
+import '../../../../core/widgets/leagues_header.dart';
 import '../../../../core/widgets/settings_language_listener.dart';
 import '../cubit/leagues_cubit.dart';
 import '../cubit/soccer_cubit.dart';
 import '../cubit/soccer_state.dart';
 import '../widgets/grouped_fixtures_list.dart';
-import '../widgets/leagues_header.dart';
 
 class FixturesScreen extends StatefulWidget {
   const FixturesScreen({super.key, this.competitionId});
@@ -31,57 +32,61 @@ class _FixturesScreenState extends State<FixturesScreen> {
     super.initState();
     initialSelectedLeagueId = widget.competitionId;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (initialSelectedLeagueId == null) {
-        context.read<SoccerCubit>().getTodayFixtures();
-      } else {
-        context.read<SoccerCubit>().getCurrentRoundFixtures(
-          competitionId: initialSelectedLeagueId!,
-        );
-      }
+      _fetchFixtures();
     });
+  }
+
+  void _fetchFixtures() {
+    final cubit = context.read<SoccerCubit>();
+    if (initialSelectedLeagueId == null) {
+      cubit.getTodayFixtures();
+    } else {
+      cubit.getCurrentRoundFixtures(competitionId: initialSelectedLeagueId!);
+    }
+  }
+
+  void _onLanguageChanged(BuildContext context, _) {
+    context.read<LeaguesCubit>().getLeagues(forceRefresh: true);
+    _fetchFixtures();
+  }
+
+  void _onSoccerError(BuildContext context, SoccerState state) {
+    if (state is SoccerTodayFixturesLoadFailure) {
+      AppErrorDialog.show(
+        context: context,
+        message: state.message,
+        onRetry: context.read<SoccerCubit>().getTodayFixtures,
+      );
+    } else if (state is SoccerCurrentRoundFixturesLoadFailure) {
+      AppErrorDialog.show(
+        context: context,
+        message: state.message,
+        onRetry: () {
+          if (state.competitionId != null) {
+            context.read<SoccerCubit>().getCurrentRoundFixtures(
+              competitionId: state.competitionId!,
+            );
+          }
+        },
+      );
+    }
+  }
+
+  bool _shouldRebuild(SoccerState previous, SoccerState current) {
+    return current is SoccerTodayFixturesLoading ||
+        current is SoccerTodayFixturesLoadFailure ||
+        current is SoccerTodayFixturesLoaded ||
+        current is SoccerCurrentRoundFixturesLoading ||
+        current is SoccerCurrentRoundFixturesLoadFailure ||
+        current is SoccerCurrentRoundFixturesLoaded;
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        SettingsLanguageListener(
-          onLanguageChanged: (context, state) {
-            final soccerCubit = context.read<SoccerCubit>();
-            context.read<LeaguesCubit>().getLeagues(forceRefresh: true);
-            if (initialSelectedLeagueId == null) {
-              soccerCubit.getTodayFixtures();
-            } else {
-              soccerCubit.getCurrentRoundFixtures(
-                competitionId: initialSelectedLeagueId!,
-              );
-            }
-          },
-        ),
-        BlocListener<SoccerCubit, SoccerState>(
-          listener: (context, state) {
-            if (state is SoccerTodayFixturesLoadFailure) {
-              AppErrorDialog.show(
-                context: context,
-                message: state.message,
-                onRetry: context.read<SoccerCubit>().getTodayFixtures,
-              );
-            }
-            if (state is SoccerCurrentRoundFixturesLoadFailure) {
-              AppErrorDialog.show(
-                context: context,
-                message: state.message,
-                onRetry: () {
-                  if (state.competitionId != null) {
-                    context.read<SoccerCubit>().getCurrentRoundFixtures(
-                      competitionId: state.competitionId!,
-                    );
-                  }
-                },
-              );
-            }
-          },
-        ),
+        SettingsLanguageListener(onLanguageChanged: _onLanguageChanged),
+        BlocListener<SoccerCubit, SoccerState>(listener: _onSoccerError),
       ],
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -90,55 +95,32 @@ class _FixturesScreenState extends State<FixturesScreen> {
           const SizedBox(height: AppSpacing.m),
           Expanded(
             child: BlocBuilder<SoccerCubit, SoccerState>(
-              buildWhen: (previous, current) {
-                return current is SoccerTodayFixturesLoading ||
-                    current is SoccerTodayFixturesLoadFailure ||
-                    current is SoccerTodayFixturesLoaded ||
-                    current is SoccerCurrentRoundFixturesLoading ||
-                    current is SoccerCurrentRoundFixturesLoadFailure ||
-                    current is SoccerCurrentRoundFixturesLoaded;
-              },
-              builder: (context, state) {
-                if (state is SoccerCurrentRoundFixturesLoading ||
-                    state is SoccerTodayFixturesLoading) {
-                  return const Align(
-                    alignment: Alignment.topCenter,
-                    child: AppLoadingIndicator(isLinear: true),
-                  );
-                }
-
-                if (state is SoccerCurrentRoundFixturesLoaded &&
-                    state.fixtures.isNotEmpty) {
-                  return GroupedFixturesList(
-                    fixtures: state.fixtures,
-                    showLeagueLogo: true,
-                  );
-                }
-
-                if (state is SoccerTodayFixturesLoaded &&
-                    state.todayFixtures.isNotEmpty) {
-                  return GroupedFixturesList(
-                    fixtures: state.todayFixtures,
-                    showLeagueLogo: true,
-                  );
-                }
-
-                if (state is SoccerCurrentRoundFixturesLoadFailure ||
-                    state is SoccerTodayFixturesLoadFailure) {
-                  return Center(
-                    child: AppEmptyWidget(
-                      message: context.l10n.errorLoadFixtures,
-                    ),
-                  );
-                }
-
-                return const Center(child: AppEmptyWidget());
-              },
+              buildWhen: _shouldRebuild,
+              builder: (context, state) => _buildBody(context, state),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildBody(BuildContext context, SoccerState state) {
+    return switch (state) {
+      SoccerCurrentRoundFixturesLoading() ||
+      SoccerTodayFixturesLoading() => const Align(
+        alignment: Alignment.topCenter,
+        child: AppLoadingIndicator(isLinear: true),
+      ),
+      SoccerCurrentRoundFixturesLoaded(fixtures: final f) when f.isNotEmpty =>
+        GroupedFixturesList(fixtures: f, showLeagueLogo: true),
+      SoccerTodayFixturesLoaded(todayFixtures: final f) when f.isNotEmpty =>
+        GroupedFixturesList(fixtures: f, showLeagueLogo: true),
+      SoccerCurrentRoundFixturesLoadFailure() ||
+      SoccerTodayFixturesLoadFailure() => Center(
+        child: AppEmptyWidget(message: context.l10n.errorLoadFixtures),
+      ),
+      _ => const Center(child: AppEmptyWidget()),
+    };
   }
 }
 
@@ -154,7 +136,9 @@ class _FixturesHeader extends StatelessWidget {
 
     return RectLeaguesHeader(
       leagues: leagues,
-      getFixtures: true,
+      onLeagueTap: (league) {
+        context.read<SoccerCubit>().getCurrentRoundFixtures(competitionId: league.id);
+      },
       initialSelectedLeagueId: screen?.initialSelectedLeagueId,
       prefixIcon: const _AllLeaguesPrefixIcon(),
       onPrefixIconTap: context.read<SoccerCubit>().getTodayFixtures,
@@ -170,10 +154,12 @@ class _AllLeaguesPrefixIcon extends StatelessWidget {
     return Tooltip(
       message: context.l10n.allLeaguesTooltip,
       child: Container(
-        height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        height: 45.h,
+        padding: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.m,
+        ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           gradient: context.colorsExt.blueGradient,
           border: Border.all(color: context.colorsExt.white, width: 1.5),
           boxShadow: [
@@ -187,7 +173,11 @@ class _AllLeaguesPrefixIcon extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.tune_rounded, color: context.colorsExt.white, size: 18),
+            Icon(
+              Icons.tune_rounded,
+              color: context.colorsExt.white,
+              size: 18.sp,
+            ),
             const SizedBox(width: AppSpacing.xs),
             Text(
               context.l10n.all,

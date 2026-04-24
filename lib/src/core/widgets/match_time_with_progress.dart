@@ -1,3 +1,4 @@
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/context_ext.dart';
 
@@ -64,7 +65,7 @@ class _MatchTimeWithProgressState extends State<MatchTimeWithProgress>
                 height: 3,
                 decoration: BoxDecoration(
                   color: widget.mainColor ?? context.colorsExt.red,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
             );

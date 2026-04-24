@@ -1,32 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/domain/entities/league.dart';
-import '../../../../core/extensions/color.dart';
-import '../../../../core/extensions/context_ext.dart';
-import '../../../../core/widgets/custom_image.dart';
-import '../../domain/use_cases/standings_usecase.dart';
-import '../cubit/soccer_cubit.dart';
-import 'league_card.dart';
-import 'modal_sheet_content.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
+
+import '../domain/entities/league.dart';
+import '../extensions/color.dart';
+import '../extensions/context_ext.dart';
+import 'custom_image.dart';
+import 'league_card.dart';
+
+/// Circle-avatar league header used on the main soccer screen.
+final double _kCircleHeaderHeight = 68.0.h;
+final double _kLeagueAvatarRadius = 25.0.r;
+final double _kLeagueLogoSize = 25.0.w;
 
 class CircleLeaguesHeader extends StatelessWidget {
   final List<League> leagues;
+  final void Function(BuildContext, League) onLeagueTap;
 
-  const CircleLeaguesHeader({super.key, required this.leagues});
+  const CircleLeaguesHeader({
+    super.key,
+    required this.leagues,
+    required this.onLeagueTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 68,
-      padding: const EdgeInsetsDirectional.only(start: 15),
+      height: _kCircleHeaderHeight,
+      padding: const EdgeInsetsDirectional.only(start: AppSpacing.l),
       decoration: BoxDecoration(
         gradient: context.colorsExt.blueGradient,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          topLeft: Radius.circular(40),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(40.r),
+          topLeft: Radius.circular(40.r),
         ),
       ),
       child: ListView.separated(
@@ -34,36 +41,30 @@ class CircleLeaguesHeader extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemBuilder:
             (context, index) =>
-                buildLeagueAvatar(league: leagues[index], context: context),
+                _buildLeagueAvatar(league: leagues[index], context: context),
         separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s),
         itemCount: leagues.length,
       ),
     );
   }
 
-  Widget buildLeagueAvatar({
+  Widget _buildLeagueAvatar({
     required League league,
     required BuildContext context,
   }) => MouseRegion(
     cursor: SystemMouseCursors.click,
     child: InkWell(
-      onTap: () {
-        buildBottomSheet(
-          context: context,
-          league: league,
-          cubit: context.read<SoccerCubit>(),
-        );
-      },
+      onTap: () => onLeagueTap(context, league),
       child: CircleAvatar(
         backgroundColor:
             league.color != null
                 ? league.color!.toColor
                 : context.colorsExt.blueGrey,
-        radius: 25,
+        radius: _kLeagueAvatarRadius,
         child: CustomImage(
           fit: BoxFit.contain,
-          width: 25,
-          height: 25,
+          width: _kLeagueLogoSize,
+          height: _kLeagueLogoSize,
           imageUrl: league.logo,
         ),
       ),
@@ -71,9 +72,11 @@ class CircleLeaguesHeader extends StatelessWidget {
   );
 }
 
+/// Rect-chip league header used on fixtures and standings screens.
+
 class RectLeaguesHeader extends StatefulWidget {
   final List<League> leagues;
-  final bool getFixtures;
+  final ValueChanged<League> onLeagueTap;
   final int? initialSelectedLeagueId;
   final Widget? prefixIcon;
   final VoidCallback? onPrefixIconTap;
@@ -81,7 +84,7 @@ class RectLeaguesHeader extends StatefulWidget {
   const RectLeaguesHeader({
     super.key,
     required this.leagues,
-    required this.getFixtures,
+    required this.onLeagueTap,
     this.initialSelectedLeagueId,
     this.prefixIcon,
     this.onPrefixIconTap,
@@ -108,25 +111,33 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
     }
   }
 
+  void _onLeagueTap(League league) {
+    widget.onLeagueTap(league);
+    setState(() => selectedLeagueId = league.id);
+  }
+
+  void _onPrefixTap() {
+    widget.onPrefixIconTap?.call();
+    setState(() => selectedLeagueId = null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.xs,
+        horizontal: AppSpacing.xs,
+      ),
       child: SizedBox(
-        height: 48,
+        height: 45.0.h,
         child: Row(
-          spacing: 8,
+          spacing: AppSpacing.s,
           children: [
             if (widget.prefixIcon != null)
               MouseRegion(
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
-                  onTap: () {
-                    if (widget.onPrefixIconTap != null) {
-                      widget.onPrefixIconTap!();
-                    }
-                    setState(() => selectedLeagueId = null);
-                  },
+                  onTap: _onPrefixTap,
                   child: widget.prefixIcon,
                 ),
               ),
@@ -139,32 +150,17 @@ class _RectLeaguesHeaderState extends State<RectLeaguesHeader> {
                 separatorBuilder:
                     (_, _) => const SizedBox(width: AppSpacing.xs),
                 itemBuilder: (context, index) {
-                  final viewCountryName = widget.leagues.any((l) {
-                    return l.name == widget.leagues[index].name &&
-                        l.id != widget.leagues[index].id;
-                  });
+                  final league = widget.leagues[index];
+                  final viewCountryName = widget.leagues.any(
+                    (l) => l.name == league.name && l.id != league.id,
+                  );
                   return MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: InkWell(
-                      onTap: () {
-                        if (widget.getFixtures == false) {
-                          final params = StandingsParams(
-                            leagueId: widget.leagues[index].id,
-                          );
-                          context.read<SoccerCubit>().getStandings(params);
-                        } else {
-                          context.read<SoccerCubit>().getCurrentRoundFixtures(
-                            competitionId: widget.leagues[index].id,
-                          );
-                        }
-                        setState(
-                          () => selectedLeagueId = widget.leagues[index].id,
-                        );
-                      },
+                      onTap: () => _onLeagueTap(league),
                       child: LeagueCard(
-                        league: widget.leagues[index],
-                        isSelected:
-                            selectedLeagueId == widget.leagues[index].id,
+                        league: league,
+                        isSelected: selectedLeagueId == league.id,
                         viewCountryName: viewCountryName,
                       ),
                     ),

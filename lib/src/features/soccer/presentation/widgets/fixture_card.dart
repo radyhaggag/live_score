@@ -1,3 +1,4 @@
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
@@ -27,18 +28,20 @@ class FixtureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 4).copyWith(top: 10),
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+      ).copyWith(top: AppSpacing.m),
       elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10.r),
         side: BorderSide(
           color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
         ),
       ),
       child: Padding(
         padding: const EdgeInsetsDirectional.symmetric(
-          vertical: 15,
-          horizontal: 10,
+          vertical: AppSpacing.l,
+          horizontal: AppSpacing.m,
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
