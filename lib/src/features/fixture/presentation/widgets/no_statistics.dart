@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:live_score/src/core/extensions/responsive_size.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/l10n/app_l10n.dart';
-import '../../../../core/constants/app_assets.dart';
+import '../../../../core/widgets/app_empty.dart';
 
 /// Shown when no statistics are available for the selected fixture.
 class NoStatistics extends StatelessWidget {
@@ -12,28 +11,12 @@ class NoStatistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 80.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image(
-              image: const AssetImage(AppAssets.noStats),
-              width: 60.w,
-              height: 60.h,
-            ),
-            const SizedBox(height: AppSpacing.m),
-            Text(
-              context.l10n.noStats,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: context.colorsExt.blueGrey,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32.0),
+      child: AppEmptyWidget(
+        message: context.l10n.noStats,
+        icon: PhosphorIcons.chartBar(PhosphorIconsStyle.regular),
+        color: context.colorsExt.blueGrey,
       ),
     );
   }

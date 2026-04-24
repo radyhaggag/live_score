@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
+import '../../../../core/extensions/context_ext.dart';
 import '../../domain/entities/statistics.dart';
 
 /// A single row comparing a home stat vs away stat.
@@ -18,9 +20,12 @@ class StatsRow extends StatelessWidget {
     final double homeFlex = total > 0 ? homeVal / total : 0.5;
     final double awayFlex = total > 0 ? awayVal / total : 0.5;
 
-    // Prevent flex from being exactly 0 which causes rendering issues
-    final int hFlex = (homeFlex * 1000).toInt().clamp(1, 1000);
-    final int aFlex = (awayFlex * 1000).toInt().clamp(1, 1000);
+    // Determine winner for color coding
+    final bool homeWins = homeVal > awayVal;
+    final bool awayWins = awayVal > homeVal;
+
+    final homeColor = homeWins ? context.colors.primary : context.colorsExt.textMuted.withValues(alpha: 0.3);
+    final awayColor = awayWins ? context.colors.primary : context.colorsExt.textMuted.withValues(alpha: 0.3);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -31,7 +36,14 @@ class StatsRow extends StatelessWidget {
             children: [
               SizedBox(
                 width: 40,
-                child: Text(home.value, style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.start),
+                child: Text(
+                  home.value, 
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: homeWins ? context.colors.primary : null,
+                  ), 
+                  textAlign: TextAlign.start
+                ),
               ),
               Expanded(
                 child: FittedBox(
@@ -40,47 +52,59 @@ class StatsRow extends StatelessWidget {
                     home.name,
                     textAlign: TextAlign.center,
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: context.colorsExt.textSubtle,
+                    ),
                   ),
                 ),
               ),
               SizedBox(
                 width: 40,
-                child: Text(away.value, style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.end),
+                child: Text(
+                  away.value, 
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: awayWins ? context.colors.primary : null,
+                  ), 
+                  textAlign: TextAlign.end
+                ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                flex: hFlex,
-                child: Container(
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(3),
-                      bottomLeft: Radius.circular(3),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final maxWidth = constraints.maxWidth;
+              // 4px gap between the two bars
+              final availableWidth = maxWidth - 4;
+              final homeWidth = (availableWidth * homeFlex).clamp(0.0, availableWidth);
+              final awayWidth = (availableWidth * awayFlex).clamp(0.0, availableWidth);
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Home Bar
+                  Container(
+                    width: homeWidth,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: homeColor,
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 2),
-              Expanded(
-                flex: aFlex,
-                child: Container(
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary,
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(3),
-                      bottomRight: Radius.circular(3),
+                  ).animate().scaleX(begin: 0, alignment: Alignment.centerRight, duration: 600.ms, curve: Curves.easeOutCubic),
+                  const SizedBox(width: 4),
+                  // Away Bar
+                  Container(
+                    width: awayWidth,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: awayColor,
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                  ),
-                ),
-              ),
-            ],
+                  ).animate().scaleX(begin: 0, alignment: Alignment.centerLeft, duration: 600.ms, curve: Curves.easeOutCubic),
+                ],
+              );
+            }
           ),
         ],
       ),

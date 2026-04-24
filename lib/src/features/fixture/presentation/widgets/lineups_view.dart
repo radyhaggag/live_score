@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
-import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/domain/entities/teams.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/features/fixture/domain/entities/fixture_details.dart';
 
 import '../../../../core/extensions/context_ext.dart';
-import '../../../../core/theme/app_fonts.dart';
 import '../../../../core/widgets/app_empty.dart';
 import '../../../../core/widgets/custom_image.dart';
 import 'pitch_painter.dart';
@@ -38,60 +37,100 @@ class LineupsView extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        _LineupTeamHeader(team: homeTeam!),
-        SizedBox(
-          width: double.infinity,
-          height: 560.h,
-          child: CustomPaint(
-            painter: PitchPainter(
-              pitchColor: context.colorsExt.darkGreen,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.m,
+        vertical: AppSpacing.l,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.1),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
-            child: Padding(
-              padding: const EdgeInsetsDirectional.only(
-                start: AppSpacing.m,
-                end: AppSpacing.m,
-                top: AppSpacing.xl,
-              ),
-              child: TeamsLineups(fixtureDetails: fixtureDetails!),
-            ),
-          ),
+          ],
         ),
-        _LineupTeamHeader(team: awayTeam!),
-      ],
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          children: [
+            _LineupTeamHeader(team: homeTeam!, isTop: true),
+            SizedBox(
+              width: double.infinity,
+              height: 560.h,
+              child: CustomPaint(
+                painter: PitchPainter(pitchColor: context.colorsExt.darkGreen),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: AppSpacing.m,
+                    end: AppSpacing.m,
+                    top: AppSpacing.xl,
+                  ),
+                  child: TeamsLineups(fixtureDetails: fixtureDetails!),
+                ),
+              ),
+            ),
+            _LineupTeamHeader(team: awayTeam!, isTop: false),
+          ],
+        ),
+      ),
     );
   }
 }
 
 /// Team header row showing logo, name, and formation string.
 class _LineupTeamHeader extends StatelessWidget {
-  const _LineupTeamHeader({required this.team});
+  const _LineupTeamHeader({required this.team, required this.isTop});
 
   final Team team;
+  final bool isTop;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.colorsExt.darkGreen,
-      padding: const EdgeInsetsDirectional.all(AppSpacing.s),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            context.colorsExt.darkGreen.withValues(alpha: 0.9),
+            context.colorsExt.darkGreen,
+          ],
+          begin: isTop ? Alignment.topCenter : Alignment.bottomCenter,
+          end: isTop ? Alignment.bottomCenter : Alignment.topCenter,
+        ),
+      ),
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: AppSpacing.m,
+        vertical: AppSpacing.s,
+      ),
       child: Row(
         children: [
-          CustomImage(width: 35.w, height: 35.h, imageUrl: team.logo),
+          CustomImage(width: 24, height: 24, imageUrl: team.logo),
           const SizedBox(width: AppSpacing.s),
           Expanded(
             child: Text(
               team.name.teamName,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: context.colorsExt.white),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: context.colorsExt.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          Text(
-            team.lineup?.formation ?? '',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.colorsExt.white,
-              fontWeight: FontWeights.semiBold,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: context.colorsExt.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Text(
+              team.lineup?.formation ?? '',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: context.colorsExt.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],

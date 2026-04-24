@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import '../../domain/entities/fixture_details.dart';
 import 'lineup_player.dart';
@@ -147,12 +148,19 @@ class _LineupTeamColumn extends StatelessWidget {
       );
     }
 
+    final animatedChildren = <Widget>[];
+    for (int i = 0; i < columnChildren.length; i++) {
+      animatedChildren.add(
+        columnChildren[i]
+            .animate()
+            .fade(duration: 400.ms, delay: (100 * i).ms)
+            .slideY(begin: isReversed ? -0.1 : 0.1),
+      );
+    }
+
     return Column(
-      mainAxisAlignment:
-          isReversed
-              ? MainAxisAlignment.spaceAround
-              : MainAxisAlignment.spaceEvenly,
-      children: columnChildren,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: animatedChildren,
     );
   }
 }

@@ -5,25 +5,26 @@ class PitchPainter extends CustomPainter {
   final Color lineColor;
 
   PitchPainter({
-    this.pitchColor = const Color(0xFF4CAF50), // Green
+    this.pitchColor = const Color(0xFF1E5631), // Darker, richer green
     this.lineColor = Colors.white,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+
+    // Draw the pitch background
     final paint = Paint()
       ..color = pitchColor
       ..style = PaintingStyle.fill;
-
-    // Draw the pitch background
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
+    canvas.drawRect(rect, paint);
 
     // Draw alternating grass stripes for realism
     final stripePaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.04)
+      ..color = Colors.white.withValues(alpha: 0.06)
       ..style = PaintingStyle.fill;
     
-    const int numStripes = 10;
+    const int numStripes = 12;
     final double stripeHeight = size.height / numStripes;
     for (int i = 0; i < numStripes; i++) {
       if (i % 2 == 0) {
@@ -34,14 +35,14 @@ class PitchPainter extends CustomPainter {
       }
     }
 
-    // Line drawing setup
+    // Line drawing setup (higher opacity)
     final linePaint = Paint()
-      ..color = lineColor.withValues(alpha: 0.5)
+      ..color = lineColor.withValues(alpha: 0.8)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
     // Draw outer boundary
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), linePaint);
+    canvas.drawRect(rect, linePaint);
 
     // Draw halfway line
     canvas.drawLine(
@@ -59,13 +60,13 @@ class PitchPainter extends CustomPainter {
 
     // Draw center spot
     final spotPaint = Paint()
-      ..color = lineColor.withValues(alpha: 0.5)
+      ..color = lineColor.withValues(alpha: 0.8)
       ..style = PaintingStyle.fill;
     canvas.drawCircle(Offset(size.width / 2, size.height / 2), 3, spotPaint);
 
     // Draw penalty areas
-    final double penaltyAreaWidth = size.width * 0.5;
-    final double penaltyAreaHeight = size.height * 0.16;
+    final double penaltyAreaWidth = size.width * 0.55;
+    final double penaltyAreaHeight = size.height * 0.14;
     final double penaltyAreaLeft = (size.width - penaltyAreaWidth) / 2;
 
     // Top penalty area
@@ -87,7 +88,7 @@ class PitchPainter extends CustomPainter {
 
     // Draw goal areas
     final double goalAreaWidth = size.width * 0.25;
-    final double goalAreaHeight = size.height * 0.06;
+    final double goalAreaHeight = size.height * 0.05;
     final double goalAreaLeft = (size.width - goalAreaWidth) / 2;
 
     // Top goal area
@@ -108,8 +109,7 @@ class PitchPainter extends CustomPainter {
     );
 
     // Draw penalty arcs
-    // We use drawArc for the "D" shapes
-    final double penaltySpotDistance = size.height * 0.12;
+    final double penaltySpotDistance = size.height * 0.10;
     final double arcRadius = size.width * 0.15;
 
     // Top penalty arc
@@ -169,8 +169,21 @@ class PitchPainter extends CustomPainter {
       false,
       linePaint,
     );
+
+    // Add vignette effect over everything
+    final vignettePaint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          Colors.transparent,
+          Colors.black.withValues(alpha: 0.4),
+        ],
+        stops: const [0.7, 1.0],
+        radius: 0.8,
+      ).createShader(rect);
+    canvas.drawRect(rect, vignettePaint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant PitchPainter oldDelegate) => 
+      pitchColor != oldDelegate.pitchColor || lineColor != oldDelegate.lineColor;
 }

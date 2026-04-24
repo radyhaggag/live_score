@@ -126,6 +126,8 @@ class FixtureCard extends StatelessWidget {
                           time: soccerFixture.gameTimeDisplay,
                           compact: true,
                           mainColor: context.colorsExt.red,
+                          progress: (soccerFixture.gameTime ?? 0) / 90.0,
+                          isLive: isLive,
                         )
                       else
                         FixtureStatusBadge(

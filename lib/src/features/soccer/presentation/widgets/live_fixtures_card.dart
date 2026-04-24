@@ -131,8 +131,9 @@ class LiveFixtureCard extends StatelessWidget {
           MatchTimeWithProgress(
             time: soccerFixture.gameTimeDisplay,
             mainColor: context.colorsExt.white,
-            widthFactor: 3,
+            progress: (soccerFixture.gameTime ?? 0) / 90.0,
             compact: true,
+            isLive: soccerFixture.status.isLive,
           ),
           
           Container(
