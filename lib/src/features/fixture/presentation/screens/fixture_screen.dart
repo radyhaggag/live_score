@@ -94,9 +94,10 @@ class _FixtureScreenState extends State<FixtureScreen> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: _appBarOpacity > 0
-              ? _fixtureColor.withValues(alpha: _appBarOpacity)
-              : Colors.transparent,
+          backgroundColor:
+              _appBarOpacity > 0
+                  ? _fixtureColor.withValues(alpha: _appBarOpacity)
+                  : Colors.transparent,
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: IconButton(
@@ -114,9 +115,9 @@ class _FixtureScreenState extends State<FixtureScreen> {
               child: Text(
                 '${homeTeam.name.teamName} ${context.l10n.versus} ${awayTeam.name.teamName}',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -142,16 +143,20 @@ class _FixtureScreenState extends State<FixtureScreen> {
             ),
           ],
           child: BlocBuilder<FixtureCubit, FixtureState>(
-            buildWhen: (prev, curr) =>
-                // Only rebuild the loading indicator when initial loading changes.
-                (curr is FixtureDetailsLoading && !curr.isTimerLoading) ||
-                (prev is FixtureDetailsLoading && curr is! FixtureDetailsLoading),
+            buildWhen:
+                (prev, curr) =>
+                    // Only rebuild the loading indicator when initial loading changes.
+                    (curr is FixtureDetailsLoading && !curr.isTimerLoading) ||
+                    (prev is FixtureDetailsLoading &&
+                        curr is! FixtureDetailsLoading),
             builder: (context, fixtureState) {
               // Also watch statistics loading state for the shared indicator.
               return BlocBuilder<StatisticsCubit, StatisticsState>(
-                buildWhen: (prev, curr) =>
-                    (curr is StatisticsLoading && !curr.isTimerLoading) ||
-                    (prev is StatisticsLoading && curr is! StatisticsLoading),
+                buildWhen:
+                    (prev, curr) =>
+                        (curr is StatisticsLoading && !curr.isTimerLoading) ||
+                        (prev is StatisticsLoading &&
+                            curr is! StatisticsLoading),
                 builder: (context, statisticsState) {
                   final isLoading =
                       (fixtureState is FixtureDetailsLoading &&
@@ -165,12 +170,12 @@ class _FixtureScreenState extends State<FixtureScreen> {
                   return RefreshIndicator(
                     onRefresh: () async {
                       await Future.wait([
-                        context
-                            .read<FixtureCubit>()
-                            .getFixtureDetails(widget.soccerFixture.id),
-                        context
-                            .read<StatisticsCubit>()
-                            .getStatistics(widget.soccerFixture.id),
+                        context.read<FixtureCubit>().getFixtureDetails(
+                          widget.soccerFixture.id,
+                        ),
+                        context.read<StatisticsCubit>().getStatistics(
+                          widget.soccerFixture.id,
+                        ),
                       ]);
                     },
                     child: ListView(
@@ -192,8 +197,9 @@ class _FixtureScreenState extends State<FixtureScreen> {
                               FixtureTabBar(
                                 selectedIndex: _selectedTabIndex,
                                 fixtureColor: _fixtureColor,
-                                onTabSelected: (i) =>
-                                    setState(() => _selectedTabIndex = i),
+                                onTabSelected: (i) {
+                                  setState(() => _selectedTabIndex = i);
+                                },
                               ),
                               if (isLoading)
                                 Padding(
@@ -204,18 +210,14 @@ class _FixtureScreenState extends State<FixtureScreen> {
                                   ),
                                 )
                               else
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 16),
-                                  child: AnimatedSwitcher(
-                                    duration:
-                                        const Duration(milliseconds: 300),
-                                    child: FixtureTabContent(
-                                      key: ValueKey(_selectedTabIndex),
-                                      selectedIndex: _selectedTabIndex,
-                                      statistics: _statistics,
-                                      fixtureDetails: _fixtureDetails,
-                                      fixtureColor: _fixtureColor,
-                                    ),
+                                AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 300),
+                                  child: FixtureTabContent(
+                                    key: ValueKey(_selectedTabIndex),
+                                    selectedIndex: _selectedTabIndex,
+                                    statistics: _statistics,
+                                    fixtureDetails: _fixtureDetails,
+                                    fixtureColor: _fixtureColor,
                                   ),
                                 ),
                             ],
