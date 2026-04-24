@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
@@ -11,7 +12,6 @@ import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../cubit/soccer_cubit.dart';
 import 'sheet_action.dart';
-import 'package:flutter/services.dart';
 
 /// Sheet drag handle width and height constants.
 const double _kDragHandleWidth = 46;
@@ -25,10 +25,15 @@ Future<dynamic> buildBottomSheet({
   return showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
-    barrierColor: Colors.transparent,
+    barrierColor: Colors.black54,
     elevation: 0,
     isScrollControlled: true,
-    builder: (context) => ModalSheetContent(league: league, cubit: cubit),
+    useRootNavigator: true,
+    showDragHandle: false,
+    builder: (context) => SafeArea(
+      bottom: true,
+      child: ModalSheetContent(league: league, cubit: cubit),
+    ),
   );
 }
 

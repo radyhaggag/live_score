@@ -43,6 +43,7 @@ class GroupedFixturesList extends StatelessWidget {
     );
 
     return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 120),
       itemCount: groupedItems.length,
       itemBuilder: (context, index) {
         final item = groupedItems[index];

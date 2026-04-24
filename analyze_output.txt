@@ -1,0 +1,17 @@
+Analyzing live_score...
+
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:85:36 - Undefined name 'AppLetterSpacing'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:143:54 - The method 'copyWith' isn't defined for the type 'Function'. Try correcting the name to the name of an existing method, or defining a method named 'copyWith'. - undefined_method
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:144:71 - The named parameter 'brightness' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:144:71 - The named parameter 'error' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:144:71 - The named parameter 'onError' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:144:71 - The named parameter 'onPrimary' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:144:71 - The named parameter 'onSecondary' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:144:71 - The named parameter 'onSurface' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:144:71 - The named parameter 'primary' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:144:71 - The named parameter 'secondary' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+  error - lib/src/features/soccer/presentation/widgets/live_fixtures_card.dart:160:36 - Undefined name 'AppLetterSpacing'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+   info - lib/src/core/widgets/app_loading.dart:91:29 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib/src/core/widgets/app_loading.dart:92:24 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+
+13 issues found.

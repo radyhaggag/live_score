@@ -111,14 +111,18 @@ class _StandingsScreenState extends State<StandingsScreen> {
     final groups = state.standings.groups ?? [];
 
     if (groups.isEmpty) {
-      return ScrollableStandingsTable(
-        teams: state.standings.standings,
-        totalTeams: state.standings.standings.length,
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 120),
+        child: ScrollableStandingsTable(
+          teams: state.standings.standings,
+          totalTeams: state.standings.standings.length,
+        ),
       );
     }
 
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 120),
       itemCount: groups.length,
       itemBuilder: (context, groupIndex) {
         final group = groups[groupIndex];

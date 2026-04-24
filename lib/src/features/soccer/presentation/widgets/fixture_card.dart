@@ -1,7 +1,7 @@
-import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
+import 'package:live_score/src/core/constants/app_decorations.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/extensions/context_ext.dart';
@@ -11,6 +11,7 @@ import '../../../../core/widgets/custom_image.dart';
 import 'fixture_league_section.dart';
 import 'fixture_score_text.dart';
 import 'fixture_status_badge.dart';
+
 class FixtureCard extends StatelessWidget {
   final SoccerFixture soccerFixture;
   final String? fixtureTime;
@@ -36,18 +37,13 @@ class FixtureCard extends StatelessWidget {
         horizontal: AppSpacing.s,
       ).copyWith(top: AppSpacing.m),
       decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: context.colorsExt.surfaceElevated,
+        borderRadius: AppBorderRadius.cardAll,
+        border: Border.all(color: context.colorsExt.dividerSubtle),
+        boxShadow: const [AppShadows.floatingShadow],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.m),
+        padding: const EdgeInsets.all(AppSpacing.l),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,7 +61,11 @@ class FixtureCard extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.s),
                 if (isLive)
-                  MatchTimeWithProgress(time: soccerFixture.gameTimeDisplay)
+                  MatchTimeWithProgress(
+                    time: soccerFixture.gameTimeDisplay,
+                    compact: true,
+                    mainColor: context.colorsExt.red,
+                  )
                 else
                   FixtureStatusBadge(
                     status: soccerFixture.status,
@@ -73,7 +73,10 @@ class FixtureCard extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: AppSpacing.l),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: AppSpacing.m),
+              child: Divider(height: 1),
+            ),
 
             // MIDDLE: Teams and Score
             Row(
@@ -91,13 +94,13 @@ class FixtureCard extends StatelessWidget {
                           imageUrl: homeTeam.logo,
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.s),
+                      const SizedBox(width: AppSpacing.m),
                       Flexible(
                         child: Text(
                           homeTeam.name.teamName,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -115,13 +118,21 @@ class FixtureCard extends StatelessWidget {
                         _ScoreRow(
                           homeScore: homeTeam.score,
                           awayScore: awayTeam.score,
+                          isLive: isLive,
                         )
                       else
-                        Text(
-                          fixtureTime ?? context.l10n.tbd,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: context.colorsExt.deepOrange,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: context.colorsExt.surfaceGlass,
+                            borderRadius: AppBorderRadius.smallAll,
+                          ),
+                          child: Text(
+                            fixtureTime ?? context.l10n.tbd,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: context.colors.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       if (homeTeam.aggregatedScore != null &&
@@ -145,12 +156,12 @@ class FixtureCard extends StatelessWidget {
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.s),
+                      const SizedBox(width: AppSpacing.m),
                       Hero(
                         tag: 'team_${awayTeam.id}_fixture_${soccerFixture.id}',
                         child: CustomImage(
@@ -175,17 +186,37 @@ class FixtureCard extends StatelessWidget {
 class _ScoreRow extends StatelessWidget {
   final int homeScore;
   final int awayScore;
+  final bool isLive;
 
-  const _ScoreRow({required this.homeScore, required this.awayScore});
+  const _ScoreRow({
+    required this.homeScore, 
+    required this.awayScore,
+    this.isLive = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        FixtureScoreText(value: homeScore.toString()),
-        const FixtureScoreText(value: ':'),
-        FixtureScoreText(value: awayScore.toString()),
+        FixtureScoreText(
+          value: homeScore.toString(),
+          color: isLive ? context.colorsExt.red : null,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Text(
+            ':',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: context.colorsExt.textMuted,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+        FixtureScoreText(
+          value: awayScore.toString(),
+          color: isLive ? context.colorsExt.red : null,
+        ),
       ],
     );
   }
@@ -208,11 +239,13 @@ class _AggregateRow extends StatelessWidget {
           context.l10n.aggregateScore(homeAgg.toString(), awayAgg.toString()),
           style: Theme.of(
             context,
-          ).textTheme.labelSmall?.copyWith(color: context.colorsExt.blueGrey),
+          ).textTheme.labelSmall?.copyWith(
+            color: context.colorsExt.textMuted,
+            fontWeight: FontWeight.w500,
+          ),
           textAlign: TextAlign.center,
         ),
       ],
     );
   }
 }
-

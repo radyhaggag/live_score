@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/constants/app_decorations.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
+import 'package:live_score/src/core/theme/app_fonts.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/extensions/context_ext.dart';
@@ -23,39 +26,38 @@ class LiveFixtureCard extends StatelessWidget {
     return Container(
       width: width ?? 200.w,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24.r),
+        borderRadius: AppBorderRadius.cardAll,
         gradient: soccerFixture.gradientColor(context),
         boxShadow: [
           BoxShadow(
             color: soccerFixture.gradientColor(context).colors.first.withValues(alpha: 0.4),
-            blurRadius: 12.r,
-            offset: const Offset(0, 6),
+            blurRadius: 16.r,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       padding: const EdgeInsetsDirectional.symmetric(
         horizontal: AppSpacing.l,
-        vertical: AppSpacing.s,
+        vertical: AppSpacing.m,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: AppSpacing.s,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            spacing: AppSpacing.s,
+            spacing: AppSpacing.xs,
             children: [
               CustomImage(
-                height: 22.w,
-                width: 22.w,
+                height: 18.w,
+                width: 18.w,
                 imageUrl: soccerFixture.fixtureLeague.logo,
               ),
               Flexible(
                 child: Text(
                   soccerFixture.fixtureLeague.name,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: context.colorsExt.white,
-                    fontWeight: FontWeight.bold,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: context.colorsExt.white.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w600,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 1,
@@ -65,74 +67,99 @@ class LiveFixtureCard extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                LiveTeamLogo(
+                  logo: soccerFixture.teams.home.logo,
+                  radius: 16.r,
+                  imageSize: 24.w,
+                ),
+                Text(
+                  'VS',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: context.colorsExt.white.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: AppLetterSpacing.extraWide,
+                  ),
+                ),
+                LiveTeamLogo(
+                  logo: soccerFixture.teams.away.logo,
+                  radius: 16.r,
+                  imageSize: 24.w,
+                ),
+              ],
+            ),
+          ),
+          
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              LiveTeamLogo(
-                logo: soccerFixture.teams.home.logo,
-                radius: 14.r,
-                imageSize: 22.w,
+              LiveTeamTile(
+                name: soccerFixture.teams.home.name.teamName,
+                goals: soccerFixture.teams.home.score.toString(),
+                teamTextStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: context.colorsExt.white,
+                  fontWeight: FontWeight.w500,
+                ),
+                goalsTextStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: context.colorsExt.white,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
-              LiveTeamLogo(
-                logo: soccerFixture.teams.away.logo,
-                radius: 14.r,
-                imageSize: 22.w,
+              const SizedBox(height: 2),
+              LiveTeamTile(
+                name: soccerFixture.teams.away.name.teamName,
+                goals: soccerFixture.teams.away.score.toString(),
+                teamTextStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: context.colorsExt.white,
+                  fontWeight: FontWeight.w500,
+                ),
+                goalsTextStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: context.colorsExt.white,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ],
           ),
-          LiveTeamTile(
-            name: soccerFixture.teams.home.name.teamName,
-            goals: soccerFixture.teams.home.score.toString(),
-            teamTextStyle: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: context.colorsExt.white),
-            goalsTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: context.colorsExt.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          LiveTeamTile(
-            name: soccerFixture.teams.away.name.teamName,
-            goals: soccerFixture.teams.away.score.toString(),
-            teamTextStyle: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: context.colorsExt.white),
-            goalsTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: context.colorsExt.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          
+          const SizedBox(height: AppSpacing.xs),
+          
           MatchTimeWithProgress(
             time: soccerFixture.gameTimeDisplay,
             mainColor: context.colorsExt.white,
             widthFactor: 3,
+            compact: true,
           ),
+          
           Container(
+            margin: const EdgeInsets.only(top: AppSpacing.s),
             padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.l,
-              vertical: AppSpacing.xs,
+              horizontal: AppSpacing.m,
+              vertical: 4,
             ),
-            decoration: BoxDecoration(
-              color: context.colorsExt.white.withValues(alpha: 0.9),
+            decoration: AppDecorations.glassMorphism(context).copyWith(
               borderRadius: BorderRadius.circular(20.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              color: context.colorsExt.white.withValues(alpha: 0.2),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _LiveIndicator(size: 6.r, color: context.colorsExt.red),
-                const SizedBox(width: AppSpacing.s),
+                Icon(
+                  PhosphorIcons.clock(PhosphorIconsStyle.fill),
+                  size: 12,
+                  color: context.colorsExt.white,
+                ),
+                const SizedBox(width: 6),
                 Text(
                   soccerFixture.statusText,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: context.colorsExt.red,
-                    fontWeight: FontWeight.bold,
+                    color: context.colorsExt.white,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: AppLetterSpacing.wide,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 1,
@@ -142,50 +169,6 @@ class LiveFixtureCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _LiveIndicator extends StatefulWidget {
-  final double size;
-  final Color color;
-  const _LiveIndicator({required this.size, required this.color});
-
-  @override
-  State<_LiveIndicator> createState() => _LiveIndicatorState();
-}
-
-class _LiveIndicatorState extends State<_LiveIndicator>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _controller,
-      child: Container(
-        width: widget.size,
-        height: widget.size,
-        decoration: BoxDecoration(
-          color: widget.color,
-          shape: BoxShape.circle,
-        ),
       ),
     );
   }
