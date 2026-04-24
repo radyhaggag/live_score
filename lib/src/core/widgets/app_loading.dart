@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:shimmer/shimmer.dart';
 
-import '../extensions/context_ext.dart';
 import '../constants/app_decorations.dart';
+import '../extensions/context_ext.dart';
 
 /// Represents the app loading indicator entity/model.
 class AppLoadingIndicator extends StatelessWidget {
@@ -88,8 +88,8 @@ class ShimmerList extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: itemCount,
-      separatorBuilder: (_, __) => SizedBox(height: spacing),
-      itemBuilder: (_, __) => ShimmerCard(height: itemHeight),
+      separatorBuilder: (_, _) => SizedBox(height: spacing),
+      itemBuilder: (_, _) => ShimmerCard(height: itemHeight),
     );
   }
 }

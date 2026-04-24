@@ -23,36 +23,33 @@ class FixtureLeagueSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (showLogo) ...[
-              CustomImage(height: 13, width: 13, imageUrl: league.logo),
-              const SizedBox(width: AppSpacing.xs),
-            ],
-            Flexible(
-              child: Text(
-                league.name,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: context.colorsExt.blueGrey,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+        if (showLogo) ...[
+          CustomImage(height: 28, width: 28, imageUrl: league.logo),
+          const SizedBox(height: AppSpacing.xs),
+        ],
+        Text(
+          league.name,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: context.colorsExt.blueGrey,
+            fontWeight: FontWeight.w600,
+            fontSize: 10,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         if (roundNum != null) ...[
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: 2),
           Text(
             context.l10n.roundNumber(roundNum.toString()),
             style: Theme.of(
               context,
-            ).textTheme.labelSmall?.copyWith(color: context.colorsExt.blueGrey),
+            ).textTheme.labelSmall?.copyWith(
+              color: context.colorsExt.blueGrey,
+              fontSize: 9,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

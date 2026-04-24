@@ -107,10 +107,7 @@ class _FixturesScreenState extends State<FixturesScreen> {
   Widget _buildBody(BuildContext context, SoccerState state) {
     return switch (state) {
       SoccerCurrentRoundFixturesLoading() ||
-      SoccerTodayFixturesLoading() => const Align(
-        alignment: Alignment.topCenter,
-        child: AppLoadingIndicator(isLinear: true),
-      ),
+      SoccerTodayFixturesLoading() => const ShimmerList(itemCount: 8),
       SoccerCurrentRoundFixturesLoaded(fixtures: final f) when f.isNotEmpty =>
         GroupedFixturesList(fixtures: f, showLeagueLogo: true),
       SoccerTodayFixturesLoaded(todayFixtures: final f) when f.isNotEmpty =>

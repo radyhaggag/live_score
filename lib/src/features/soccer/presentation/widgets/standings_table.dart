@@ -54,26 +54,30 @@ class StandingsTable extends StatelessWidget {
                 ? constraints.maxWidth
                 : minWidth;
 
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          child: SizedBox(
-            width: tableWidth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const StandingsHeaders(),
-                const SizedBox(height: AppSpacing.s),
-                ...List.generate(teams.length, (teamIndex) {
-                  final team = teams[teamIndex];
-                  return StandingsItem(
-                    teamRank: team,
-                    totalTeams: totalTeams,
-                    isGrouped: isGrouped,
-                  );
-                }),
-                const SizedBox(height: AppSpacing.s),
-              ],
+        return Scrollbar(
+          thumbVisibility: true,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              width: tableWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const StandingsHeaders(),
+                  const SizedBox(height: AppSpacing.s),
+                  ...List.generate(teams.length, (teamIndex) {
+                    final team = teams[teamIndex];
+                    return StandingsItem(
+                      teamRank: team,
+                      totalTeams: totalTeams,
+                      isGrouped: isGrouped,
+                      index: teamIndex,
+                    );
+                  }),
+                  const SizedBox(height: AppSpacing.s),
+                ],
+              ),
             ),
           ),
         );
@@ -103,32 +107,60 @@ class ScrollableStandingsTable extends StatelessWidget {
                 ? constraints.maxWidth
                 : minWidth;
 
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          child: SizedBox(
-            width: tableWidth,
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                const SliverToBoxAdapter(child: StandingsHeaders()),
-                const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
-                SliverList.builder(
-                  itemCount: teams.length,
-                  itemBuilder: (context, index) {
-                    final team = teams[index];
-                    return StandingsItem(
-                      teamRank: team,
-                      totalTeams: totalTeams,
-                    );
-                  },
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
-              ],
+        return Scrollbar(
+          thumbVisibility: true,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              width: tableWidth,
+              child: CustomScrollView(
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _StandingsHeaderDelegate(),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
+                  SliverList.builder(
+                    itemCount: teams.length,
+                    itemBuilder: (context, index) {
+                      final team = teams[index];
+                      return StandingsItem(
+                        teamRank: team,
+                        totalTeams: totalTeams,
+                        index: index,
+                      );
+                    },
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
+                ],
+              ),
             ),
           ),
         );
       },
     );
+  }
+}
+
+class _StandingsHeaderDelegate extends SliverPersistentHeaderDelegate {
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return const Material(
+      color: Colors.transparent, // Let the headers widget handle the styling
+      child: StandingsHeaders(),
+    );
+  }
+
+  @override
+  double get maxExtent => 44.0; // Estimate height based on StandingsHeaders padding/text
+
+  @override
+  double get minExtent => 44.0;
+
+  @override
+  bool shouldRebuild(covariant _StandingsHeaderDelegate oldDelegate) {
+    return false;
   }
 }

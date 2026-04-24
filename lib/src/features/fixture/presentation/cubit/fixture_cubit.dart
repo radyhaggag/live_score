@@ -32,6 +32,7 @@ class FixtureCubit extends Cubit<FixtureState> {
     try {
       emit(FixtureStatisticsLoading(isTimerLoading: isTimerLoading));
       final result = await statisticsUseCase(fixtureId);
+      if (isClosed) return;
       result.fold(
         (left) {
           emit(FixtureStatisticsLoadingFailure(message: left.message));
@@ -56,6 +57,7 @@ class FixtureCubit extends Cubit<FixtureState> {
     try {
       emit(FixtureDetailsLoading(isTimerLoading: isTimerLoading));
       final result = await fixtureDetailsUseCase(fixtureId);
+      if (isClosed) return;
       result.fold(
         (left) {
           emit(FixtureDetailsLoadingFailure(message: left.message));
