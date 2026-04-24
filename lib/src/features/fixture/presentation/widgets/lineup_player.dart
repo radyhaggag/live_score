@@ -1,8 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/constants/app_constants.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
-import 'package:live_score/src/core/extensions/strings.dart';
+import 'package:live_score/src/core/widgets/custom_image.dart';
 
 import '../../../../core/extensions/context_ext.dart';
 import '../../domain/entities/fixture_details.dart';
@@ -24,7 +25,8 @@ class LineupPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double markerSize = compact ? 24.0 : 29.0;
+    final double markerSize = compact ? 24.0 : 36.0;
+    final int? imageId = player.player.imageId;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -36,14 +38,17 @@ class LineupPlayer extends StatelessWidget {
             height: markerSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  context.colorsExt.white,
-                  context.colorsExt.white.withValues(alpha: 0.7),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient:
+                  imageId != null
+                      ? null
+                      : LinearGradient(
+                        colors: [
+                          context.colorsExt.white,
+                          context.colorsExt.white.withValues(alpha: 0.7),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.4),
@@ -51,25 +56,21 @@ class LineupPlayer extends StatelessWidget {
                   offset: const Offset(0, 3),
                 ),
               ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: primaryColor,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  player.player.number.toString(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: numberColor,
-                        fontWeight: FontWeight.w900,
-                        fontSize: compact ? 9 : 11,
-                      ),
-                ),
+              border: Border.all(
+                color: context.colorsExt.white.withValues(alpha: 0.5),
+                width: 1.5,
               ),
             ),
+            clipBehavior: Clip.antiAlias,
+            child:
+                imageId != null
+                    ? CustomImage(
+                      imageUrl: AppConstants.athleteImage(imageId, size: '120'),
+                      fit: BoxFit.cover,
+                      placeholder: _buildFallback(context, markerSize),
+                      errorWidget: _buildFallback(context, markerSize),
+                    )
+                    : _buildFallback(context, markerSize),
           ),
           const SizedBox(height: AppSpacing.xs),
           ClipRRect(
@@ -87,20 +88,35 @@ class LineupPlayer extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  player.player.name.playerName,
+                  player.player.shortName,
                   textAlign: TextAlign.center,
                   maxLines: compact ? 1 : 2,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: context.colorsExt.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: compact ? 8 : 9,
-                      ),
+                    color: context.colorsExt.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: compact ? 8 : 9,
+                  ),
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFallback(BuildContext context, double size) {
+    return Container(
+      decoration: BoxDecoration(shape: BoxShape.circle, color: primaryColor),
+      alignment: Alignment.center,
+      child: Text(
+        player.player.number.toString(),
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: numberColor,
+          fontWeight: FontWeight.w900,
+          fontSize: compact ? 9 : 14,
+        ),
       ),
     );
   }

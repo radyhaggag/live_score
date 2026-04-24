@@ -20,7 +20,7 @@ class PlayerModel extends Player {
       shortName: json['shortName'] ?? '',
       nameForURL: json['nameForURL'] ?? '',
       number: toInt(json['jerseyNumber']) ?? 0,
-      imageId: toInt(json['imageId']),
+      imageId: toInt(json['imageId']) ?? toInt(json['athleteId']),
     );
   }
 }

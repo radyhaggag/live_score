@@ -72,5 +72,6 @@
   "noStandingsYet": "No standings available yet.",
   "errorLoadStandings": "Unable to load standings right now.",
   "all": "All",
-  "allLeaguesTooltip": "All leagues"
+  "allLeaguesTooltip": "All leagues",
+  "fullLineups": "Full Lineups"
 }

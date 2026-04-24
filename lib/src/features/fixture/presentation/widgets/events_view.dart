@@ -80,12 +80,8 @@ class _EventsViewState extends State<EventsView> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.l),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: events.length,
-        padding: EdgeInsets.zero,
-        itemBuilder: (context, index) {
+      child: Column(
+        children: List.generate(events.length, (index) {
           final event = events[index];
           final isHomeTeam = event.team?.id == widget.fixtureDetails?.fixture.teams.home.id;
           final isLast = index == events.length - 1;
@@ -99,7 +95,7 @@ class _EventsViewState extends State<EventsView> {
           .animate()
           .fade(duration: 400.ms, delay: (50 * index).ms)
           .slideY(begin: 0.1);
-        },
+        }),
       ),
     );
   }

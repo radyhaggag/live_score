@@ -60,18 +60,19 @@ class StatsCategorySection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.m),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: homeStats.length,
-          padding: EdgeInsets.zero,
-          separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.l),
-          itemBuilder: (context, index) {
-            return StatsRow(home: homeStats[index], away: awayStats[index])
-                .animate()
-                .fade(duration: 300.ms, delay: (50 * index).ms)
-                .slideY(begin: 0.1);
-          },
+        Column(
+          children: List.generate(homeStats.length, (index) {
+            return Column(
+              children: [
+                StatsRow(home: homeStats[index], away: awayStats[index])
+                    .animate()
+                    .fade(duration: 300.ms, delay: (50 * index).ms)
+                    .slideY(begin: 0.1),
+                if (index < homeStats.length - 1)
+                  const SizedBox(height: AppSpacing.l),
+              ],
+            );
+          }),
         ),
       ],
     );

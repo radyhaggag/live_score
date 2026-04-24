@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:live_score/src/config/app_route.dart';
 import 'package:flutter/services.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
@@ -10,6 +9,7 @@ import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/domain/entities/league.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/extensions/color.dart';
+import '../../../../core/extensions/date_time.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/theme/app_fonts.dart';
 import '../../../../core/constants/app_decorations.dart';
@@ -50,7 +50,9 @@ class GroupedFixturesList extends StatelessWidget {
     // If all fixtures have the same league, group by Date.
     // If there are multiple leagues, group by League.
     final firstLeagueId = fixtures.first.fixtureLeague.id;
-    final allSameLeague = fixtures.every((f) => f.fixtureLeague.id == firstLeagueId);
+    final allSameLeague = fixtures.every(
+      (f) => f.fixtureLeague.id == firstLeagueId,
+    );
 
     if (allSameLeague) {
       return _buildDateGroupedList(context);
@@ -84,7 +86,10 @@ class GroupedFixturesList extends StatelessWidget {
               ),
             ),
           ),
-          FixtureCardItem(fixture: final fixture) => _buildFixtureCard(context, fixture),
+          FixtureCardItem(fixture: final fixture) => _buildFixtureCard(
+            context,
+            fixture,
+          ),
         };
 
         return FadeSlideIn(
@@ -112,32 +117,27 @@ class GroupedFixturesList extends StatelessWidget {
                 ),
               ),
               SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final fixture = groups[i].fixtures[index];
-                    return FadeSlideIn(
-                      delay: Duration(milliseconds: 30 * index.clamp(0, 10)),
-                      child: Column(
-                        children: [
-                          _buildFixtureCard(context, fixture),
-                          if (index < groups[i].fixtures.length - 1)
-                            Divider(
-                              color: context.colorsExt.dividerSubtle,
-                              height: 1,
-                              thickness: 1,
-                              indent: AppSpacing.xxl,
-                              endIndent: AppSpacing.l,
-                            ),
-                        ],
-                      ),
-                    );
-                  },
-                  childCount: groups[i].fixtures.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final fixture = groups[i].fixtures[index];
+                  return FadeSlideIn(
+                    delay: Duration(milliseconds: 30 * index.clamp(0, 10)),
+                    child: Column(
+                      children: [
+                        _buildFixtureCard(context, fixture),
+                        if (index < groups[i].fixtures.length - 1)
+                          Divider(
+                            color: context.colorsExt.dividerSubtle,
+                            height: 1,
+                            thickness: 1,
+                            indent: AppSpacing.xxl,
+                            endIndent: AppSpacing.l,
+                          ),
+                      ],
+                    ),
+                  );
+                }, childCount: groups[i].fixtures.length),
               ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.xl),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xl)),
             ],
           ),
         const SliverToBoxAdapter(
@@ -148,14 +148,11 @@ class GroupedFixturesList extends StatelessWidget {
   }
 
   Widget _buildFixtureCard(BuildContext context, SoccerFixture fixture) {
-    final localTime = fixture.startTime?.toLocal();
+    final localTime = fixture.startTime;
     final formattedTime =
         localTime == null
             ? context.l10n.tbd
-            : DateFormat(
-              'h:mm a',
-              context.localeName,
-            ).format(localTime);
+            : localTime.formatForLocale(context.localeName, pattern: 'h:mm a');
 
     return InkWell(
       onTap: () {
@@ -208,13 +205,13 @@ List<GroupedFixtureItem> _buildGroupedFixturesByDate(
   for (final fixture in sortedFixtures) {
     if (fixture.startTime == null) continue;
 
-    final localDate = fixture.startTime!.toLocal();
+    final localDate = fixture.startTime!.userLocal;
     final isSameYear = localDate.year == now.year;
 
-    final fixtureDate = DateFormat(
-      isSameYear ? 'EEEE, MMM d' : 'EEEE, MMM d, yyyy',
+    final fixtureDate = localDate.formatForLocale(
       localeName,
-    ).format(localDate);
+      pattern: isSameYear ? 'EEEE, MMM d' : 'EEEE, MMM d, yyyy',
+    );
 
     if (lastDate != fixtureDate) {
       groupedList.add(FixtureHeaderItem(fixtureDate));
@@ -233,7 +230,11 @@ class _LeagueHeaderDelegate extends SliverPersistentHeaderDelegate {
   _LeagueHeaderDelegate({required this.league, required this.context});
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     // Gradient bar + logo
     return Container(
       decoration: BoxDecoration(
@@ -246,15 +247,16 @@ class _LeagueHeaderDelegate extends SliverPersistentHeaderDelegate {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
-        boxShadow: overlapsContent
-            ? [
-                BoxShadow(
-                  color: Colors.black.withOpacitySafe(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                )
-              ]
-            : null,
+        boxShadow:
+            overlapsContent
+                ? [
+                  BoxShadow(
+                    color: Colors.black.withOpacitySafe(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+                : null,
       ),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.l,
@@ -272,11 +274,7 @@ class _LeagueHeaderDelegate extends SliverPersistentHeaderDelegate {
               boxShadow: const [AppShadows.elevatedShadow],
             ),
             child: Center(
-              child: CustomImage(
-                imageUrl: league.logo,
-                width: 18,
-                height: 18,
-              ),
+              child: CustomImage(imageUrl: league.logo, width: 18, height: 18),
             ),
           ),
           const SizedBox(width: AppSpacing.s),

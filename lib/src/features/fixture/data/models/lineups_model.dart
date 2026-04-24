@@ -49,7 +49,6 @@ class LineupMemberModel extends LineupMember {
   });
 
   factory LineupMemberModel.fromJson(Map<String, dynamic> json) {
-    print("Image Id for the member ${json['imageId']}");
     return LineupMemberModel(
       id: json['id'],
       status: toInt(json['status']) ?? 0,

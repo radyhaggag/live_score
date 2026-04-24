@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/extensions/responsive_size.dart';
@@ -9,6 +8,7 @@ import '../../../../core/constants/app_decorations.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/extensions/context_ext.dart';
+import '../../../../core/extensions/date_time.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
 import 'view_team.dart';
@@ -86,9 +86,10 @@ class _LeagueRow extends StatelessWidget {
         horizontal: AppSpacing.s,
         vertical: 2,
       ),
-      decoration: AppDecorations.glassMorphism(
-        context,
-      ).copyWith(borderRadius: BorderRadius.circular(20.r)),
+      decoration: AppDecorations.glassMorphism(context).copyWith(
+        borderRadius: BorderRadius.circular(20.r),
+        color: Colors.black.withValues(alpha: 0.3),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -100,14 +101,17 @@ class _LeagueRow extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.xs),
           Flexible(
-            child: Text(
-              soccerFixture.fixtureLeague.name,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: context.colorsExt.white,
-                fontWeight: FontWeight.w600,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                soccerFixture.fixtureLeague.name,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: context.colorsExt.white,
+                  fontWeight: FontWeight.w600,
+                ),
+                // textAlign: TextAlign.center,
+                // maxLines: 2,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -166,12 +170,14 @@ class _FixtureTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localTime =
-        DateTime.parse(soccerFixture.startTime.toString()).toLocal();
-    final formattedTime = DateFormat(
-      'h:mm a',
-      context.localeName,
-    ).format(localTime);
+    final fixtureStartTime = soccerFixture.startTime;
+    final formattedTime =
+        fixtureStartTime == null
+            ? context.l10n.tbd
+            : fixtureStartTime.formatForLocale(
+              context.localeName,
+              pattern: 'h:mm a',
+            );
 
     return Column(
       children: [

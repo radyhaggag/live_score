@@ -180,7 +180,10 @@ class _ViewFixtures extends StatelessWidget {
             SoccerTodayFixturesLoading() => const Padding(
               padding: EdgeInsets.symmetric(vertical: AppSpacing.xxxl),
               child:
-                  ShimmerList(), // Use ShimmerList from Phase 2 instead of circular loading
+                  ShimmerList(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                  ), // Use ShimmerList from Phase 2 instead of circular loading
             ),
             SoccerTodayFixturesLoaded(
               liveFixtures: final live,

@@ -72,5 +72,6 @@
   "noStandingsYet": "لا يوجد ترتيب متاح حالياً.",
   "errorLoadStandings": "تعذر تحميل الترتيب حالياً.",
   "all": "الكل",
-  "allLeaguesTooltip": "كل الدوريات"
+  "allLeaguesTooltip": "كل الدوريات",
+  "fullLineups": "التشكيل الكامل"
 }

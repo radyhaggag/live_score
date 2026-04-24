@@ -16,16 +16,23 @@ import 'teams_lineups.dart';
 ///
 /// Shows team headers above and below the pitch with formation strings,
 /// and renders player markers at their respective field positions.
-class LineupsView extends StatelessWidget {
+class LineupsView extends StatefulWidget {
   final FixtureDetails? fixtureDetails;
   final Color? color;
 
   const LineupsView({super.key, required this.fixtureDetails, this.color});
 
   @override
+  State<LineupsView> createState() => _LineupsViewState();
+}
+
+class _LineupsViewState extends State<LineupsView> {
+  int _selectedIndex = 0; // 0: Full, 1: Home, 2: Away
+
+  @override
   Widget build(BuildContext context) {
-    final homeTeam = fixtureDetails?.fixture.teams.home;
-    final awayTeam = fixtureDetails?.fixture.teams.away;
+    final homeTeam = widget.fixtureDetails?.fixture.teams.home;
+    final awayTeam = widget.fixtureDetails?.fixture.teams.away;
     final hasLineups =
         (homeTeam?.lineup?.formation ?? '').isNotEmpty &&
         (awayTeam?.lineup?.formation ?? '').isNotEmpty;
@@ -34,7 +41,7 @@ class LineupsView extends StatelessWidget {
       return AppEmptyWidget(
         icon: Icons.people,
         message: context.l10n.noLineups,
-        color: color,
+        color: widget.color,
       );
     }
 
@@ -43,52 +50,149 @@ class LineupsView extends StatelessWidget {
         horizontal: AppSpacing.m,
         vertical: AppSpacing.l,
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.1),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            _LineupTeamHeader(
-              team: homeTeam!,
-              isTop: true,
-              teamColor:
-                  ('#${homeTeam.color ?? homeTeam.awayColor ?? "1E5631"}')
-                      .toColor,
-            ),
-            SizedBox(
-              height: 640.h,
-              width: double.infinity,
-              child: CustomPaint(
-                painter: PitchPainter(pitchColor: context.colorsExt.darkGreen),
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: AppSpacing.m,
-                    end: AppSpacing.m,
-                    top: AppSpacing.xl,
-                  ),
-                  child: TeamsLineups(fixtureDetails: fixtureDetails!),
+      child: Column(
+        children: [
+          _buildSelector(homeTeam!, awayTeam!),
+          const SizedBox(height: AppSpacing.m),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.1),
+                  blurRadius: 15,
+                  offset: const Offset(0, 8),
                 ),
-              ),
+              ],
             ),
-            _LineupTeamHeader(
-              team: awayTeam!,
-              isTop: false,
-              teamColor:
-                  ('#${awayTeam.color ?? awayTeam.awayColor ?? "FFFFFF"}')
-                      .toColor,
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                if (_selectedIndex == 0 || _selectedIndex == 1)
+                  _LineupTeamHeader(
+                    team: homeTeam,
+                    isTop: true,
+                    teamColor:
+                        ('#${homeTeam.color ?? homeTeam.awayColor ?? "1E5631"}')
+                            .toColor,
+                  ),
+                if (_selectedIndex == 2)
+                  _LineupTeamHeader(
+                    team: awayTeam,
+                    isTop: true,
+                    teamColor:
+                        ('#${awayTeam.color ?? awayTeam.awayColor ?? "FFFFFF"}')
+                            .toColor,
+                  ),
+                SizedBox(
+                  height: 640.h,
+                  width: double.infinity,
+                  child: CustomPaint(
+                    painter: PitchPainter(
+                      pitchColor: context.colorsExt.darkGreen,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: AppSpacing.m,
+                        end: AppSpacing.m,
+                        top: AppSpacing.xl,
+                      ),
+                      child: TeamsLineups(
+                        fixtureDetails: widget.fixtureDetails!,
+                        showHome: _selectedIndex == 0 || _selectedIndex == 1,
+                        showAway: _selectedIndex == 0 || _selectedIndex == 2,
+                      ),
+                    ),
+                  ),
+                ),
+                if (_selectedIndex == 0)
+                  _LineupTeamHeader(
+                    team: awayTeam,
+                    isTop: false,
+                    teamColor:
+                        ('#${awayTeam.color ?? awayTeam.awayColor ?? "FFFFFF"}')
+                            .toColor,
+                  ),
+              ],
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelector(Team homeTeam, Team awayTeam) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: context.colorsExt.white.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: context.colorsExt.white.withValues(alpha: 0.05),
+        ),
+      ),
+      child: Row(
+        spacing: 5.w,
+        children: [
+          _SelectorItem(
+            label: context.l10n.fullLineups,
+            isSelected: _selectedIndex == 0,
+            onTap: () => setState(() => _selectedIndex = 0),
+          ),
+          _SelectorItem(
+            label: homeTeam.shortName ?? homeTeam.name.teamName,
+            isSelected: _selectedIndex == 1,
+            onTap: () => setState(() => _selectedIndex = 1),
+          ),
+          _SelectorItem(
+            label: awayTeam.shortName ?? awayTeam.name.teamName,
+            isSelected: _selectedIndex == 2,
+            onTap: () => setState(() => _selectedIndex = 2),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SelectorItem extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _SelectorItem({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? context.colorsExt.blue : context.colorsExt.grey,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color:
+                  isSelected
+                      ? Colors.white
+                      : context.colorsExt.white.withValues(alpha: 0.6),
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
         ),
       ),
     );

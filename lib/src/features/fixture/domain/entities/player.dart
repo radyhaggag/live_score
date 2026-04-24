@@ -21,5 +21,5 @@ class Player extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, name, number, shortName, nameForURL];
+  List<Object?> get props => [id, name, number, shortName, nameForURL, imageId];
 }

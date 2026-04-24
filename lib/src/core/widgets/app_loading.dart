@@ -76,17 +76,24 @@ class ShimmerList extends StatelessWidget {
     this.itemCount = 5,
     this.itemHeight = 120,
     this.spacing = 16.0,
+    this.shrinkWrap = false,
+    this.physics,
+    this.padding,
   });
 
   final int itemCount;
   final double itemHeight;
   final double spacing;
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      padding: padding,
+      shrinkWrap: shrinkWrap,
+      physics: physics,
       itemCount: itemCount,
       separatorBuilder: (_, _) => SizedBox(height: spacing),
       itemBuilder: (_, _) => ShimmerCard(height: itemHeight),

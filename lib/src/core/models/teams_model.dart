@@ -24,6 +24,7 @@ class TeamModel extends Team {
     super.score,
     super.aggregatedScore,
     super.lineup,
+    super.shortName,
   });
 
   factory TeamModel.fromJson(Map<String, dynamic> json) {
@@ -36,6 +37,7 @@ class TeamModel extends Team {
       awayColor: json['awayColor'],
       score: (json['score'] as num?)?.toInt() ?? -1,
       aggregatedScore: (json['aggregatedScore'] as num?)?.toInt(),
+      shortName: json['shortName'],
       lineup:
           json['lineups'] != null
               ? LineupModel.fromJson(json['lineups'])
