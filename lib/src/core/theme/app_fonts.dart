@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/responsive_size.dart';
+
 /// Represents the font size entity/model.
 class FontSize {
-  static const double paragraph = 12.0;
-  static const double details = 14.0;
-  static const double bodyText = 16.0;
-  static const double subTitle = 18.0;
-  static const double title = 24.0;
-  static const double mainTitle = 32.0;
+  static double get paragraph => 12.0.sp;
+  static double get details => 14.0.sp;
+  static double get bodyText => 16.0.sp;
+  static double get subTitle => 18.0.sp;
+  static double get title => 24.0.sp;
+  static double get mainTitle => 32.0.sp;
 }
 
 /// Represents the font weights entity/model.

@@ -1,12 +1,13 @@
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 
+import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/constants/app_assets.dart';
-import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../../domain/entities/event.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
 
 /// The full card for a single match event.
 class EventCard extends StatelessWidget {
@@ -18,12 +19,12 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.m),
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(AppSpacing.xl - 2), // 18dp
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12,
+          spacing: AppSpacing.m,
           children: [
             _EventTeamHeader(event: event),
             _EventDetailsRow(event: event, color: color),
@@ -44,7 +45,11 @@ class _EventTeamHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CustomImage(width: 20, height: 20, imageUrl: event.team?.logo ?? ''),
+        CustomImage(
+          width: AppSpacing.xl,
+          height: AppSpacing.xl,
+          imageUrl: event.team?.logo ?? '',
+        ),
         const SizedBox(width: AppSpacing.s),
         Flexible(
           child: Text(
@@ -71,7 +76,7 @@ class _EventDetailsRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CircleAvatar(
-          radius: 14,
+          radius: 14.r,
           backgroundColor: color,
           child: FittedBox(
             child: Text(
@@ -87,7 +92,7 @@ class _EventDetailsRow extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 10,
+            spacing: AppSpacing.m - 2, // 10dp
             children: [
               Row(
                 children: [
@@ -169,7 +174,7 @@ class _PenaltyMissedIcon extends StatelessWidget {
       children: [
         const Icon(Icons.sports_soccer, size: 24),
         CircleAvatar(
-          radius: 8,
+          radius: 8.r,
           backgroundColor: context.colorsExt.red,
           child: Icon(Icons.close, color: context.colorsExt.white, size: 10),
         ),
@@ -182,6 +187,10 @@ class _PenaltyMissedIcon extends StatelessWidget {
 class _EventCardIndicator extends StatelessWidget {
   const _EventCardIndicator({required this.event});
   final Event event;
+
+  /// Card indicator dimensions — fixed by design spec (standard card aspect ratio).
+  static const double _cardWidth = 18;
+  static const double _cardHeight = 24;
 
   @override
   Widget build(BuildContext context) {
@@ -199,8 +208,8 @@ class _EventCardIndicator extends StatelessWidget {
               event.type.id.isYellowCard
                   ? context.colorsExt.yellow
                   : context.colorsExt.red,
-          width: 18,
-          height: 24,
+          width: _cardWidth,
+          height: _cardHeight,
         ),
       ],
     );

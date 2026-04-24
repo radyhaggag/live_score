@@ -3,15 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../config/app_route.dart';
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
-import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/extensions/context_ext.dart';
+import '../../../../core/l10n/app_l10n.dart';
+import '../../../../core/widgets/app_empty.dart';
 import 'fixture_card.dart';
 import 'live_fixtures_card.dart';
-import '../../../../core/widgets/app_empty.dart';
 import 'view_all_tile.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
 
+/// Displays the list of today's fixtures with a section header.
 class ViewDayFixtures extends StatelessWidget {
   final List<SoccerFixture> fixtures;
 
@@ -19,53 +20,57 @@ class ViewDayFixtures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (fixtures.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.jumbo),
+        child: AppEmptyWidget(),
+      );
+    }
+
     final l10n = context.l10n;
-    return fixtures.isNotEmpty
-        ? Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12,
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: AppSpacing.m,
+      children: [
+        Row(
+          spacing: AppSpacing.s,
           children: [
-            Row(
-              spacing: 8,
-              children: [
-                Icon(Icons.calendar_month, color: context.colorsExt.blue),
-                Expanded(
-                  child: Text(
-                    l10n.fixtures,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-                ViewAllTile(onTap: () => context.push(Routes.fixtures)),
-              ],
+            Icon(Icons.calendar_month, color: context.colorsExt.blue),
+            Expanded(
+              child: Text(
+                l10n.fixtures,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
-            ...List.generate(fixtures.length, (index) {
-              final String fixtureTime = fixtures[index].startTime.toString();
-              final localTime = DateTime.parse(fixtureTime).toLocal();
-              final formattedTime = DateFormat(
-                'h:mm a',
-                context.localeName,
-              ).format(localTime);
-              return InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  context.push(Routes.fixtureDetails, extra: fixtures[index]);
-                },
-                child: FixtureCard(
-                  soccerFixture: fixtures[index],
-                  fixtureTime: formattedTime,
-                ),
-              );
-            }),
+            ViewAllTile(onTap: () => context.push(Routes.fixtures)),
           ],
-        )
-        : const Padding(
-          padding: EdgeInsets.symmetric(vertical: 48),
-          child: AppEmptyWidget(),
-        );
+        ),
+        ...List.generate(fixtures.length, (index) {
+          final localTime = fixtures[index].startTime?.toLocal();
+          final formattedTime =
+              localTime == null
+                  ? l10n.tbd
+                  : DateFormat('h:mm a', context.localeName).format(localTime);
+
+          return InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap:
+                () =>
+                    context.push(Routes.fixtureDetails, extra: fixtures[index]),
+            child: FixtureCard(
+              soccerFixture: fixtures[index],
+              fixtureTime: formattedTime,
+            ),
+          );
+        }),
+      ],
+    );
   }
 }
 
+/// Horizontal scrollable rail of live fixture cards.
 class ViewLiveFixtures extends StatefulWidget {
   final List<SoccerFixture> fixtures;
 
@@ -127,21 +132,20 @@ class _ViewLiveFixturesState extends State<ViewLiveFixtures> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final cardWidth =
-            constraints.maxWidth >= 1100
-                ? 220.0
-                : constraints.maxWidth >= 760
-                ? 205.0
-                : 190.0;
+        final cardWidth = switch (constraints.maxWidth) {
+          >= 1100 => 220.0,
+          >= 760 => 205.0,
+          _ => 190.0,
+        };
         final railHeight = constraints.maxWidth >= 760 ? 246.0 : 238.0;
-        final scrollAmount = cardWidth + 20;
+        final scrollAmount = cardWidth + AppSpacing.xl;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12,
+          spacing: AppSpacing.m,
           children: [
             Row(
-              spacing: 8,
+              spacing: AppSpacing.s,
               children: [
                 Icon(Icons.stream, color: context.colorsExt.red),
                 Expanded(
@@ -170,12 +174,11 @@ class _ViewLiveFixturesState extends State<ViewLiveFixtures> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {
-                      context.push(
-                        Routes.fixtureDetails,
-                        extra: widget.fixtures[index],
-                      );
-                    },
+                    onTap:
+                        () => context.push(
+                          Routes.fixtureDetails,
+                          extra: widget.fixtures[index],
+                        ),
                     child: LiveFixtureCard(
                       soccerFixture: widget.fixtures[index],
                       width: cardWidth,

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/domain/entities/teams.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/features/fixture/domain/entities/fixture_details.dart';
 
-import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/theme/app_fonts.dart';
-import '../../../../core/widgets/custom_image.dart';
 import '../../../../core/widgets/app_empty.dart';
+import '../../../../core/widgets/custom_image.dart';
 import 'teams_lineups.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
 
+/// Displays the full-pitch lineup for both teams.
+///
+/// Shows team headers above and below the pitch with formation strings,
+/// and renders player markers at their respective field positions.
 class LineupsView extends StatelessWidget {
   final FixtureDetails? fixtureDetails;
   final Color? color;
@@ -36,10 +40,10 @@ class LineupsView extends StatelessWidget {
 
     return Column(
       children: [
-        _buildTeamHeader(context: context, team: homeTeam!),
+        _LineupTeamHeader(team: homeTeam!),
         Container(
           width: double.infinity,
-          height: 560,
+          height: 560.h,
           decoration: const BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.fill,
@@ -47,24 +51,34 @@ class LineupsView extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-            ).copyWith(top: 20),
+            padding: const EdgeInsetsDirectional.only(
+              start: AppSpacing.m,
+              end: AppSpacing.m,
+              top: AppSpacing.xl,
+            ),
             child: TeamsLineups(fixtureDetails: fixtureDetails!),
           ),
         ),
-        _buildTeamHeader(context: context, team: awayTeam!),
+        _LineupTeamHeader(team: awayTeam!),
       ],
     );
   }
+}
 
-  Widget _buildTeamHeader({required BuildContext context, required Team team}) {
+/// Team header row showing logo, name, and formation string.
+class _LineupTeamHeader extends StatelessWidget {
+  const _LineupTeamHeader({required this.team});
+
+  final Team team;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: context.colorsExt.darkGreen,
-      padding: const EdgeInsetsDirectional.all(8),
+      padding: const EdgeInsetsDirectional.all(AppSpacing.s),
       child: Row(
         children: [
-          CustomImage(width: 35, height: 35, imageUrl: team.logo),
+          CustomImage(width: 35.w, height: 35.h, imageUrl: team.logo),
           const SizedBox(width: AppSpacing.s),
           Expanded(
             child: Text(
@@ -76,9 +90,9 @@ class LineupsView extends StatelessWidget {
           ),
           Text(
             team.lineup?.formation ?? '',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: FontSize.subTitle,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: context.colorsExt.white,
+              fontWeight: FontWeights.semiBold,
             ),
           ),
         ],

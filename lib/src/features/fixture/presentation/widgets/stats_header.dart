@@ -14,7 +14,12 @@ class StatsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.m,
+        AppSpacing.m,
+        AppSpacing.m,
+        0,
+      ),
       child: Row(
         children: [
           Expanded(

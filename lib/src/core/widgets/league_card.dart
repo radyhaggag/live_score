@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/context_ext.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 
-import '../../../../core/domain/entities/league.dart';
-import '../../../../core/widgets/custom_image.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
+import '../domain/entities/league.dart';
+import 'custom_image.dart';
+
+/// Minimum / maximum chip width and fixed height for the rect league card.
 
 class LeagueCard extends StatelessWidget {
   const LeagueCard({
@@ -30,11 +32,11 @@ class LeagueCard extends StatelessWidget {
     return Transform.scale(
       scale: isSelected ? 1.01 : 1.0,
       child: Container(
-        constraints: const BoxConstraints(minWidth: 84, maxWidth: 220),
-        height: 36,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        constraints: BoxConstraints(minWidth: 84.0.w, maxWidth: 220.0.w),
+        height: 45.0.h,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           gradient: isSelected ? context.colorsExt.redGradient : null,
           color:
               isSelected
@@ -61,7 +63,7 @@ class LeagueCard extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CustomImage(width: 18, height: 18, imageUrl: league.logo),
+              CustomImage(width: 18.w, height: 18.h, imageUrl: league.logo),
               const SizedBox(width: AppSpacing.xs),
               Text(
                 leagueTitle,

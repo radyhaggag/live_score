@@ -1,15 +1,16 @@
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 import 'package:live_score/src/core/extensions/fixture.dart';
 import 'package:live_score/src/core/widgets/match_time_with_progress.dart';
 
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/domain/entities/soccer_fixture.dart';
-import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/extensions/context_ext.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
 import 'view_team.dart';
-import 'package:live_score/src/core/constants/app_spacing.dart';
 
 class FixtureDetails extends StatelessWidget {
   final SoccerFixture soccerFixture;
@@ -19,7 +20,10 @@ class FixtureDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.xl,
+        horizontal: AppSpacing.l,
+      ),
       decoration: BoxDecoration(gradient: soccerFixture.gradientColor(context)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -65,8 +69,8 @@ class _LeagueRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CustomImage(
-          width: 20,
-          height: 20,
+          width: AppSpacing.xl,
+          height: AppSpacing.xl,
           imageUrl: soccerFixture.fixtureLeague.logo,
         ),
         const SizedBox(width: AppSpacing.xs),
@@ -175,13 +179,16 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xl,
+        vertical: AppSpacing.xs + 1,
+      ),
       decoration: BoxDecoration(
         color:
             soccerFixture.isThereWinner
                 ? context.colorsExt.lightRed
                 : context.colorsExt.darkBlue,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Text(
         soccerFixture.statusText,

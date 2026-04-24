@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../../../core/l10n/app_l10n.dart';
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/extensions/context_ext.dart';
+import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/app_empty.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/fixture_details.dart';
@@ -47,9 +47,9 @@ class _EventsViewState extends State<EventsView> {
 
     events =
         details.sortedEvents.map((event) {
-          final player = _firstWhereOrNull(
-            details.members,
+          final player = details.members.cast<dynamic>().firstWhere(
             (member) => member.id == event.playerId,
+            orElse: () => null,
           );
           final teams = details.fixture.teams;
           final team = teams.home.id == event.teamId ? teams.home : teams.away;
@@ -66,13 +66,6 @@ class _EventsViewState extends State<EventsView> {
         }).toList();
   }
 
-  T? _firstWhereOrNull<T>(Iterable<T> items, bool Function(T item) test) {
-    for (final item in items) {
-      if (test(item)) return item;
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     if (events.isEmpty) {
@@ -84,7 +77,7 @@ class _EventsViewState extends State<EventsView> {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(AppSpacing.xs),
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

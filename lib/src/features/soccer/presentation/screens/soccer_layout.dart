@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_score/src/config/app_route.dart';
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:live_score/src/core/layout/adaptive_layout.dart';
 
 import '../../../../core/l10n/app_l10n.dart';
@@ -109,9 +111,9 @@ class _SoccerHead extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      spacing: 12,
+      spacing: AppSpacing.m,
       children: [
-        Image.asset(AppAssets.appLogo, height: 32),
+        Image.asset(AppAssets.appLogo, height: 32.h),
         Text(
           context.l10n.bottomNavigationTitle(currentIndex),
           style: Theme.of(context).textTheme.titleMedium,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:live_score/src/config/app_route.dart';
+import 'package:live_score/src/core/constants/app_spacing.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
 import '../../../../core/extensions/context_ext.dart';
@@ -46,7 +47,10 @@ class GroupedFixturesList extends StatelessWidget {
         final item = groupedItems[index];
         return switch (item) {
           FixtureHeaderItem(date: final date) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            padding: const EdgeInsets.symmetric(
+              vertical: AppSpacing.m,
+              horizontal: AppSpacing.m,
+            ),
             child: Text(
               date,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(

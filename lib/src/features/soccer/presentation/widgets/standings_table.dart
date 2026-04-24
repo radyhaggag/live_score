@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/leagues_cubit.dart';
+import '../cubit/soccer_cubit.dart';
+import '../../domain/use_cases/standings_usecase.dart';
 
 import '../../domain/entities/team_rank.dart';
-import '../widgets/leagues_header.dart';
+import '../../../../core/widgets/leagues_header.dart';
 import '../widgets/standings_headers.dart';
 import '../widgets/standings_item.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
@@ -21,7 +23,9 @@ class StandingsHeader extends StatelessWidget {
     );
     return RectLeaguesHeader(
       leagues: leagues,
-      getFixtures: false,
+      onLeagueTap: (league) {
+        context.read<SoccerCubit>().getStandings(StandingsParams(leagueId: league.id));
+      },
       initialSelectedLeagueId: leagueId,
     );
   }

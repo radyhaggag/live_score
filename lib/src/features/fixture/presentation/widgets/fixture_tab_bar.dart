@@ -1,6 +1,8 @@
+import 'package:live_score/src/core/extensions/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:live_score/src/core/extensions/color.dart';
 
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/l10n/app_l10n.dart';
 import '../../domain/entities/fixture_details.dart';
@@ -33,10 +35,10 @@ class FixtureTabBar extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: fixtureColor.withOpacitySafe(0.12),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(AppSpacing.xs),
         child: Row(
           children: List.generate(
             labels.length,
@@ -70,15 +72,18 @@ class _TabBarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(AppSpacing.xs),
         child: FilledButton(
           onPressed: onPressed,
           style: FilledButton.styleFrom(
             backgroundColor: isSelected ? color : color.withOpacitySafe(0.72),
             foregroundColor: context.colorsExt.white,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+            padding: const EdgeInsets.symmetric(
+              vertical: AppSpacing.l - 2, // 14dp
+              horizontal: AppSpacing.m,
+            ),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(14.r),
             ),
           ),
           child: Text(label, textAlign: TextAlign.center),
@@ -105,23 +110,21 @@ class FixtureTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (selectedIndex == 0) {
-      return StatisticsView(
+    return switch (selectedIndex) {
+      0 => StatisticsView(
         key: ValueKey(statistics?.hashCode ?? 'no_statistics'),
         statistics: statistics,
-      );
-    }
-    if (selectedIndex == 1) {
-      return LineupsView(
+      ),
+      1 => LineupsView(
         key: ValueKey(fixtureDetails?.hashCode ?? 'no_details'),
         fixtureDetails: fixtureDetails,
         color: fixtureColor,
-      );
-    }
-    return EventsView(
-      key: ValueKey(fixtureDetails?.hashCode ?? 'no_details'),
-      fixtureDetails: fixtureDetails,
-      color: fixtureColor,
-    );
+      ),
+      _ => EventsView(
+        key: ValueKey(fixtureDetails?.hashCode ?? 'no_details'),
+        fixtureDetails: fixtureDetails,
+        color: fixtureColor,
+      ),
+    };
   }
 }
