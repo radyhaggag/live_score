@@ -11,7 +11,7 @@ class FixtureScoreText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       value,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
         color: context.colorsExt.deepOrange,
         fontWeight: FontWeight.bold,
       ),

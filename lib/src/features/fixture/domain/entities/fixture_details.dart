@@ -10,13 +10,13 @@ class FixtureDetails extends Equatable {
   final SoccerFixture fixture;
   final List<Event> events;
   final List<Player> members;
-  final Venue venue;
+  final Venue? venue;
 
   const FixtureDetails({
     required this.fixture,
     required this.events,
     required this.members,
-    required this.venue,
+    this.venue,
   });
 
   // match each player with his lineup info

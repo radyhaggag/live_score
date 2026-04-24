@@ -93,6 +93,7 @@ ThemeData _buildTheme({
   );
 
   return ThemeData(
+    fontFamily: 'Inter',
     brightness: colorScheme.brightness,
     colorScheme: colorScheme,
     scaffoldBackgroundColor: scaffoldBackgroundColor,

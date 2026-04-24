@@ -11,6 +11,7 @@ import '../../../../core/l10n/app_l10n.dart';
 import '../../../../core/widgets/custom_image.dart';
 import '../cubit/soccer_cubit.dart';
 import 'sheet_action.dart';
+import 'package:flutter/services.dart';
 
 /// Sheet drag handle width and height constants.
 const double _kDragHandleWidth = 46;
@@ -87,6 +88,7 @@ class ModalSheetContent extends StatelessWidget {
               title: l10n.viewFixtures,
               subtitle: l10n.fixtures,
               onTap: () {
+                HapticFeedback.selectionClick();
                 context.push(Routes.fixtures, extra: league.id);
                 context.pop();
               },
@@ -97,6 +99,7 @@ class ModalSheetContent extends StatelessWidget {
               title: l10n.viewStandings,
               subtitle: l10n.standings,
               onTap: () {
+                HapticFeedback.selectionClick();
                 context.push(Routes.standings, extra: league.id);
                 context.pop();
               },

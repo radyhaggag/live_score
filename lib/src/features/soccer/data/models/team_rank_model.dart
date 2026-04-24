@@ -12,6 +12,7 @@ class TeamRankModel extends TeamRank {
     required super.form,
     required super.stats,
     super.groupNum,
+    super.destinationNum,
   });
 
   factory TeamRankModel.fromJson(Map<String, dynamic> json) => TeamRankModel(
@@ -32,6 +33,7 @@ class TeamRankModel extends TeamRank {
           received: json['against'],
         ).toDomain(),
     groupNum: (json['groupNum'] as num?)?.toInt(),
+    destinationNum: (json['destinationNum'] as num?)?.toInt(),
   );
 }
 

@@ -23,9 +23,11 @@ class FixtureLeagueSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             if (showLogo) ...[
               CustomImage(height: 13, width: 13, imageUrl: league.logo),
@@ -34,7 +36,7 @@ class FixtureLeagueSection extends StatelessWidget {
             Flexible(
               child: Text(
                 league.name,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: context.colorsExt.blueGrey,
                 ),
                 textAlign: TextAlign.center,

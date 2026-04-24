@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:live_score/src/core/models/country_model.dart';
 import 'package:live_score/src/core/constants/app_constants.dart';
+import 'package:live_score/src/core/models/country_model.dart';
 
 import '../../../../core/api/dio_helper.dart';
 import '../../../../core/api/endpoints.dart';
@@ -117,14 +117,14 @@ class SoccerDataSourceImpl implements SoccerDataSource {
     final normalizedToday = DateTime(today.year, today.month, today.day);
     for (var fixture in result) {
       final competitionId = fixture['competitionId'] as int?;
-      if (competitionId == null ||
-          !AppConstants.availableLeagues.contains(competitionId)) {
-        continue;
-      }
+      // if (competitionId == null ||
+      //     !AppConstants.availableLeagues.contains(competitionId)) {
+      //   continue;
+      // }
       final model = SoccerFixtureModel.fromJson(
         fixture,
         fixtureLeague: League.light(
-          id: competitionId,
+          id: competitionId!,
           name: fixture['competitionDisplayName'],
         ),
       );

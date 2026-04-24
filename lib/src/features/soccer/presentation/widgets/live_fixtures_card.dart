@@ -23,16 +23,23 @@ class LiveFixtureCard extends StatelessWidget {
     return Container(
       width: width ?? 200.w,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(24.r),
         gradient: soccerFixture.gradientColor(context),
+        boxShadow: [
+          BoxShadow(
+            color: soccerFixture.gradientColor(context).colors.first.withValues(alpha: 0.4),
+            blurRadius: 12.r,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       padding: const EdgeInsetsDirectional.symmetric(
         horizontal: AppSpacing.l,
-        vertical: AppSpacing.m,
+        vertical: AppSpacing.s,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        spacing: AppSpacing.m,
+        spacing: AppSpacing.s,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -106,21 +113,79 @@ class LiveFixtureCard extends StatelessWidget {
               vertical: AppSpacing.xs,
             ),
             decoration: BoxDecoration(
-              color: context.colorsExt.white,
+              color: context.colorsExt.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            child: Text(
-              soccerFixture.statusText,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: context.colorsExt.red,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _LiveIndicator(size: 6.r, color: context.colorsExt.red),
+                const SizedBox(width: AppSpacing.s),
+                Text(
+                  soccerFixture.statusText,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: context.colorsExt.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _LiveIndicator extends StatefulWidget {
+  final double size;
+  final Color color;
+  const _LiveIndicator({required this.size, required this.color});
+
+  @override
+  State<_LiveIndicator> createState() => _LiveIndicatorState();
+}
+
+class _LiveIndicatorState extends State<_LiveIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _controller,
+      child: Container(
+        width: widget.size,
+        height: widget.size,
+        decoration: BoxDecoration(
+          color: widget.color,
+          shape: BoxShape.circle,
+        ),
       ),
     );
   }

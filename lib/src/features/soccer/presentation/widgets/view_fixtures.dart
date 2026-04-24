@@ -137,7 +137,7 @@ class _ViewLiveFixturesState extends State<ViewLiveFixtures> {
           >= 760 => 205.0,
           _ => 190.0,
         };
-        final railHeight = constraints.maxWidth >= 760 ? 246.0 : 238.0;
+        final railHeight = constraints.maxWidth >= 760 ? 250.0 : 246.0;
         final scrollAmount = cardWidth + AppSpacing.xl;
 
         return Column(

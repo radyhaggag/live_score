@@ -32,7 +32,7 @@ class FixtureDetails extends StatelessWidget {
           const SizedBox(height: AppSpacing.s),
           Row(
             children: [
-              Expanded(child: ViewTeam(team: soccerFixture.teams.home)),
+              Expanded(child: ViewTeam(team: soccerFixture.teams.home, fixtureId: soccerFixture.id)),
               Expanded(
                 child:
                     (soccerFixture.gameTime != null &&
@@ -40,7 +40,7 @@ class FixtureDetails extends StatelessWidget {
                         ? _FixtureResult(soccerFixture: soccerFixture)
                         : _FixtureTime(soccerFixture: soccerFixture),
               ),
-              Expanded(child: ViewTeam(team: soccerFixture.teams.away)),
+              Expanded(child: ViewTeam(team: soccerFixture.teams.away, fixtureId: soccerFixture.id)),
             ],
           ),
           const SizedBox(height: AppSpacing.s),

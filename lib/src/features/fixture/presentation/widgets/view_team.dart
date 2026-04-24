@@ -8,15 +8,19 @@ import '../../../../core/widgets/custom_image.dart';
 
 class ViewTeam extends StatelessWidget {
   final Team team;
+  final int fixtureId;
 
-  const ViewTeam({super.key, required this.team});
+  const ViewTeam({super.key, required this.team, required this.fixtureId});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CustomImage(width: 50, height: 50, imageUrl: team.logo),
+        Hero(
+          tag: 'team_${team.id}_fixture_$fixtureId',
+          child: CustomImage(width: 50, height: 50, imageUrl: team.logo),
+        ),
         const SizedBox(height: AppSpacing.m),
         FittedBox(
           child: Text(

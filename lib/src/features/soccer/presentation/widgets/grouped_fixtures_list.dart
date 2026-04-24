@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:live_score/src/config/app_route.dart';
+import 'package:flutter/services.dart';
 import 'package:live_score/src/core/constants/app_spacing.dart';
 
 import '../../../../core/domain/entities/soccer_fixture.dart';
@@ -71,6 +72,7 @@ class GroupedFixturesList extends StatelessWidget {
 
             return InkWell(
               onTap: () {
+                HapticFeedback.selectionClick();
                 context.push(Routes.fixtureDetails, extra: item.fixture);
               },
               child: FixtureCard(

@@ -65,12 +65,15 @@ class LeagueCard extends StatelessWidget {
             children: [
               CustomImage(width: 18.w, height: 18.h, imageUrl: league.logo),
               const SizedBox(width: AppSpacing.xs),
-              Text(
-                leagueTitle,
-                softWrap: false,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: context.colorsExt.white,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              Flexible(
+                child: Text(
+                  leagueTitle,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: context.colorsExt.white,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  ),
                 ),
               ),
             ],

@@ -55,12 +55,23 @@ class CircleLeaguesHeader extends StatelessWidget {
     cursor: SystemMouseCursors.click,
     child: InkWell(
       onTap: () => onLeagueTap(context, league),
-      child: CircleAvatar(
-        backgroundColor:
-            league.color != null
-                ? league.color!.toColor
-                : context.colorsExt.blueGrey,
-        radius: _kLeagueAvatarRadius,
+      borderRadius: BorderRadius.circular(_kLeagueAvatarRadius),
+      child: Container(
+        width: _kLeagueAvatarRadius * 2,
+        height: _kLeagueAvatarRadius * 2,
+        decoration: BoxDecoration(
+          color: league.color != null ? league.color!.toColor : context.colorsExt.white,
+          shape: BoxShape.circle,
+          border: Border.all(color: context.colorsExt.white.withValues(alpha: 0.8), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        alignment: Alignment.center,
         child: CustomImage(
           fit: BoxFit.contain,
           width: _kLeagueLogoSize,

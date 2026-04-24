@@ -39,7 +39,7 @@ class StandingsForm extends StatelessWidget {
     height: itemSize,
     decoration: BoxDecoration(
       color: color,
-      borderRadius: BorderRadius.circular(50.r),
+      borderRadius: BorderRadius.circular(6.r),
     ),
     child: child,
   );

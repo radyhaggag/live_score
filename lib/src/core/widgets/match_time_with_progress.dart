@@ -43,33 +43,42 @@ class _MatchTimeWithProgressState extends State<MatchTimeWithProgress>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final mainColor = widget.mainColor ?? context.colorsExt.red;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           widget.time.isNotEmpty ? widget.time : context.l10n.liveFallback,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: widget.mainColor ?? context.colorsExt.red,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: mainColor,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.xs),
-        AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              widthFactor: _controller.value / widget.widthFactor,
-              child: Container(
+        Container(
+          width: 28.r,
+          height: 3,
+          decoration: BoxDecoration(
+            color: mainColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(2.r),
+          ),
+          alignment: Alignment.centerLeft,
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Container(
+                width: 28.r * (_controller.value / widget.widthFactor),
                 height: 3,
                 decoration: BoxDecoration(
-                  color: widget.mainColor ?? context.colorsExt.red,
+                  color: mainColor,
                   borderRadius: BorderRadius.circular(2.r),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ],
     );

@@ -36,17 +36,19 @@ class StandingsItem extends StatelessWidget {
           '${teamRank.points}',
         ];
 
-        final Color rankColor =
-            isGrouped
-                ? Colors.black
-                : (teamRank.rank <= 3 || teamRank.rank > totalTeams - 3)
-                ? Colors.white
-                : Colors.black;
 
-        return Padding(
+
+        return Container(
           padding: EdgeInsets.symmetric(
             vertical: metrics.verticalPadding,
             horizontal: metrics.horizontalPadding,
+          ),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
+              ),
+            ),
           ),
           child: Row(
             children: [
@@ -57,9 +59,9 @@ class StandingsItem extends StatelessWidget {
                   children: [
                     _RankBadge(
                       rank: teamRank.rank,
+                      teamRank: teamRank,
                       totalTeams: totalTeams,
                       isGrouped: isGrouped,
-                      rankColor: rankColor,
                       size: metrics.rankBadgeSize,
                     ),
                     CustomImage(
@@ -70,7 +72,7 @@ class StandingsItem extends StatelessWidget {
                     Expanded(
                       child: Text(
                         teamRank.team.name.teamName,
-                        style: Theme.of(context).textTheme.titleSmall,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -85,7 +87,7 @@ class StandingsItem extends StatelessWidget {
                   child: Text(
                     headersNumbers[index],
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ),
@@ -108,34 +110,52 @@ class StandingsItem extends StatelessWidget {
 class _RankBadge extends StatelessWidget {
   const _RankBadge({
     required this.rank,
+    required this.teamRank,
     required this.totalTeams,
     required this.isGrouped,
-    required this.rankColor,
     required this.size,
   });
 
   final int rank;
+  final TeamRank teamRank;
   final int totalTeams;
   final bool isGrouped;
-  final Color rankColor;
   final double size;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     Color? background() {
       if (isGrouped) return context.colorsExt.white;
-      if (rank == 1) return context.colorsExt.green;
-      if (rank == 2) return context.colorsExt.blue;
-      if (rank == 3) return context.colorsExt.purple;
-      if (rank > totalTeams - 3) return context.colorsExt.red;
-      return context.colorsExt.white;
+      // Default to transparent/white if no destination
+      if (teamRank.destinationNum == null) return Colors.transparent;
+
+      switch (teamRank.destinationNum) {
+        case 1:
+          return context.colorsExt.blue;
+        case 2:
+          return context.colorsExt.deepOrange;
+        case 3:
+          return context.colorsExt.green;
+        case 4:
+          return context.colorsExt.red;
+        case 5:
+          return context.colorsExt.purple;
+        default:
+          return Colors.transparent;
+      }
     }
+
+    final bgColor = background();
+    final bool isTransparent = bgColor == Colors.transparent || bgColor == context.colorsExt.white;
+    final rColor = isTransparent ? theme.colorScheme.onSurface : Colors.white;
 
     return SizedBox(
       width: size,
       height: size,
       child: DecoratedBox(
-        decoration: BoxDecoration(color: background(), shape: BoxShape.circle),
+        decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -144,9 +164,9 @@ class _RankBadge extends StatelessWidget {
               child: Text(
                 rank.toString(),
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                style: theme.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: rankColor,
+                  color: rColor,
                 ),
               ),
             ),

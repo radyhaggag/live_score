@@ -10,6 +10,7 @@ import '../../domain/entities/statistics.dart';
 import '../widgets/events_view.dart';
 import '../widgets/lineups_view.dart';
 import '../widgets/statistics_view.dart';
+import 'package:flutter/services.dart';
 
 /// The tab bar with Statistics, Lineups, Events buttons.
 class FixtureTabBar extends StatelessWidget {
@@ -46,7 +47,10 @@ class FixtureTabBar extends StatelessWidget {
               label: labels[i],
               isSelected: selectedIndex == i,
               color: fixtureColor,
-              onPressed: () => onTabSelected(i),
+              onPressed: () {
+                HapticFeedback.selectionClick();
+                onTabSelected(i);
+              },
             ),
           ),
         ),

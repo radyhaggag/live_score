@@ -13,24 +13,27 @@ class NoStatistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: context.screenHeight / 2,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image(
-            image: const AssetImage(AppAssets.noStats),
-            width: 100.w,
-            height: 100.h,
-          ),
-          const SizedBox(height: AppSpacing.s),
-          Text(
-            context.l10n.noStats,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: context.colorsExt.blueGrey,
-              letterSpacing: 1.1,
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 80.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image(
+              image: const AssetImage(AppAssets.noStats),
+              width: 60.w,
+              height: 60.h,
             ),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.m),
+            Text(
+              context.l10n.noStats,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: context.colorsExt.blueGrey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

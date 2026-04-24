@@ -5,11 +5,11 @@ import 'package:live_score/src/core/domain/entities/teams.dart';
 import 'package:live_score/src/core/extensions/strings.dart';
 import 'package:live_score/src/features/fixture/domain/entities/fixture_details.dart';
 
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/extensions/context_ext.dart';
 import '../../../../core/theme/app_fonts.dart';
 import '../../../../core/widgets/app_empty.dart';
 import '../../../../core/widgets/custom_image.dart';
+import 'pitch_painter.dart';
 import 'teams_lineups.dart';
 
 /// Displays the full-pitch lineup for both teams.
@@ -41,22 +41,21 @@ class LineupsView extends StatelessWidget {
     return Column(
       children: [
         _LineupTeamHeader(team: homeTeam!),
-        Container(
+        SizedBox(
           width: double.infinity,
           height: 560.h,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(AppAssets.playground),
+          child: CustomPaint(
+            painter: PitchPainter(
+              pitchColor: context.colorsExt.darkGreen,
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.only(
-              start: AppSpacing.m,
-              end: AppSpacing.m,
-              top: AppSpacing.xl,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(
+                start: AppSpacing.m,
+                end: AppSpacing.m,
+                top: AppSpacing.xl,
+              ),
+              child: TeamsLineups(fixtureDetails: fixtureDetails!),
             ),
-            child: TeamsLineups(fixtureDetails: fixtureDetails!),
           ),
         ),
         _LineupTeamHeader(team: awayTeam!),
