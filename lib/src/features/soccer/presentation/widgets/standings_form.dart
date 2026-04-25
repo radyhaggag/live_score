@@ -24,15 +24,15 @@ class StandingsForm extends StatelessWidget {
     _ => context.colorsExt.grey.withOpacitySafe(0.2),
   };
 
-  String? _letter(int number) => switch (number) {
-    0 => 'L',
-    1 => 'W',
-    2 => 'D',
+  String? _letter(BuildContext context, int number) => switch (number) {
+    0 => context.l10n.lostShort,
+    1 => context.l10n.wonShort,
+    2 => context.l10n.drawnShort,
     _ => null,
   };
 
   Widget? _text(BuildContext context, int number) {
-    final letter = _letter(number);
+    final letter = _letter(context, number);
     if (letter == null) return null;
     return Text(
       letter,

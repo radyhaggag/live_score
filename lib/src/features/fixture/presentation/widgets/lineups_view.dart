@@ -37,10 +37,13 @@ class _LineupsViewState extends State<LineupsView> {
         (awayTeam?.lineup?.formation ?? '').isNotEmpty;
 
     if (!hasLineups) {
-      return AppEmptyWidget(
-        icon: Icons.people,
-        message: context.l10n.noLineups,
-        color: widget.color,
+      return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32.0),
+        child: AppEmptyWidget(
+          icon: Icons.people,
+          message: context.l10n.noLineups,
+          color: widget.color,
+        ),
       );
     }
 

@@ -17,60 +17,57 @@ class StandingsShimmer extends StatelessWidget {
     return Shimmer.fromColors(
       baseColor: baseColor,
       highlightColor: highlightColor,
-      child: Column(
-        children: List.generate(itemCount, (index) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.m,
-                  horizontal: AppSpacing.l,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.m),
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.m),
-                    Container(
-                      width: 100,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      width: 150,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ],
-                ),
+      child: ListView.separated(
+        physics: const BouncingScrollPhysics(),
+        itemCount: itemCount,
+        separatorBuilder:
+            (context, index) => const Divider(height: 1, color: Colors.white24),
+        itemBuilder:
+            (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: AppSpacing.m,
+                horizontal: AppSpacing.l,
               ),
-              if (index < itemCount - 1)
-                const Divider(height: 1, color: Colors.white24),
-            ],
-          );
-        }),
+              child: Row(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.m),
+                  Container(
+                    width: 24,
+                    height: 24,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.m),
+                  Container(
+                    width: 100,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    width: 150,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ],
+              ),
+            ),
       ),
     );
   }

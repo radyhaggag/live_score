@@ -43,11 +43,12 @@ class FixtureTabBar extends StatelessWidget {
           AnimatedAlign(
             duration: const Duration(milliseconds: 250),
             curve: Curves.easeInOut,
-            alignment: selectedIndex == 0
-                ? Alignment.centerLeft
-                : selectedIndex == 1
+            alignment:
+                selectedIndex == 0
+                    ? AlignmentDirectional.centerStart
+                    : selectedIndex == 1
                     ? Alignment.center
-                    : Alignment.centerRight,
+                    : AlignmentDirectional.centerEnd,
             child: FractionallySizedBox(
               widthFactor: 1 / 3,
               child: Container(
@@ -84,22 +85,27 @@ class FixtureTabBar extends StatelessWidget {
                         Icon(
                           tabs[i].$1,
                           size: 16,
-                          color: selectedIndex == i
-                              ? context.colorsExt.white
-                              : Theme.of(context).colorScheme.onSurface,
+                          color:
+                              selectedIndex == i
+                                  ? context.colorsExt.white
+                                  : Theme.of(context).colorScheme.onSurface,
                         ),
                         const SizedBox(width: 4),
                         FittedBox(
                           child: Text(
                             tabs[i].$2,
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  color: selectedIndex == i
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelLarge?.copyWith(
+                              color:
+                                  selectedIndex == i
                                       ? context.colorsExt.white
                                       : Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: selectedIndex == i
+                              fontWeight:
+                                  selectedIndex == i
                                       ? FontWeight.bold
                                       : FontWeight.normal,
-                                ),
+                            ),
                           ),
                         ),
                       ],

@@ -71,30 +71,37 @@ class _EventsViewState extends State<EventsView> {
   @override
   Widget build(BuildContext context) {
     if (events.isEmpty) {
-      return AppEmptyWidget(
-        message: context.l10n.noEvents,
-        icon: Icons.event_busy,
-        color: widget.color,
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32.0),
+        child: AppEmptyWidget(
+          message: context.l10n.noEvents,
+          icon: Icons.event_busy,
+          color: widget.color,
+        ),
       );
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.l),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: AppSpacing.l,
+      ),
       child: Column(
         children: List.generate(events.length, (index) {
           final event = events[index];
-          final isHomeTeam = event.team?.id == widget.fixtureDetails?.fixture.teams.home.id;
+          final isHomeTeam =
+              event.team?.id == widget.fixtureDetails?.fixture.teams.home.id;
           final isLast = index == events.length - 1;
 
           return EventCard(
-            event: event,
-            color: widget.color,
-            isHomeTeam: isHomeTeam,
-            isLast: isLast,
-          )
-          .animate()
-          .fade(duration: 400.ms, delay: (50 * index).ms)
-          .slideY(begin: 0.1);
+                event: event,
+                color: widget.color,
+                isHomeTeam: isHomeTeam,
+                isLast: isLast,
+              )
+              .animate()
+              .fade(duration: 400.ms, delay: (50 * index).ms)
+              .slideY(begin: 0.1);
         }),
       ),
     );
